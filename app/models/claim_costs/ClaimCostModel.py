@@ -24,4 +24,16 @@ class ClaimCostModel(db.Model):
 
     @classmethod
     def find_by_id(cls, id):
-        return db.session.query(cls).filter(claim_cost_id=id).first()
+        return db.session.query(cls).filter(cls.claim_cost_id == id).first()
+
+    @classmethod
+    def find_all(cls, num_rows=1000):
+        return db.session.query(cls).limit(num_rows).all()
+
+    def save_to_db(self):
+        try:
+            db.session.add(self)
+        except:
+            db.session.rollback()
+        else:
+            db.session.commit()
