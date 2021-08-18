@@ -18,11 +18,11 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
 
-    from .resources.products.product_admin import ProductAdmin, ProductAdminList
-    from .resources.benefits.benefit_admin import BenefitAdmin, BenefitAdminList
-    from .resources.provisions.provision_admin import ProvisionAdmin, ProvisionAdminList
-    from .resources.states.state_admin import StateAdmin, StateAdminList
-    from .resources.claim_costs.claim_cost_admin import ClaimCostAdmin, ClaimCostAdminList
+    from .resources.admin.products.product_admin import ProductAdmin, ProductAdminList
+    from .resources.admin.benefits.benefit_admin import BenefitAdmin, BenefitAdminList
+    from .resources.admin.provisions.provision_admin import ProvisionAdmin, ProvisionAdminList
+    from .resources.admin.states.state_admin import StateAdmin, StateAdminList
+    from .resources.admin.claim_costs.claim_cost_admin import ClaimCostAdmin, ClaimCostAdminList
 
     api = Api(app)
     api.add_resource(ProductAdmin, '/api/v1/product')
