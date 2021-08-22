@@ -1,0 +1,74 @@
+{
+  "product": "Accident",
+  "statesApproved": [
+    { "state": "SC", "effectiveDate": "2020-01-01" },
+    { "state": "NC", "effectiveDate": "2021-07-01" }
+  ],
+  "benefits": [
+    {
+      "name": "hospital_admission",
+      "displayName": "Hospital Admission",
+      "benefitType": "single",
+      "amounts": {
+        "default": 500,
+        "min": 100,
+        "max": 5000,
+        "step": 25
+      },
+      "rates": {
+        "claimCost": 10,
+        "unit": 100
+      },
+      "variations": {
+        "statesProhibited": ["NC"],
+        "statesRequired": ["SC"]
+      },
+      "factorApplicability": [
+        {
+          "name": "groupsize",
+          "type": "product",
+          "applicability": "mandatory"
+        }
+      ]
+    },
+    {
+      "name": "hospital_confinement",
+      "displayName": "Hospital Confinement",
+      "benefitType": "durational",
+      "amounts": {
+        "default": 200,
+        "min": 50,
+        "max": 1000,
+        "step": 25
+      },
+      "rates": {
+        "claimCost": 5,
+        "unit": 100
+      },
+      "durations": {
+        "default": 30,
+        "values": [
+          { "time": 2, "factor": 0.5 },
+          { "time": 3, "factor": 0.6 },
+          { "time": 5, "factor": 0.7 },
+          { "time": 7, "factor": 0.8 },
+          { "time": 14, "factor": 0.9 },
+          { "time": 30, "factor": 1 },
+          { "time": 60, "factor": 1.1 },
+          { "time": 365, "factor": 1.3 }
+        ],
+        "unit": "day"
+      },
+      "variations": {
+        "statesRequired": ["SC"]
+      },
+      "factorApplicability": [
+        {
+          "name": "occ_factor",
+          "type": "product",
+          "applicability": "mandatory"
+        }
+      ]
+    }
+  ]
+}
