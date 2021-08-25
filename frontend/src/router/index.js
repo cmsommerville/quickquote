@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import RatingForm from "../views/RatingForm.vue";
+import ProductFactors from "../views/ProductFactors.vue";
 
 Vue.use(VueRouter);
 
@@ -12,9 +12,9 @@ const routes = [
     component: Home,
   },
   {
-    path: "/rater",
-    name: "RatingForm",
-    component: RatingForm,
+    path: "/product-factors",
+    name: "ProductFactors",
+    component: ProductFactors,
   },
   {
     path: "/about",

@@ -4,6 +4,10 @@
     { "state": "SC", "effectiveDate": "2020-01-01" },
     { "state": "NC", "effectiveDate": "2021-07-01" }
   ],
+  "factors": {
+    "product": {},
+    "coverage": {}
+  },
   "benefits": [
     {
       "name": "hospital_admission",
