@@ -25,18 +25,6 @@ class Plan(Resource):
 
         products = projectMongoResults(res, ["name", "text", "statesApproved"])
 
-        # selections = {}
-        # group = session.get("selections", {}).get("group")
-
-        # if group:
-        #     selections = group_schema.dump(group)
-
-        # return {
-        #     "product": data['productName'],
-        #     "statesApproved": data['statesApproved'],
-        #     "selections": selections
-        # }, 200
-
         return {"products": products}, 200
 
     def post(self):
