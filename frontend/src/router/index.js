@@ -1,7 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import RaterEntry from "../views/RaterEntry.vue";
+import Group from "../views/Group.vue";
+import Plan from "../views/Plan.vue";
 import ProductFactors from "../views/ProductFactors.vue";
+import CreateTables from "../views/admin/CreateTables.vue";
 
 Vue.use(VueRouter);
 
@@ -12,18 +16,29 @@ const routes = [
     component: Home,
   },
   {
+    path: "/rater",
+    name: "rater",
+    component: RaterEntry,
+  },
+  {
+    path: "/group",
+    name: "group",
+    component: Group,
+  },
+  {
+    path: "/plan",
+    name: "plan",
+    component: Plan,
+  },
+  {
     path: "/product-factors",
     name: "ProductFactors",
     component: ProductFactors,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/admin/create-tables",
+    name: "create-tables",
+    component: CreateTables,
   },
 ];
 

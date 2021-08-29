@@ -11,6 +11,11 @@ flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 sqlalchemy = "*"
 flask-cors = "*"
+flask-session = "*"
+python-dotenv = "*"
+flask-pymongo = "*"
+pymongo = "*"
+dnspython = "*"
 
 [dev-packages]
 

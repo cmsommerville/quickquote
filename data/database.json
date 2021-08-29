@@ -1,23 +1,58 @@
 {
-  "product": "Accident",
+  "productCode": "critical_illness",
+  "productName": "Critical Illness",
   "statesApproved": [
     { "state": "SC", "effectiveDate": "2020-01-01" },
     { "state": "NC", "effectiveDate": "2021-07-01" }
   ],
+  "coverages": [],
   "factors": {
-    "product": {},
+    "product": [
+      {
+        "name": "groupsize",
+        "text": "Group Size",
+        "model": "ProductFactorModel__GroupSize",
+        "type": "function"
+      },
+      {
+        "name": "industry",
+        "text": "Industry",
+        "model": "ProductFactorModel__Industry",
+        "type": "function"
+      },
+      {
+        "name": "prex",
+        "text": "Pre-Existing Condition Limitation",
+        "model": "ProductFactorModel__Prex",
+        "type": "select",
+        "options": [
+          { "value": "none", "text": "No Pre-Ex", "amount": 0.8 },
+          { "value": "3/12", "text": "3/12", "amount": 0.85 },
+          { "value": "6/6", "text": "6/6", "amount": 0.9 },
+          { "value": "6/12", "text": "6/12", "amount": 0.95 },
+          { "value": "12/12", "text": "12/12", "amount": 1 }
+        ]
+      },
+      {
+        "name": "reductionAt70",
+        "text": "50% Reduction at Age 70",
+        "model": "ProductFactorModel__ReductionAt70",
+        "type": "checkbox"
+      }
+    ],
     "coverage": {}
   },
   "benefits": [
     {
       "name": "hospital_admission",
-      "displayName": "Hospital Admission",
-      "benefitType": "single",
+      "text": "Hospital Admission",
+      "type": "single",
       "amounts": {
-        "default": 500,
-        "min": 100,
-        "max": 5000,
-        "step": 25
+        "default": 100,
+        "min": 0,
+        "max": 100,
+        "step": 0.5,
+        "unit": "percent"
       },
       "rates": {
         "claimCost": 10,
@@ -37,8 +72,8 @@
     },
     {
       "name": "hospital_confinement",
-      "displayName": "Hospital Confinement",
-      "benefitType": "durational",
+      "text": "Hospital Confinement",
+      "type": "durational",
       "amounts": {
         "default": 200,
         "min": 50,

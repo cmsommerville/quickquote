@@ -1,30 +1,26 @@
 <template>
   <div class="container">
-    <div class="form-rater">
+    <div class="form-rater" v-if="loaded">
       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
         <b-form-group
           id="input-group-1"
-          label="Group Size:"
-          label-for="input-group-size"
+          label="Pre-Existing Condition Limitation:"
+          label-for="input-prex"
         >
-          <b-form-input
-            id="input-group-size"
-            v-model.number="form.groupsize"
-            type="number"
-            placeholder="Enter group size"
-            required
-          ></b-form-input>
+          <b-form-select
+            id="input-prex"
+            v-model="data.selections.prex"
+            :options="inputPrex.options"
+          ></b-form-select>
         </b-form-group>
 
         <b-form-checkbox
-          id="input-pre"
-          v-model="form.prex"
+          v-model="data.selections.reductionAt70"
           name="check-button"
           switch
         >
-          Pre-Existing Conditions
+          50% Reduction At Age 70
         </b-form-checkbox>
-
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
@@ -39,27 +35,51 @@ export default {
   name: "ProductFactors",
   data() {
     return {
-      form: {
-        groupsize: null,
-        prex: true,
-      },
+      loaded: false,
+      data: null,
       show: true,
     };
+  },
+  async mounted() {
+    const res = await axios.get(
+      "http://localhost:5000/workflow/product-factors",
+      {
+        withCredentials: true,
+      }
+    );
+    this.data = { ...res.data };
+    this.loaded = true;
+  },
+  computed: {
+    states() {
+      return this.data.statesApproved.map((stateObj) => {
+        return {
+          value: stateObj.state,
+          text: stateObj.state,
+        };
+      });
+    },
+    inputPrex() {
+      return this.data.factors.filter((item) => item.id === "prex")[0];
+    },
+    inputReductionAt70() {
+      return this.data.factors.filter((item) => item.id === "reductionAt70")[0];
+    },
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:5000/workflow/product-factors",
-        this.form
+        this.data.selections,
+        { withCredentials: true }
       );
-      console.log(res);
     },
     onReset(event) {
       event.preventDefault();
       // Reset our form values
-      this.form.prex = true;
-      this.form.groupsize = null;
+      this.data.selections.groupsize = null;
+      this.data.selections.state = null;
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -70,7 +90,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   justify-content: center;
