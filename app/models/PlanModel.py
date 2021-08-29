@@ -27,6 +27,10 @@ class PlanModel(db.Model):
         self.plan_effective_date = datetime.datetime.strptime(
             data.get("plan_effective_date"), '%Y-%m-%d').date()
 
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter(cls.plan_id == id).first()
+
     def save_to_db(self):
         try:
             db.session.add(self)

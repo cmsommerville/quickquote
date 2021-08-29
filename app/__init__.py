@@ -26,14 +26,12 @@ def create_app(config):
     sess.init_app(app)
     api = Api(app)
 
-    from .resources.workflow.rating.Group import Group
-    from .resources.workflow.rating.Plan import Plan
-    from .resources.workflow.rating.ProductFactors import ProductFactors
+    from .resources.workflow.rating.GroupResource import Group
+    from .resources.workflow.rating.PlanResource import Plan
     from .resources.admin.CreateTables import CreateTables
 
     api.add_resource(Group, '/workflow/group')
     api.add_resource(Plan, '/workflow/plan')
-    api.add_resource(ProductFactors, '/workflow/product-factors')
     api.add_resource(CreateTables, '/admin/create-tables')
 
     @app.route("/")

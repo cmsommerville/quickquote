@@ -42,8 +42,9 @@ class Plan(Resource):
     def post(self):
 
         data = request.get_json()
-        plan = session.get("selections", {}).get("plan")
-        if plan:
+        plan_id = session.get("quote", {}).get("plan_id")
+        if plan_id:
+            plan = PlanModel.find_by_id(plan_id)
             plan.reset(data)
         else:
             plan = plan_schema.load(data)
@@ -53,9 +54,6 @@ class Plan(Resource):
         except:
             print("Couldn't write to db")
 
-        session['selections'] = {
-            **session.get('selections', {}),
-            "plan": plan
-        }
+        session['quote']['plan_id'] = plan.plan_id
 
         return "Success", 201

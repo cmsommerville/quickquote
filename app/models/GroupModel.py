@@ -22,6 +22,10 @@ class GroupModel(db.Model):
         self.sic_code = data.get("sic_code")
         self.tax_id = data.get("tax_id")
 
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter(cls.group_id == id).first()
+
     def save_to_db(self):
         try:
             db.session.add(self)

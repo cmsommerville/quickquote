@@ -10,27 +10,21 @@ group_schema = GroupSchema()
 
 
 class Group(Resource):
-
     @classmethod
     def get(cls):
-        with open("data/database.json") as f:
-            data = json.load(f)
-
         selections = {}
-        group = session.get("selections", {}).get("group")
-
-        if group:
+        group_id = session.get("quote", {}).get("group_id")
+        if group_id:
+            group = GroupModel.find_by_id(group_id)
             selections = group_schema.dump(group)
 
-        return {
-            "selections": selections
-        }, 200
+        return {"selections": selections}, 200
 
     def post(self):
-
         data = request.get_json()
-        group = session.get("selections", {}).get("group")
-        if group:
+        group_id = session.get("quote", {}).get("group_id")
+        if group_id:
+            group = GroupModel.find_by_id(group_id)
             group.reset(data)
         else:
             group = group_schema.load(data)
@@ -40,9 +34,9 @@ class Group(Resource):
         except:
             print("Couldn't write to db")
 
-        session['selections'] = {
-            **session.get('selections', {}),
-            "group": group
-        }
+        if session.get("quote") is None:
+            session['quote'] = {}
+
+        session['quote']['group_id'] = group.group_id
 
         return "Success", 201
