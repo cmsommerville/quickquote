@@ -39,4 +39,4 @@ class Group(Resource):
 
         session['quote']['group_id'] = group.group_id
 
-        return "Success", 201
+        return {"group_id": group.group_id}, 201

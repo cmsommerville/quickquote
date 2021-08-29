@@ -60,6 +60,7 @@ export default {
       loaded: false,
       data: null,
       selections: {
+        group_id: null,
         product_name: null,
         rating_state: null,
         plan_effective_date: null,
@@ -70,6 +71,7 @@ export default {
   async mounted() {
     const res = await axios.get("http://localhost:5000/workflow/plan");
     this.data = { ...res.data };
+    this.selections.group_id = +this.$route.query.group_id || null;
     this.loaded = true;
   },
   computed: {
@@ -142,9 +144,9 @@ export default {
   height: 200px;
   border: 1px solid #ddd;
   border-radius: 20px;
-  background: rgb(243, 222, 249);
   cursor: pointer;
   position: relative;
+  background: rgb(243, 222, 249);
 
   display: flex;
   justify-content: center;

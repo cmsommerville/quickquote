@@ -2,14 +2,13 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from flask_session import Session
 from dotenv import load_dotenv
 
 from app.models import db, mongo
 from app.schemas import ma
+from app.extensions import sess
 
 load_dotenv()
-sess = Session()
 
 
 def create_app(config):

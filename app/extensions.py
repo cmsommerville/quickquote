@@ -1,3 +1,3 @@
-from flask_marshmallow import Marshmallow
+from flask_session import Session
 
-ma = Marshmallow()
+sess = Session()

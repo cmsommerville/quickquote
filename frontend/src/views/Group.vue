@@ -67,13 +67,18 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post(
+      const res = await axios.post(
         "http://localhost:5000/workflow/group",
         this.data.selections,
         { withCredentials: true }
       );
 
-      this.$router.push({ name: "plan" });
+      console.log(res.data);
+
+      this.$router.push({
+        name: "plan",
+        query: { group_id: res.data.group_id },
+      });
     },
     onReset(event) {
       event.preventDefault();

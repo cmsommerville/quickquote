@@ -7,6 +7,7 @@ load_dotenv()
 class BaseConfig():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PROPAGATE_EXCEPTIONS = True
+    PERMANENT_SESSION_LIFETIME = 3600
 
 
 class DevConfig(BaseConfig):
