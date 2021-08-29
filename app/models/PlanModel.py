@@ -23,10 +23,12 @@ class PlanModel(db.Model):
         return f"<Plan Id: {self.plan_id} -- Product Name: `{self.product_name}`>"
 
     def reset(self, data):
-        self.group_id = data.get("group_id")
-        self.product_name = data.get("product_name")
-        self.plan_effective_date = datetime.datetime.strptime(
-            data.get("plan_effective_date"), '%Y-%m-%d').date()
+        self.group_id = data.get("group_id", self.group_id)
+        self.product_name = data.get("product_name", self.group_id)
+        self.rating_state = data.get("rating_state", self.group_id)
+        if data.get("plan_effective_date"):
+            self.plan_effective_date = datetime.datetime.strptime(
+                data.get("plan_effective_date"), '%Y-%m-%d').date()
 
     @classmethod
     def find_by_id(cls, id):

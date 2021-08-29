@@ -2,8 +2,8 @@ from flask import request, session
 from flask_restful import Resource
 from app.models import mongo
 
-from app.models.PlanModel import PlanModel
-from app.schemas.PlanSchema import PlanSchema
+from app.models.FactorModel import FactorModel
+from app.schemas.FactorSchema import FactorSchema
 
 plan_schema = PlanSchema()
 

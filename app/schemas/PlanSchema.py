@@ -6,3 +6,4 @@ class PlanSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = PlanModel
         load_instance = True
+        include_fk = True
