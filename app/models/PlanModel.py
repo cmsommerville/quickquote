@@ -1,6 +1,8 @@
 from app.models import db
 import datetime
 
+from app.models.ProvisionModel import ProvisionModel
+
 
 class PlanModel(db.Model):
     __tablename__ = "plans"
@@ -17,15 +19,15 @@ class PlanModel(db.Model):
     # factors = db.relationship("FactorModel", back_populates="plan")
     # coverages = db.relationship("CoverageModel", back_populates="plan")
     # benefits = db.relationship("BenefitModel", back_populates="plan")
-    # provisions = db.relationship("ProvisionModel", back_populates="plan")
+    provisions = db.relationship("ProvisionModel", back_populates="plan")
 
     def __repr__(self):
         return f"<Plan Id: {self.plan_id} -- Product Name: `{self.product_name}`>"
 
     def reset(self, data):
         self.group_id = data.get("group_id", self.group_id)
-        self.product_name = data.get("product_name", self.group_id)
-        self.rating_state = data.get("rating_state", self.group_id)
+        self.product_name = data.get("product_name", self.product_name)
+        self.rating_state = data.get("rating_state", self.rating_state)
         if data.get("plan_effective_date"):
             self.plan_effective_date = datetime.datetime.strptime(
                 data.get("plan_effective_date"), '%Y-%m-%d').date()

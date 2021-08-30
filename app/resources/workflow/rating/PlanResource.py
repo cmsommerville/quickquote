@@ -1,18 +1,12 @@
 from flask import request, session
 from flask_restful import Resource
 from app.models import mongo
+from app.util.mongo import projectMongoResults
 
 from app.models.PlanModel import PlanModel
 from app.schemas.PlanSchema import PlanSchema
 
 plan_schema = PlanSchema()
-
-
-def projectMongoResults(cursor, keys):
-    result = []
-    for row in cursor:
-        result.append({k: v for k, v in row.items() if k in keys})
-    return result
 
 
 class Plan(Resource):

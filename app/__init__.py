@@ -26,12 +26,17 @@ def create_app(config):
     api = Api(app)
 
     from .resources.workflow.rating.GroupResource import Group
+    from .resources.workflow.rating.ProvisionResource import Provision
     from .resources.workflow.rating.PlanResource import Plan
     from .resources.admin.CreateTables import CreateTables
+    from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
 
     api.add_resource(Group, '/workflow/group')
     api.add_resource(Plan, '/workflow/plan')
+    api.add_resource(Provision, '/workflow/provision')
     api.add_resource(CreateTables, '/admin/create-tables')
+    api.add_resource(ProductConfig, '/admin/product')
+    api.add_resource(ProductConfigList, '/admin/products')
 
     @app.route("/")
     def hello_world():
