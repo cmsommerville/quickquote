@@ -25,8 +25,9 @@ class Plan(Resource):
         data = request.get_json()
         plan_id = session.get("quote", {}).get("plan_id")
         if plan_id:
-            plan = PlanModel.find_by_id(plan_id)
-            plan.reset(data)
+            oldPlan = PlanModel.find_by_id(plan_id)
+            plan = plan_schema.load(
+                {**data, "plan_number": oldPlan.plan_number})
         else:
             plan = plan_schema.load(data)
 

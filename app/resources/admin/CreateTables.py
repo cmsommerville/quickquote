@@ -7,6 +7,7 @@ class CreateTables(Resource):
     @classmethod
     def get(cls):
         try:
+            db.drop_all()
             db.create_all()
         except Exception as e:
             return e, 400

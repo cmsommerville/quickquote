@@ -9,6 +9,7 @@ class PlanModel(db.Model):
     __tablename__ = "plans"
 
     plan_id = db.Column(db.Integer, primary_key=True)
+    plan_number = db.Column(db.Integer, db.Sequence('seq_plans__plan_number'))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.group_id'))
     product_name = db.Column(db.String(50), nullable=False)
     rating_state = db.Column(db.String(2), nullable=False)
@@ -42,5 +43,6 @@ class PlanModel(db.Model):
             db.session.add(self)
         except:
             db.session.rollback()
+            raise
         else:
             db.session.commit()

@@ -16,6 +16,7 @@ python-dotenv = "*"
 flask-pymongo = "*"
 pymongo = "*"
 dnspython = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
