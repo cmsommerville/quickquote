@@ -73,8 +73,6 @@ export default {
         { withCredentials: true }
       );
 
-      console.log(res.data);
-
       this.$router.push({
         name: "plan",
         query: { group_id: res.data.group_id },

@@ -93,11 +93,17 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post("http://localhost:5000/workflow/plan", this.selections, {
-        withCredentials: true,
+      const res = await axios.post(
+        "http://localhost:5000/workflow/plan",
+        this.selections,
+        {
+          withCredentials: true,
+        }
+      );
+      this.$router.push({
+        name: "provisions",
+        query: { plan_id: res.data.plan_id },
       });
-
-      // this.$router.push({ name: "ProductFactors" });
     },
     onReset(event) {
       event.preventDefault();

@@ -2,6 +2,7 @@ from app.models import db
 import datetime
 
 from app.models.ProvisionModel import ProvisionModel
+from app.models.FactorModel import FactorModel
 
 
 class PlanModel(db.Model):
@@ -16,7 +17,7 @@ class PlanModel(db.Model):
     row_add_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     group = db.relationship("GroupModel", back_populates="plans")
-    # factors = db.relationship("FactorModel", back_populates="plan")
+    factors = db.relationship("FactorModel", back_populates="plan")
     # coverages = db.relationship("CoverageModel", back_populates="plan")
     # benefits = db.relationship("BenefitModel", back_populates="plan")
     provisions = db.relationship("ProvisionModel", back_populates="plan")

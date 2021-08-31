@@ -18,6 +18,15 @@ class ProvisionModel(db.Model):
     def __repr__(self):
         return f"<Provision Id: {self.provision_id} -- Provision Name: `{self.provision_name}`>"
 
+    def getValue(self):
+        if self.provision_data_type == 'number':
+            if '.' in self.provision_value:
+                return float(self.provision_value)
+            return int(self.provision_value)
+        if self.provision_data_type == 'boolean':
+            return self.provision_value.lower() == 'true'
+        return self.provision_value
+
     def reset(self, data):
         self.plan_id = data.get("plan_id", self.plan_id)
         self.provision_code = data.get("provision_code", self.provision_code)
@@ -34,6 +43,16 @@ class ProvisionModel(db.Model):
     def save_to_db(self):
         try:
             db.session.add(self)
+        except:
+            db.session.rollback()
+        else:
+            db.session.commit()
+
+    @classmethod
+    def save_all_to_db(cls, provisions):
+        try:
+            for provision in provisions:
+                db.session.add(provision)
         except:
             db.session.rollback()
         else:
