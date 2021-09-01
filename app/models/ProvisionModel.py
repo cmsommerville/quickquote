@@ -40,6 +40,10 @@ class ProvisionModel(db.Model):
     def find_by_id(cls, id):
         return cls.query.filter(cls.provision_id == id).first()
 
+    @classmethod
+    def find_plan_provisions(cls, plan_id):
+        return cls.query.filter(cls.plan_id == plan_id).all()
+
     def save_to_db(self):
         try:
             db.session.add(self)
