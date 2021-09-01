@@ -1,8 +1,0 @@
-{
-  "state": "SC",
-  "factors": [{ "name": "groupsize", "value": 250 }],
-  "benefits": [
-    { "name": "hospital_admission", "amount": 500 },
-    { "name": "hospital_confinement", "amount": 200, "duration": 7 }
-  ]
-}

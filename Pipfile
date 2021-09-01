@@ -17,6 +17,7 @@ flask-pymongo = "*"
 pymongo = "*"
 dnspython = "*"
 psycopg2 = "*"
+pytest = "*"
 
 [dev-packages]
 

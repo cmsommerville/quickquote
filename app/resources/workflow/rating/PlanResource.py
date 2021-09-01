@@ -13,12 +13,21 @@ class Plan(Resource):
 
     @classmethod
     def get(cls):
+        selections = {}
+        plan_id = request.args.get("plan_id")
+        if plan_id is None:
+            plan_id = session.get("quote", {}).get("plan_id")
+
+        if plan_id:
+            plan = PlanModel.find_by_id(plan_id)
+            selections = plan_schema.dump(plan)
+
         res = mongo.db.products.find(
             projection=["name", "text", "statesApproved"])
 
         products = projectMongoResults(res, ["name", "text", "statesApproved"])
 
-        return {"products": products}, 200
+        return {"products": products, "selections": selections}, 200
 
     def post(self):
 

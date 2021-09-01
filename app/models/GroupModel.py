@@ -1,5 +1,6 @@
 from app.models import db
-from sqlalchemy.sql.functions import current_timestamp
+
+from app.models.PlanModel import PlanModel
 
 
 class GroupModel(db.Model):

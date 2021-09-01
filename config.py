@@ -18,6 +18,15 @@ class DevConfig(BaseConfig):
     SESSION_COOKIE_SAMESITE = "None"
 
 
+class TestConfig(BaseConfig):
+    MONGO_URI = os.getenv("DEV_MONGO_URI")
+    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_SQLALCHEMY_DATABASE_URI")
+    SESSION_TYPE = os.getenv("SESSION_TYPE")
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
+
+
 CONFIG = {
-    "DEV": DevConfig()
+    "DEV": DevConfig(),
+    "TEST": TestConfig()
 }

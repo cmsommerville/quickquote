@@ -13,7 +13,10 @@ class Group(Resource):
     @classmethod
     def get(cls):
         selections = {}
-        group_id = session.get("quote", {}).get("group_id")
+        group_id = request.args.get("group_id")
+        if group_id is None:
+            group_id = session.get("quote", {}).get("group_id")
+
         if group_id:
             group = GroupModel.find_by_id(group_id)
             selections = group_schema.dump(group)
