@@ -12,13 +12,14 @@ factor_list_schema = FactorSchema(many=True)
 class FactorCalculator(Resource):
 
     @classmethod
-    def get(cls):
+    def post(cls):
         factorList = []
         plan_id = request.args.get("plan_id")
         if plan_id is None:
             raise Exception("Plan ID not provided")
 
         plan_rates = PlanRateModel.find_by_plan_id(plan_id)
+        print(plan_rates)
 
         for plan_rate in plan_rates:
 

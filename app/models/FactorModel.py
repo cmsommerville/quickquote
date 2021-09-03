@@ -9,7 +9,6 @@ class FactorModel(db.Model):
         db.Integer, db.ForeignKey('plan_rates.plan_rate_id'))
     factor_type = db.Column(db.String(10), nullable=False)
     factor_name = db.Column(db.String(50), nullable=False)
-    factor_selection = db.Column(db.String(100), nullable=False)
     factor_value = db.Column(db.Float, nullable=False)
 
     plan_rate = db.relationship("PlanRateModel", back_populates="factors")
