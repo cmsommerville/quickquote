@@ -32,9 +32,16 @@ def generateUUID(arr):
 
     for obj in arr:
         newObj = {}
+        if type(obj) != dict:
+            continue
+
         for k, v in obj.items():
-            if type(v) == list:
-                v = generateUUID(v)
+            if type(v) in [dict, list]:
+                try:
+                    v = generateUUID(v)
+                except:
+                    print(v)
+                    raise
             newObj = {**newObj, k: v}
 
         l.append({"uuid": str(uuid.uuid4()), **newObj})
