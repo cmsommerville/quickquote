@@ -1,4 +1,5 @@
 from pymongo.cursor import Cursor
+import uuid
 
 
 def projectMongoResults(data, keys=None):
@@ -17,3 +18,27 @@ def projectMongoResults(data, keys=None):
 
 def formatMongoID(d):
     return {k: str(v) if k == "_id" else v for k, v in d.items()}
+
+
+def generateUUID(arr):
+    l = []
+    isDict = False
+    if type(arr) not in [list, dict]:
+        raise Exception("Please pass a dictionary or list")
+
+    if type(arr) == dict:
+        isDict = True
+        arr = [arr]
+
+    for obj in arr:
+        newObj = {}
+        for k, v in obj.items():
+            if type(v) == list:
+                v = generateUUID(v)
+            newObj = {**newObj, k: v}
+
+        l.append({"uuid": str(uuid.uuid4()), **newObj})
+
+    if isDict:
+        return l[0]
+    return l
