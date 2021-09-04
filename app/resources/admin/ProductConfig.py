@@ -3,7 +3,7 @@ from flask_restful import Resource
 from bson.objectid import ObjectId
 
 from app.models import mongo
-from app.util.mongo import projectMongoResults
+from app.util.mongo import projectMongoResults, generateUUID
 
 
 class ProductConfig(Resource):
@@ -15,13 +15,13 @@ class ProductConfig(Resource):
         return product, 200
 
     def post(self):
-        req = request.get_json()
+        req = generateObjectID(request.get_json())
         mongo.db.products.insert_one(req)
         return req, 201
 
     def put(self):
         id = request.args.get("id")
-        req = request.get_json()
+        req = generateUUID([request.get_json()])[0]
         mongo.db.products.replace_one({'_id': ObjectId(id)}, req)
         return req, 201
 

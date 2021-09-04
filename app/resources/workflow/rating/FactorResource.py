@@ -1,5 +1,6 @@
 from flask import request, session
 from flask_restful import Resource
+from app.models import mongo
 
 from app.models.PlanRateModel import PlanRateModel
 from app.models.FactorModel import FactorModel
@@ -19,13 +20,20 @@ class FactorCalculator(Resource):
             raise Exception("Plan ID not provided")
 
         plan_rates = PlanRateModel.find_by_plan_id(plan_id)
-        print(plan_rates)
+        config = mongo.db.products.find_one(
+            {"name": plan_rates[0].plan.product_name}, {"factors": True})
+
+        factor_config = {
+            obj['name']: obj
+            for obj in config['factors']
+        }
 
         for plan_rate in plan_rates:
 
             # instantiate factor calculation models with plan data
-            factorGroupSize = FactorGroupSize(plan_rate)
-            factorPrex = FactorPrex(plan_rate)
+            factorGroupSize = FactorGroupSize(
+                plan_rate, factor_config['groupsize'])
+            factorPrex = FactorPrex(plan_rate, factor_config['prex'])
 
             # add factors to a list
             factorList = [factorGroupSize, factorPrex]

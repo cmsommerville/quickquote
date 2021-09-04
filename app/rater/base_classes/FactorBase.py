@@ -9,14 +9,22 @@ class FactorBase:
         self.plan_rate_id = plan_rate.plan_rate_id
         self.factor_name = factor_name
         self.factor_type = factor_type
-        self.factor_value = self.set(plan_rate)
+
+        # set value, selection, and selection_type
+        self.set(plan_rate)
 
     def set(self, plan_rate):
 
         val = self.config['value']
+        uuid = self.config['uuid']
         variability = self.config.get('variability')
         if variability:
-            return self._variabilityHandler(variability, plan_rate, val)
+            selection, sel_value = self._variabilityHandler(
+                variability, plan_rate, val, uuid)
+
+            self.factor_selection = selection
+            self.factor_selection_type = 'uuid'
+            self.factor_value = sel_value
 
         functional = self.config.get('function')
         if functional:
@@ -24,12 +32,12 @@ class FactorBase:
 
         return val
 
-    def _variabilityHandler(self, variability, plan_rate, default):
+    def _variabilityHandler(self, variability, plan_rate, default_value, default_uuid):
 
         for item in variability:
             applyRule = True
             for k, v in item.items():
-                if k in ['value', '_id']:
+                if k in ['value', '_id', 'uuid']:
                     continue
 
                 attr = deep_getattr(plan_rate, k)
@@ -59,8 +67,10 @@ class FactorBase:
 
             if applyRule:
                 val = item['value']
-                return val
-        return default
+                uuid = item.get('uuid')
+                return uuid, val
+
+        return default_uuid, default_value
 
     def _functionalHandler(self):
         return
