@@ -39,7 +39,7 @@ class PlanRate(Resource):
         plan_rates = plan_rate_list_schema.load(data)
 
         try:
-            PlanRateModel.save_all_to_db(plan_rates)
+            PlanRateModel.save_all_to_db(plan_rates, plan_id)
         except Exception as e:
             print(e)
 

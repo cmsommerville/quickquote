@@ -5,6 +5,7 @@ import RaterEntry from "../views/RaterEntry.vue";
 import Group from "../views/Group.vue";
 import Plan from "../views/Plan.vue";
 import Provisions from "../views/Provisions.vue";
+import PlanRates from "../views/PlanRates.vue";
 import CreateTables from "../views/admin/CreateTables.vue";
 
 Vue.use(VueRouter);
@@ -34,6 +35,11 @@ const routes = [
     path: "/provisions",
     name: "provisions",
     component: Provisions,
+  },
+  {
+    path: "/plan-rate",
+    name: "plan-rate",
+    component: PlanRates,
   },
   {
     path: "/admin/create-tables",

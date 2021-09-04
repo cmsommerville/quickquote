@@ -4,13 +4,13 @@
       <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
         <b-form-group
           class="form-item"
-          :label="provisions.prex.text"
+          :label="provisions_object.prex.text"
           label-for="input-prex"
         >
           <b-form-select
             id="input-prex"
             v-model="selections.prex"
-            :options="provisions.prex.options"
+            :options="provisions_object.prex.options"
           ></b-form-select>
         </b-form-group>
 
@@ -19,7 +19,7 @@
           v-model="selections.reductionAt70"
           name="checkbox-reductionAt70"
         >
-          {{ provisions.reductionAt70.text }}
+          {{ provisions_object.reductionAt70.text }}
         </b-form-checkbox>
 
         <div class="form-item buttons">
@@ -35,54 +35,60 @@
 const axios = require("axios");
 
 export default {
-  name: "Plan",
+  name: "Provisions",
   data() {
     return {
       loaded: false,
-      provisions: {},
+      plan_id: null,
+      provisions: [],
       selections: {
-        plan_id: null,
+        prex: null,
+        reductionAt70: false,
       },
       show: true,
     };
   },
+  computed: {
+    provisions_object() {
+      return this.provisions.reduce(
+        (obj, item) => Object.assign(obj, { [item.name]: item }),
+        {}
+      );
+    },
+    selectionHandler() {
+      return this.provisions
+        .filter((prov) => Object.keys(this.selections).includes(prov.name))
+        .map((item) => {
+          return {
+            plan_id: this.plan_id,
+            provision_code: item.name,
+            provision_name: item.text,
+            provision_value: String(this.selections[item.name]),
+            provision_data_type: typeof this.selections[item.name],
+          };
+        });
+    },
+  },
   async mounted() {
     const res = await axios.get("http://localhost:5000/workflow/provisions");
-    const provisions = [...res.data];
-
-    this.provisions = provisions.reduce(
-      (obj, item) => Object.assign(obj, { [item.name]: item }),
-      {}
-    );
-
-    this.selections.plan_id = +this.$route.query.plan_id || null;
+    this.provisions = [...res.data];
+    this.plan_id = +this.$route.query.plan_id || null;
     this.loaded = true;
   },
   methods: {
-    selectionSubmissionHandler() {
-      const provisions = [];
-      let newProvisionData;
-      for (const key in this.provisions) {
-        newProvisionData = {
-          plan_id: this.selections.plan_id,
-          provision_code: this.provisions[key].name,
-          provision_name: this.provisions[key].text,
-          provision_value: String(this.selections[key]),
-          provision_data_type: typeof this.selections[key],
-        };
-        provisions.push(newProvisionData);
-      }
-      return provisions;
-    },
     async onSubmit(event) {
       event.preventDefault();
       await axios.post(
         "http://localhost:5000/workflow/provisions",
-        this.selectionSubmissionHandler(),
+        this.selectionHandler,
         {
           withCredentials: true,
         }
       );
+      this.$router.push({
+        name: "plan-rate",
+        query: { plan_id: this.plan_id },
+      });
     },
     onReset(event) {
       event.preventDefault();

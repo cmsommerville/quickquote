@@ -36,10 +36,11 @@ class ProvisionList(Resource):
 
         data = request.get_json()
         provisions = provision_list_schema.load(data)
+        plan_id = provisions[0].plan_id
 
         try:
-            ProvisionModel.save_all_to_db(provisions)
-        except:
-            print("Couldn't write to db")
+            ProvisionModel.save_all_to_db(provisions, plan_id)
+        except Exception as e:
+            print(e)
 
         return {"message": "Success"}, 201

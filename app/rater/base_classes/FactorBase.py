@@ -3,24 +3,31 @@ from app.util import deep_getattr
 
 
 class FactorBase:
-    def __init__(self, plan_rate, factor_name, factor_type, config):
+    def __init__(self, factor_attributes, factor_name, factor_type, config):
         self.config = config
-        self.plan_rate = plan_rate
-        self.plan_rate_id = plan_rate.plan_rate_id
+        self.factor_attributes = factor_attributes
+        self.plan_rate_id = factor_attributes.plan_rate_id
+        try:
+            self.provision_id = factor_attributes.provision_id
+        except AttributeError:
+            pass
         self.factor_name = factor_name
         self.factor_type = factor_type
 
         # set value, selection, and selection_type
-        self.set(plan_rate)
+        self.set(factor_attributes)
 
-    def set(self, plan_rate):
+    def __repr__(self):
+        return f"<Factor: {self.factor_name}>"
+
+    def set(self, factor_attributes):
 
         val = self.config['default_factor_value']
         uuid = self.config['uuid']
         variability = self.config.get('variability')
         if variability:
             selection, sel_value = self._variabilityHandler(
-                variability, plan_rate, val, uuid)
+                variability, factor_attributes, val, uuid)
 
             self.factor_selection = selection
             self.factor_selection_type = 'uuid'
@@ -32,7 +39,7 @@ class FactorBase:
 
         return val
 
-    def _variabilityHandler(self, variability, plan_rate, default_value, default_uuid):
+    def _variabilityHandler(self, variability, factor_attributes, default_value, default_uuid):
 
         for item in variability:
             applyRule = True
@@ -40,7 +47,7 @@ class FactorBase:
                 if k in ['factor_value', '_id', 'uuid']:
                     continue
 
-                attr = deep_getattr(plan_rate, k)
+                attr = deep_getattr(factor_attributes, k)
                 if type(v) == list:
                     applyRule = (attr in v) and applyRule
                 elif type(v) == dict:
