@@ -10,6 +10,12 @@ from app.rater import FactorGroupSize, FactorPrex
 factor_list_schema = FactorSchema(many=True)
 
 
+factor_classes = {
+    'groupsize': FactorGroupSize,
+    'prex': FactorPrex
+}
+
+
 class FactorCalculator(Resource):
 
     @classmethod
@@ -20,29 +26,28 @@ class FactorCalculator(Resource):
             raise Exception("Plan ID not provided")
 
         plan_rates = PlanRateModel.find_by_plan_id(plan_id)
-        config = mongo.db.products.find_one(
-            {"name": plan_rates[0].plan.product_name}, {"factors": True})
+        provisions_config = mongo.db.products.find_one(
+            {"name": plan_rates[0].plan.product_name}, {"provisions": True})['provisions']
 
-        factor_config = {
-            obj['name']: obj
-            for obj in config['factors']
-        }
-
+        # loop over plan rates
         for plan_rate in plan_rates:
 
-            # instantiate factor calculation models with plan data
-            factorGroupSize = FactorGroupSize(
-                plan_rate, factor_config['groupsize'])
-            factorPrex = FactorPrex(plan_rate, factor_config['prex'])
+            # loop over each provision
+            for prov_config in provisions_config:
+                provision_name = prov_config['name']
+                factor_config = prov_config.get('factor')
 
-            # add factors to a list
-            factorList = [factorGroupSize, factorPrex]
+                factor_instance = factor_classes[provision_name](
+                    plan_rate, factor_config)
 
-            # dump factors to JSON
-            factor_data = factor_list_schema.dump(factorList)
+                # add factors to a list
+                factorList.append(factor_instance)
 
-            # save factor calculation data to DB
-            FactorModel.save_all_to_db([FactorModel(**factor)
-                                       for factor in factor_data])
+        # dump factors to JSON
+        factor_data = factor_list_schema.dump(factorList)
+
+        # save factor calculation data to DB
+        FactorModel.save_all_to_db([FactorModel(**factor)
+                                    for factor in factor_data])
 
         return factor_data, 201

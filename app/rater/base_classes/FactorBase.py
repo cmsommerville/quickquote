@@ -15,7 +15,7 @@ class FactorBase:
 
     def set(self, plan_rate):
 
-        val = self.config['value']
+        val = self.config['default_factor_value']
         uuid = self.config['uuid']
         variability = self.config.get('variability')
         if variability:
@@ -37,7 +37,7 @@ class FactorBase:
         for item in variability:
             applyRule = True
             for k, v in item.items():
-                if k in ['value', '_id', 'uuid']:
+                if k in ['factor_value', '_id', 'uuid']:
                     continue
 
                 attr = deep_getattr(plan_rate, k)
@@ -66,7 +66,7 @@ class FactorBase:
                     applyRule = (attr == v) and applyRule
 
             if applyRule:
-                val = item['value']
+                val = item['factor_value']
                 uuid = item.get('uuid')
                 return uuid, val
 
