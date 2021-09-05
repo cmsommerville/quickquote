@@ -1,13 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/admin/create-tables">Create Tables</router-link> |
-      <router-link :to="{ name: 'rater' }">Rater</router-link>
+    <div class="container">
+      <base-sidebar class="nav-container" />
+      <div class="page-container">
+        <div id="nav">
+          <router-link to="/">Home</router-link> |
+          <router-link to="/admin/create-tables">Create Tables</router-link> |
+          <router-link :to="{ name: 'rater' }">Rater</router-link>
+        </div>
+        <router-view />
+      </div>
     </div>
-    <router-view />
   </div>
 </template>
+
+<script>
+import BaseSidebar from "./components/BaseSidebar.vue";
+
+export default {
+  name: "App",
+  components: {
+    BaseSidebar,
+  },
+};
+</script>
 
 <style>
 #app {
@@ -18,6 +34,10 @@
   color: #2c3e50;
 }
 
+.container {
+  display: flex;
+  flex-direction: row;
+}
 #nav {
   padding: 30px;
 }
@@ -29,5 +49,9 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.page-container {
+  width: 85%;
 }
 </style>
