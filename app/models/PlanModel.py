@@ -4,6 +4,8 @@ import datetime
 from app.models.ProvisionModel import ProvisionModel
 from app.models.FactorModel import FactorModel
 from app.models.PlanRateModel import PlanRateModel
+from app.models.CoverageModel import CoverageModel
+from app.models.BenefitModel import BenefitModel
 
 
 class PlanModel(db.Model):
@@ -24,8 +26,8 @@ class PlanModel(db.Model):
     group = db.relationship("GroupModel", back_populates="plans")
     # factors = db.relationship("FactorModel", back_populates="plan")
     plan_rates = db.relationship("PlanRateModel", back_populates="plan")
-    # coverages = db.relationship("CoverageModel", back_populates="plan")
-    # benefits = db.relationship("BenefitModel", back_populates="plan")
+    coverages = db.relationship("CoverageModel", back_populates="plan")
+    benefits = db.relationship("BenefitModel", back_populates="plan")
     provisions = db.relationship("ProvisionModel", back_populates="plan")
 
     def __repr__(self):

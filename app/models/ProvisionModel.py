@@ -30,15 +30,6 @@ class ProvisionModel(db.Model):
             return self.provision_value.lower() == 'true'
         return self.provision_value
 
-    # def reset(self, data):
-    #     self.plan_id = data.get("plan_id", self.plan_id)
-    #     self.provision_code = data.get("provision_code", self.provision_code)
-    #     self.provision_name = data.get("provision_name", self.provision_name)
-    #     self.provision_value = data.get(
-    #         "provision_value", self.provision_value)
-    #     self.provision_data_type = data.get(
-    #         "provision_data_type", self.provision_data_type)
-
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter(cls.provision_id == id).first()

@@ -29,6 +29,7 @@ def create_app(config):
     from .resources.workflow.rating.ProvisionResource import Provision, ProvisionList
     from .resources.workflow.rating.PlanResource import Plan
     from .resources.workflow.rating.PlanRateResource import PlanRate
+    from .resources.workflow.rating.BenefitResource import BenefitsList
     from .resources.workflow.rating.FactorResource import FactorCalculator
     from .resources.admin.CreateTables import CreateTables
     from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
@@ -37,6 +38,7 @@ def create_app(config):
     api.add_resource(Plan, '/workflow/plan')
     api.add_resource(PlanRate, '/workflow/plan-rate')
     api.add_resource(ProvisionList, '/workflow/provisions')
+    api.add_resource(BenefitsList, '/workflow/benefits')
     api.add_resource(FactorCalculator, '/workflow/factor-calc')
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(ProductConfig, '/admin/product')
