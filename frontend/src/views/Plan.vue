@@ -1,51 +1,51 @@
 <template>
   <div class="container">
-    <div class="content" v-if="loaded">
-      <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <div class="form-item">
-          <div
-            class="tile-wrapper"
-            v-for="product in data.products"
-            :key="product.name"
-          >
-            <input
-              type="radio"
-              :id="product.name"
-              :value="product.name"
-              v-model="selections.product_name"
-            />
-            <label :for="product.name">{{ product.text }}</label>
-          </div>
-        </div>
+    <div class="form-rater my-6" v-if="loaded">
+      <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+        <v-btn-toggle v-model="selections.product_name" borderless class="my-3">
+          <v-btn value="critical_illness">
+            <span class="hidden-sm-and-down">Critical Illness</span>
 
-        <b-form-group
-          class="form-item"
-          label="Rating State:"
-          label-for="input-state"
-        >
-          <b-form-select
-            id="input-state"
-            v-model="selections.rating_state"
-            :options="states"
-          ></b-form-select>
-        </b-form-group>
+            <v-icon right> mdi-format-align-left </v-icon>
+          </v-btn>
 
-        <b-form-group
-          class="form-item"
-          label="Effective Date:"
-          label-for="input-tax-id"
-        >
-          <b-form-input
-            id="input-tax-id"
-            v-model="selections.plan_effective_date"
-            type="date"
-          ></b-form-input>
-        </b-form-group>
-        <div class="form-item buttons">
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
+          <v-btn value="accident">
+            <span class="hidden-sm-and-down">Accident</span>
+
+            <v-icon right> mdi-format-align-center </v-icon>
+          </v-btn>
+
+          <v-btn value="hospital_indemnity">
+            <span class="hidden-sm-and-down">Hospital Indemnity</span>
+
+            <v-icon right> mdi-format-align-right </v-icon>
+          </v-btn>
+
+          <v-btn value="disability">
+            <span class="hidden-sm-and-down">Disability</span>
+            <v-icon right> mdi-format-align-justify </v-icon>
+          </v-btn>
+        </v-btn-toggle>
+
+        <v-select
+          :items="states"
+          v-model="selections.rating_state"
+          label="Rating State"
+          class="my-3"
+        ></v-select>
+
+        <v-text-field
+          v-model="selections.plan_effective_date"
+          label="Plan Effective Date"
+          type="date"
+          class="my-3"
+        ></v-text-field>
+
+        <div class="d-flex justify-content my-3">
+          <v-btn type="submit" color="primary" class="mx-3">Submit</v-btn>
+          <v-btn type="reset" color="secondary" class="mx-3">Reset</v-btn>
         </div>
-      </b-form>
+      </v-form>
     </div>
   </div>
 </template>
@@ -87,7 +87,7 @@ export default {
           };
         });
       }
-      return null;
+      return ["AL", "AZ", "NC", "SC"];
     },
   },
   methods: {
@@ -128,46 +128,9 @@ export default {
   align-items: center;
 }
 
-.content {
-  width: 60%;
+.form-rater {
+  min-width: 60%;
   border: 1px solid #ddd;
   padding: 2rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.form-item {
-  margin: 0.5rem;
-}
-
-.tile-wrapper {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  cursor: pointer;
-  position: relative;
-  background: rgb(243, 222, 249);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tile-wrapper input {
-  cursor: pointer;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-}
-
-.tile-wrapper label {
-  font-size: 2.2rem;
 }
 </style>

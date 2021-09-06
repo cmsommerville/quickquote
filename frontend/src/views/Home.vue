@@ -1,13 +1,11 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <h1>Welcome to the QuickQuote App</h1>
-  </div>
+  <v-container>
+    <h1>Welcome to QuickQuote!</h1>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "Home",
-  components: {},
 };
 </script>

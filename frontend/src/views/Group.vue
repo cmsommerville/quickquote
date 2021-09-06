@@ -1,46 +1,37 @@
 <template>
   <div class="container">
-    <div class="form-rater" v-if="loaded">
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-        <b-form-group label="Group Name:" label-for="input-group-name">
-          <b-form-input
-            id="input-group-name"
-            v-model="data.selections.group_name"
-            type="input"
-            placeholder="Group Name"
-            required
-          ></b-form-input>
-        </b-form-group>
+    <div class="form-rater my-6" v-if="loaded">
+      <v-form @submit="onSubmit" @reset="onReset" v-if="show">
+        <v-text-field
+          v-model="data.selections.group_name"
+          label="Group Name"
+          required
+        ></v-text-field>
 
-        <b-form-group label="Group Size:" label-for="input-group-size">
-          <b-form-input
-            id="input-group-size"
-            v-model.number="data.selections.group_size"
-            type="number"
-            placeholder="Enter group size"
-          ></b-form-input>
-        </b-form-group>
+        <v-text-field
+          v-model.number="data.selections.group_size"
+          label="Group Size"
+          required
+        ></v-text-field>
 
-        <b-form-group label="SIC Code:" label-for="input-sic-code">
-          <b-form-input
-            id="input-sic-code"
-            v-model="data.selections.sic_code"
-            type="input"
-            placeholder="SIC Code"
-          ></b-form-input>
-        </b-form-group>
+        <v-text-field
+          v-model="data.selections.sic_code"
+          label="SIC Code"
+        ></v-text-field>
 
-        <b-form-group label="Tax ID:" label-for="input-tax-id">
-          <b-form-input
-            id="input-tax-id"
-            v-model="data.selections.tax_id"
-            type="input"
-            placeholder="Group Tax ID"
-          ></b-form-input>
-        </b-form-group>
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
-      </b-form>
+        <v-text-field
+          v-model="data.selections.tax_id"
+          label="Tax ID"
+        ></v-text-field>
+
+        <div class="d-flex justify-center">
+          <v-btn depressed color="primary" type="submit" class="mx-3">
+            Submit
+          </v-btn>
+
+          <v-btn depressed color="secondary" class="mx-3"> Reset </v-btn>
+        </div>
+      </v-form>
     </div>
   </div>
 </template>
@@ -100,7 +91,7 @@ export default {
 }
 
 .form-rater {
-  width: 60%;
+  min-width: 60%;
   border: 1px solid #ddd;
   padding: 2rem;
 }

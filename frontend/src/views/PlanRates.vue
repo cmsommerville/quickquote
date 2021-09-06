@@ -1,17 +1,33 @@
 <template>
   <div class="container">
-    <div class="content" v-if="loaded">
-      <div class="form-item buttons">
-        <b-button variant="primary" @click="planRateHandler"
-          >Generate Plan Rates</b-button
+    <div class="form-rater d-flex flex-column" v-if="loaded">
+      <div class="d-flex flex-column my-6 align-center">
+        <v-btn
+          depressed
+          color="primary"
+          type="button"
+          class="mx-3"
+          @click="planRateHandler"
         >
-        <p v-if="text.plan_rates">{{ text.plan_rates }}</p>
+          Generate Plan Rates
+        </v-btn>
+        <p v-if="text.plan_rates" class="my-3 warning--text">
+          {{ text.plan_rates }}
+        </p>
       </div>
-      <div class="form-item buttons">
-        <b-button variant="secondary" @click="factorHandler"
-          >Generate Factors</b-button
+      <div class="d-flex flex-column my-6 align-center">
+        <v-btn
+          depressed
+          color="primary"
+          type="button"
+          class="mx-3"
+          @click="factorHandler"
         >
-        <p v-if="text.factors">{{ text.factors }}</p>
+          Generate Factors
+        </v-btn>
+        <p v-if="text.factors" class="my-3 warning--text">
+          {{ text.factors }}
+        </p>
       </div>
     </div>
   </div>
@@ -64,46 +80,9 @@ export default {
   align-items: center;
 }
 
-.content {
-  width: 60%;
+.form-rater {
+  min-width: 60%;
   border: 1px solid #ddd;
   padding: 2rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.form-item {
-  margin: 0.5rem;
-}
-
-.tile-wrapper {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  cursor: pointer;
-  position: relative;
-  background: rgb(243, 222, 249);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tile-wrapper input {
-  cursor: pointer;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-}
-
-.tile-wrapper label {
-  font-size: 2.2rem;
 }
 </style>

@@ -1,10 +1,28 @@
 <template>
   <div class="container">
-    <div class="content">
-      <button @click="createTables">Create Tables</button>
-      <div class="response" v-if="created">
-        <h2>{{ data.message }}</h2>
-      </div>
+    <div class="form-rater d-flex justify-center">
+      <v-btn depressed color="primary" @click="createTables" class="my-3"
+        >Create Tables</v-btn
+      >
+
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="timeout"
+        class="text-uppercase font-weight-black"
+      >
+        {{ data.message }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="secondary"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </div>
   </div>
 </template>
@@ -16,16 +34,16 @@ export default {
   name: "CreateTables",
   data() {
     return {
-      data: null,
-      created: false,
+      data: { message: null },
+      snackbar: false,
+      timeout: 5000,
     };
   },
   methods: {
     async createTables() {
-      this.created = false;
       const res = await axios.get("http://localhost:5000/admin/create-tables");
       this.data = { ...res.data };
-      this.created = true;
+      this.snackbar = true;
     },
   },
 };
@@ -38,21 +56,13 @@ export default {
   align-items: center;
 }
 
-.content {
-  width: 60%;
+.form-rater {
+  min-width: 60%;
   border: 1px solid #ddd;
   padding: 2rem;
 }
 
 .response {
   margin: 3rem 0;
-}
-
-button {
-  padding: 1rem 2rem;
-  background-color: rgb(101, 132, 255);
-  border-radius: 10px;
-  color: #fff;
-  font-size: 1.5rem;
 }
 </style>

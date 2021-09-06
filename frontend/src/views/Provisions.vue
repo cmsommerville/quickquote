@@ -1,32 +1,30 @@
 <template>
   <div class="container">
-    <div class="content" v-if="loaded">
-      <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <b-form-group
-          class="form-item"
+    <div class="form-rater" v-if="loaded">
+      <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+        <v-select
+          :items="provisions_object.prex.options"
+          v-model="selections.prex"
           :label="provisions_object.prex.text"
-          label-for="input-prex"
-        >
-          <b-form-select
-            id="input-prex"
-            v-model="selections.prex"
-            :options="provisions_object.prex.options"
-          ></b-form-select>
-        </b-form-group>
-
-        <b-form-checkbox
-          id="checkbox-reductionAt70"
+          class="my-3"
+        ></v-select>
+        <v-switch
           v-model="selections.reductionAt70"
-          name="checkbox-reductionAt70"
-        >
-          {{ provisions_object.reductionAt70.text }}
-        </b-form-checkbox>
+          :label="provisions_object.reductionAt70.text"
+          color="primary"
+          value="primary"
+          hide-details
+          class="my-3"
+        ></v-switch>
 
-        <div class="form-item buttons">
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
+        <div class="d-flex justify-center my-3">
+          <v-btn depressed color="primary" type="submit" class="mx-3">
+            Submit
+          </v-btn>
+
+          <v-btn depressed color="secondary" class="mx-3"> Reset </v-btn>
         </div>
-      </b-form>
+      </v-form>
     </div>
   </div>
 </template>
@@ -105,46 +103,9 @@ export default {
   align-items: center;
 }
 
-.content {
-  width: 60%;
+.form-rater {
+  min-width: 60%;
   border: 1px solid #ddd;
   padding: 2rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.form-item {
-  margin: 0.5rem;
-}
-
-.tile-wrapper {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  cursor: pointer;
-  position: relative;
-  background: rgb(243, 222, 249);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tile-wrapper input {
-  cursor: pointer;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-}
-
-.tile-wrapper label {
-  font-size: 2.2rem;
 }
 </style>
