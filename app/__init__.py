@@ -1,20 +1,31 @@
 import os
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_restful import Api
 from dotenv import load_dotenv
+from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, ObjectType
+from ariadne.constants import PLAYGROUND_HTML
 
 from app.models import db, mongo
 from app.schemas import ma
 from app.extensions import sess
+from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
+
+query = ObjectType("Query")
+query.set_field("listProducts", listProducts_resolver)
+
+type_defs = load_schema_from_path("schemas.graphql")
+schema = make_executable_schema(
+    type_defs, query, snake_case_fallback_resolvers
+)
 
 
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
-    CORS(app, origins=["http://localhost:8080"], supports_credentials=True)
+    CORS(app, supports_credentials=True)
     app.secret_key = os.getenv("SESSION_SECRET_KEY")
 
     db.init_app(app)
@@ -58,4 +69,19 @@ def create_app(config):
     def hello_world():
         return "<h1>Hello World!</h1>"
 
+    @app.route("/graphql", methods=["GET"])
+    def graphql_playground():
+        return PLAYGROUND_HTML, 200
+
+    @app.route("/graphql", methods=["POST"])
+    def graphql_server():
+        data = request.get_json()
+        success, result = graphql_sync(
+            schema,
+            data,
+            context_value=request,
+            debug=app.debug
+        )
+        status_code = 200 if success else 400
+        return jsonify(result), status_code
     return app

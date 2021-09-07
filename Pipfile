@@ -18,6 +18,7 @@ pymongo = "*"
 dnspython = "*"
 psycopg2 = "*"
 pytest = "*"
+ariadne = "*"
 
 [dev-packages]
 

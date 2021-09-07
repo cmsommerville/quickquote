@@ -1,0 +1,27 @@
+schema {
+  query: Query
+}
+
+type RateTemplate {
+  uuid: String
+  age: Int
+  family_code: String
+  smoker_status: String
+}
+
+type Product {
+  uuid: String
+  name: String
+  text: String
+  rate_template: [RateTemplate]
+}
+
+type ProductResult {
+  success: Boolean!
+  errors: [String]
+  products: [Product]
+}
+
+type Query {
+  listProducts: ProductResult!
+}
