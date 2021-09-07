@@ -6,23 +6,17 @@ class BenefitModel(db.Model):
     __tablename__ = "benefits"
 
     benefit_id = db.Column(db.Integer, primary_key=True)
-    plan_rate_id = db.Column(
-        db.Integer, db.ForeignKey('plan_rates.plan_rate_id'))
     coverage_id = db.Column(db.Integer, db.ForeignKey('coverages.coverage_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     benefit_code = db.Column(db.String(20), nullable=False)
-    benefit_value = db.Column(db.Numeric(12, 2), nullable=False)
-    benefit_base_rate_uuid = db.Column(db.String(36))
-    benefit_annual_base_rate_per_unit = db.Column(db.Numeric(12, 5))
-    benefit_annual_base_rate_unit_value = db.Column(db.Numeric(12, 2))
-    benefit_annual_rate = db.Column(db.Numeric(12, 5))
+    benefit_uuid = db.Column(db.String(36))
+    benefit_value = db.Column(db.Numeric(12, 4), nullable=False)
     row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     row_exp_dts = db.Column(
         db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
     active_record_indicator = db.Column(db.String(1), default='Y')
 
     plan = db.relationship("PlanModel", back_populates="benefits")
-    plan_rate = db.relationship("PlanRateModel", back_populates="benefits")
     coverage = db.relationship("CoverageModel", back_populates="benefits")
 
     def __repr__(self):

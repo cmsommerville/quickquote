@@ -8,9 +8,9 @@ class ProvisionModel(db.Model):
     provision_id = db.Column(db.Integer, primary_key=True)
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     provision_code = db.Column(db.String(20), nullable=False)
-    provision_name = db.Column(db.String(100), nullable=False)
     provision_value = db.Column(db.String(255), nullable=False)
     provision_data_type = db.Column(db.String(20), nullable=False)
+
     row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     row_exp_dts = db.Column(
         db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
@@ -19,7 +19,7 @@ class ProvisionModel(db.Model):
     plan = db.relationship("PlanModel", back_populates="provisions")
 
     def __repr__(self):
-        return f"<Provision Id: {self.provision_id} -- Provision Name: `{self.provision_name}`>"
+        return f"<Provision Id: {self.provision_id} -- Provision Code: `{self.provision_code}`>"
 
     def getValue(self):
         if self.provision_data_type == 'number':

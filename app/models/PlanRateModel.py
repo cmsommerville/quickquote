@@ -22,10 +22,10 @@ class PlanRateModel(db.Model):
         db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
     active_record_indicator = db.Column(db.String(1), default='Y')
 
-    plan = db.relationship("PlanModel", back_populates="plan_rates")
+    # plan = db.relationship("PlanModel", back_populates="plan_rates")
     factors = db.relationship("FactorModel", back_populates="plan_rate")
-    coverages = db.relationship("CoverageModel", back_populates="plan_rate")
-    benefits = db.relationship("BenefitModel", back_populates="plan_rate")
+    # coverages = db.relationship("CoverageModel", back_populates="plan_rate")
+    # benefits = db.relationship("BenefitModel", back_populates="plan_rate")
     # provisions = db.relationship("ProvisionModel", back_populates="plan")
 
     def __repr__(self):

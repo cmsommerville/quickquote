@@ -25,6 +25,9 @@ def create_app(config):
     sess.init_app(app)
     api = Api(app)
 
+    from .resources.config import PlanConfig, PlanConfigList
+    from .resources.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
+
     from .resources.workflow.rating.GroupResource import Group
     from .resources.workflow.rating.ProvisionResource import Provision, ProvisionList
     from .resources.workflow.rating.PlanResource import Plan
@@ -33,6 +36,13 @@ def create_app(config):
     from .resources.workflow.rating.FactorResource import FactorCalculator
     from .resources.admin.CreateTables import CreateTables
     from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
+
+    api.add_resource(PlanConfigList, '/config/plans')
+    api.add_resource(PlanConfig, '/config/plan/<id>')
+
+    api.add_resource(PlanSelections, '/selections/plan')
+    api.add_resource(CoverageBenefitSelections, '/selections/benefits')
+    api.add_resource(ProvisionSelections, '/selections/provisions')
 
     api.add_resource(Group, '/workflow/group')
     api.add_resource(Plan, '/workflow/plan')

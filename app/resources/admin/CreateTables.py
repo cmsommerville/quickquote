@@ -10,6 +10,6 @@ class CreateTables(Resource):
             db.drop_all()
             db.create_all()
         except Exception as e:
-            return e, 400
+            return str(e), 400
         else:
             return {"message": "Created tables"}, 200
