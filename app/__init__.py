@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 
-from app.models import db, mongo
-from app.schemas import ma
-from app.extensions import sess
+# from app.models import db, mongo
+# from app.schemas import ma
+from app.extensions import sess, db, mongo, ma
 from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
@@ -36,17 +36,20 @@ def create_app(config):
     sess.init_app(app)
     api = Api(app)
 
-    from .resources.config import PlanConfig, PlanConfigList
-    from .resources.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
+    # from .resources.config import PlanConfig, PlanConfigList
+    # from .resources.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
 
-    from .resources.workflow.rating.GroupResource import Group
-    from .resources.workflow.rating.ProvisionResource import Provision, ProvisionList
-    from .resources.workflow.rating.PlanResource import Plan
-    from .resources.workflow.rating.PlanRateResource import PlanRate
-    from .resources.workflow.rating.BenefitResource import BenefitsList
-    from .resources.workflow.rating.FactorResource import FactorCalculator
-    from .resources.admin.CreateTables import CreateTables
-    from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
+    # from .resources.workflow.rating.GroupResource import Group
+    # from .resources.workflow.rating.ProvisionResource import Provision, ProvisionList
+    # from .resources.workflow.rating.PlanResource import Plan
+    # from .resources.workflow.rating.PlanRateResource import PlanRate
+    # from .resources.workflow.rating.BenefitResource import BenefitsList
+    # from .resources.workflow.rating.FactorResource import FactorCalculator
+    # from .resources.admin.CreateTables import CreateTables
+    # from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
+
+    from .products.config import PlanConfig, PlanConfigList
+    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
 
     api.add_resource(PlanConfigList, '/config/plans')
     api.add_resource(PlanConfig, '/config/plan/<id>')
@@ -55,19 +58,15 @@ def create_app(config):
     api.add_resource(CoverageBenefitSelections, '/selections/benefits')
     api.add_resource(ProvisionSelections, '/selections/provisions')
 
-    api.add_resource(Group, '/workflow/group')
-    api.add_resource(Plan, '/workflow/plan')
-    api.add_resource(PlanRate, '/workflow/plan-rate')
-    api.add_resource(ProvisionList, '/workflow/provisions')
-    api.add_resource(BenefitsList, '/workflow/benefits')
-    api.add_resource(FactorCalculator, '/workflow/factor-calc')
-    api.add_resource(CreateTables, '/admin/create-tables')
-    api.add_resource(ProductConfig, '/admin/product')
-    api.add_resource(ProductConfigList, '/admin/products')
-
-    @app.route("/")
-    def hello_world():
-        return "<h1>Hello World!</h1>"
+    # api.add_resource(Group, '/workflow/group')
+    # api.add_resource(Plan, '/workflow/plan')
+    # api.add_resource(PlanRate, '/workflow/plan-rate')
+    # api.add_resource(ProvisionList, '/workflow/provisions')
+    # api.add_resource(BenefitsList, '/workflow/benefits')
+    # api.add_resource(FactorCalculator, '/workflow/factor-calc')
+    # api.add_resource(CreateTables, '/admin/create-tables')
+    # api.add_resource(ProductConfig, '/admin/product')
+    # api.add_resource(ProductConfigList, '/admin/products')
 
     @app.route("/graphql", methods=["GET"])
     def graphql_playground():
