@@ -14,7 +14,6 @@ class PlanConfig(Resource):
         return product, 200
 
     def put(self, id):
-        id = request.args.get("id")
         req = generateUUID([request.get_json()])[0]
         mongo.db.products.replace_one({'_id': ObjectId(id)}, req)
         return req, 201

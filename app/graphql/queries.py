@@ -1,4 +1,4 @@
-from app.models import mongo
+from app.extensions import mongo
 
 
 def listProducts_resolver(obj, info):

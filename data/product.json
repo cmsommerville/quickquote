@@ -1,452 +1,1021 @@
-{
-  "uuid": "937e9667-f0f0-4769-badf-432bee9269ca",
-  "name": "critical_illness",
-  "text": "Critical Illness",
-  "rate_template": [
-    {
-      "uuid": "192893b8-480a-4fa6-8239-b7da80a67a65",
-      "age": 22,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "b128228b-da92-4cda-8788-a80fa74a21d1",
-      "age": 27,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "8eea708d-d31b-486b-ac73-56035375ded9",
-      "age": 32,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "b76fc334-f7bc-4955-aeb0-b9d71fe154f6",
-      "age": 37,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "1b7b43e5-79f9-4caa-831c-d22b55fc1028",
-      "age": 42,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "a8b3f8df-0520-42c6-b9a7-3d7a7707df8f",
-      "age": 47,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "8becc52b-bc57-4769-9a2c-46cb37fc20a8",
-      "age": 52,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "e23a2eee-8691-4150-93fb-292faf518537",
-      "age": 57,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "6c8059d1-50ba-4a42-bea8-9cbe33ac0866",
-      "age": 62,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "564c1f19-df73-46b8-89a5-db948fda3628",
-      "age": 67,
-      "family_code": "EMP",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "fe63a1e8-8f5d-4ceb-8a48-cd87caae9fc2",
-      "age": 22,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "7f70581d-298e-47b1-a579-799676fc36a1",
-      "age": 27,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "9d287289-2908-4736-9fe8-dc57d4121c34",
-      "age": 32,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "4d1db579-4d2c-410f-a0b5-b6d69253fac5",
-      "age": 37,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "425c48a6-2a77-4991-aefb-aa4c27933e31",
-      "age": 42,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "c2359e92-c6d7-4d4d-8d22-c423f975b3a3",
-      "age": 47,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "6d1a16b5-fdcb-4a84-a7ca-5c32e0554655",
-      "age": 52,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "751851fc-7959-4ed0-b3c8-92da3ae4a21c",
-      "age": 57,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "ffa32c0c-e95c-4166-9aaa-6c237710b11e",
-      "age": 62,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "65c59e4a-ca93-4e9e-b4bf-e074fc78e8a8",
-      "age": 67,
-      "family_code": "SPO",
-      "smoker_status": "N"
-    },
-    {
-      "uuid": "c7872bce-92a6-4421-b5c9-afec5edff165",
-      "age": 22,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "c71cdaf9-673a-4133-a11b-e86b25a96e7e",
-      "age": 27,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "a00060a3-ea13-4024-9311-f33c869c5cf9",
-      "age": 32,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "b048ec4e-ab50-459d-8aab-d36f67efea80",
-      "age": 37,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "6456569d-14ee-40d6-a898-ab159861f80d",
-      "age": 42,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "a0758286-16dd-4eb2-919d-a4615a2bc895",
-      "age": 47,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "8bd531f7-0e44-45ee-a396-8f914e711245",
-      "age": 52,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "e75a3daf-b1dd-4083-a85d-041ab49ce27b",
-      "age": 57,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "79f44ce3-46c7-4fa1-97f8-13c6c84aebe3",
-      "age": 62,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "f4ee64ab-d6d7-40ed-9cb8-c60b94adc266",
-      "age": 67,
-      "family_code": "EMP",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "de068c9b-6b06-40c0-b904-cbc8b29a7dd4",
-      "age": 22,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "e47d308d-3668-448e-b802-38e49a732a27",
-      "age": 27,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "f5539f9e-afc0-4886-a22e-696796e4495c",
-      "age": 32,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "a325bba5-41c7-4b40-9bac-97c74f37d5df",
-      "age": 37,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "695820c7-1637-4612-8d24-967114a1dfba",
-      "age": 42,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "3e752258-19e8-43c5-a0cc-97457159b195",
-      "age": 47,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "579e2116-15ca-4d93-bb0a-804b72f9c45f",
-      "age": 52,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "ba721ec3-8450-46bf-9262-ea3d83886ba5",
-      "age": 57,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "680a59ae-6047-4755-a08c-53c135b24c11",
-      "age": 62,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    },
-    {
-      "uuid": "f1396490-e55b-49bc-9fa2-9e7640b80ad5",
-      "age": 67,
-      "family_code": "SPO",
-      "smoker_status": "T"
-    }
-  ],
-  "statesApproved": [
-    {
-      "uuid": "5e522d81-da4b-433f-b6d7-1e0d42357610",
-      "state": "SC",
-      "effectiveDate": "2020-01-01"
-    },
-    {
-      "uuid": "6d94501b-934d-49e6-b6da-0cb490ddf610",
-      "state": "NC",
-      "effectiveDate": "2021-07-01"
-    }
-  ],
-  "coverages": [],
-  "provisions": [
-    {
-      "uuid": "1c120bfc-55f6-4b8b-964a-1ab745dccbbb",
-      "name": "prex",
-      "text": "Pre-Existing Condition Limitation",
-      "type": "select",
-      "options": [
-        {
-          "uuid": "b0a691c4-4d04-4439-99db-8062a3869b1f",
-          "value": "none",
-          "text": "No Pre-Ex"
-        },
-        {
-          "uuid": "369d1e81-5868-45fa-b95b-af43e85b7822",
-          "value": "3/12",
-          "text": "3/12"
-        },
-        {
-          "uuid": "a33a1956-f7cd-4864-95e0-df03b9377e4c",
-          "value": "6/6",
-          "text": "6/6"
-        },
-        {
-          "uuid": "59354c51-1b77-49e0-9f70-139b5411990f",
-          "value": "6/12",
-          "text": "6/12"
-        },
-        {
-          "uuid": "d9240561-dbff-4a4c-b711-b517c027cc14",
-          "value": "12/12",
-          "text": "12/12"
-        }
-      ],
-      "factor": {
-        "default_factor_value": 1,
-        "variability": [
-          { "provision.provision_value": "none", "factor_value": 0.86 },
-          { "provision.provision_value": "3/12", "factor_value": 0.88 },
-          { "provision.provision_value": "6/6", "factor_value": 0.92 },
-          { "provision.provision_value": "6/12", "factor_value": 0.96 },
-          { "provision.provision_value": "12/12", "factor_value": 1 }
-        ]
+[
+  {
+    "uuid": "937e9667-f0f0-4769-badf-432bee9269ca",
+    "name": "critical_illness",
+    "text": "Critical Illness",
+    "rate_template": [
+      {
+        "uuid": "192893b8-480a-4fa6-8239-b7da80a67a65",
+        "age": 22,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "b128228b-da92-4cda-8788-a80fa74a21d1",
+        "age": 27,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "8eea708d-d31b-486b-ac73-56035375ded9",
+        "age": 32,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "b76fc334-f7bc-4955-aeb0-b9d71fe154f6",
+        "age": 37,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "1b7b43e5-79f9-4caa-831c-d22b55fc1028",
+        "age": 42,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "a8b3f8df-0520-42c6-b9a7-3d7a7707df8f",
+        "age": 47,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "8becc52b-bc57-4769-9a2c-46cb37fc20a8",
+        "age": 52,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "e23a2eee-8691-4150-93fb-292faf518537",
+        "age": 57,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "6c8059d1-50ba-4a42-bea8-9cbe33ac0866",
+        "age": 62,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "564c1f19-df73-46b8-89a5-db948fda3628",
+        "age": 67,
+        "family_code": "EMP",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "fe63a1e8-8f5d-4ceb-8a48-cd87caae9fc2",
+        "age": 22,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "7f70581d-298e-47b1-a579-799676fc36a1",
+        "age": 27,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "9d287289-2908-4736-9fe8-dc57d4121c34",
+        "age": 32,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "4d1db579-4d2c-410f-a0b5-b6d69253fac5",
+        "age": 37,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "425c48a6-2a77-4991-aefb-aa4c27933e31",
+        "age": 42,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "c2359e92-c6d7-4d4d-8d22-c423f975b3a3",
+        "age": 47,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "6d1a16b5-fdcb-4a84-a7ca-5c32e0554655",
+        "age": 52,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "751851fc-7959-4ed0-b3c8-92da3ae4a21c",
+        "age": 57,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "ffa32c0c-e95c-4166-9aaa-6c237710b11e",
+        "age": 62,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "65c59e4a-ca93-4e9e-b4bf-e074fc78e8a8",
+        "age": 67,
+        "family_code": "SPO",
+        "smoker_status": "N"
+      },
+      {
+        "uuid": "c7872bce-92a6-4421-b5c9-afec5edff165",
+        "age": 22,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "c71cdaf9-673a-4133-a11b-e86b25a96e7e",
+        "age": 27,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "a00060a3-ea13-4024-9311-f33c869c5cf9",
+        "age": 32,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "b048ec4e-ab50-459d-8aab-d36f67efea80",
+        "age": 37,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "6456569d-14ee-40d6-a898-ab159861f80d",
+        "age": 42,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "a0758286-16dd-4eb2-919d-a4615a2bc895",
+        "age": 47,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "8bd531f7-0e44-45ee-a396-8f914e711245",
+        "age": 52,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "e75a3daf-b1dd-4083-a85d-041ab49ce27b",
+        "age": 57,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "79f44ce3-46c7-4fa1-97f8-13c6c84aebe3",
+        "age": 62,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "f4ee64ab-d6d7-40ed-9cb8-c60b94adc266",
+        "age": 67,
+        "family_code": "EMP",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "de068c9b-6b06-40c0-b904-cbc8b29a7dd4",
+        "age": 22,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "e47d308d-3668-448e-b802-38e49a732a27",
+        "age": 27,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "f5539f9e-afc0-4886-a22e-696796e4495c",
+        "age": 32,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "a325bba5-41c7-4b40-9bac-97c74f37d5df",
+        "age": 37,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "695820c7-1637-4612-8d24-967114a1dfba",
+        "age": 42,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "3e752258-19e8-43c5-a0cc-97457159b195",
+        "age": 47,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "579e2116-15ca-4d93-bb0a-804b72f9c45f",
+        "age": 52,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "ba721ec3-8450-46bf-9262-ea3d83886ba5",
+        "age": 57,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "680a59ae-6047-4755-a08c-53c135b24c11",
+        "age": 62,
+        "family_code": "SPO",
+        "smoker_status": "T"
+      },
+      {
+        "uuid": "f1396490-e55b-49bc-9fa2-9e7640b80ad5",
+        "age": 67,
+        "family_code": "SPO",
+        "smoker_status": "T"
       }
-    },
-    {
-      "uuid": "48df59de-068a-4983-a48a-880815c2cd2e",
-      "name": "reductionAt70",
-      "text": "50% Reduction at Age 70",
-      "type": "checkbox",
-      "factor": {
-        "default_factor_value": 1,
-        "variability": [
-          {
-            "provision.provision_value": true,
-            "plan_rate.age": {
-              "comparison": "range",
-              "lower": 50,
-              "upper": 59
-            },
-            "factor_value": 0.92
-          },
-          {
-            "provision.provision_value": true,
-            "plan_rate.age": { "comparison": "ge", "value": 60 },
-            "factor_value": 0.8
-          }
-        ]
+    ],
+    "statesApproved": [
+      {
+        "uuid": "5e522d81-da4b-433f-b6d7-1e0d42357610",
+        "state": "SC",
+        "effectiveDate": "2020-01-01"
+      },
+      {
+        "uuid": "6d94501b-934d-49e6-b6da-0cb490ddf610",
+        "state": "NC",
+        "effectiveDate": "2021-07-01"
       }
-    },
-    {
-      "name": "groupsize",
-      "text": "Group Size",
-      "type": "number",
-      "factor": {
-        "default_factor_value": 1,
-        "variability": [
+    ],
+    "coverages": [],
+    "provisions": [
+      {
+        "uuid": "1c120bfc-55f6-4b8b-964a-1ab745dccbbb",
+        "name": "prex",
+        "text": "Pre-Existing Condition Limitation",
+        "type": "select",
+        "options": [
           {
-            "factor_value": 0.96,
-            "plan.group.group_size": { "comparison": "lt", "value": 500 }
+            "uuid": "b0a691c4-4d04-4439-99db-8062a3869b1f",
+            "value": "none",
+            "text": "No Pre-Ex"
           },
           {
-            "factor_value": 0.91,
-            "plan.group.group_size": {
-              "comparison": "range",
-              "lower": 500,
-              "upper": 999
-            }
+            "uuid": "369d1e81-5868-45fa-b95b-af43e85b7822",
+            "value": "3/12",
+            "text": "3/12"
           },
           {
-            "factor_value": 0.85,
-            "plan.group.group_size": { "comparison": "ge", "value": 1000 }
-          }
-        ]
-      }
-    }
-  ],
-  "benefits": [
-    {
-      "uuid": "146bb572-b486-4df4-80de-d2c6f1e4aa6f",
-      "name": "hospital_admission",
-      "text": "Hospital Admission",
-      "type": "single",
-      "amounts": {
-        "default": 100,
-        "min": 0,
-        "max": 100,
-        "step": 0.5,
-        "unit": "percent"
-      },
-      "rates": {
-        "claimCost": 10,
-        "unit": 100
-      },
-      "variations": {
-        "statesProhibited": ["NC"],
-        "statesRequired": ["SC"]
-      },
-      "factorApplicability": [
-        {
-          "uuid": "4ed34a88-0964-4c3e-bf2a-3eea09b38f0b",
-          "name": "groupsize",
-          "type": "product",
-          "applicability": "mandatory"
-        }
-      ]
-    },
-    {
-      "uuid": "8c73f08d-79e1-4e34-942b-2556dc577814",
-      "name": "hospital_confinement",
-      "text": "Hospital Confinement",
-      "type": "durational",
-      "amounts": {
-        "default": 200,
-        "min": 50,
-        "max": 1000,
-        "step": 25
-      },
-      "rates": {
-        "claimCost": 5,
-        "unit": 100
-      },
-      "durations": {
-        "default": 30,
-        "values": [
-          {
-            "time": 2,
-            "factor": 0.5
+            "uuid": "a33a1956-f7cd-4864-95e0-df03b9377e4c",
+            "value": "6/6",
+            "text": "6/6"
           },
           {
-            "time": 3,
-            "factor": 0.6
+            "uuid": "59354c51-1b77-49e0-9f70-139b5411990f",
+            "value": "6/12",
+            "text": "6/12"
           },
           {
-            "time": 5,
-            "factor": 0.7
-          },
-          {
-            "time": 7,
-            "factor": 0.8
-          },
-          {
-            "time": 14,
-            "factor": 0.9
-          },
-          {
-            "time": 30,
-            "factor": 1
-          },
-          {
-            "time": 60,
-            "factor": 1.1
-          },
-          {
-            "time": 365,
-            "factor": 1.3
+            "uuid": "d9240561-dbff-4a4c-b711-b517c027cc14",
+            "value": "12/12",
+            "text": "12/12"
           }
         ],
-        "unit": "day"
-      },
-      "variations": {
-        "statesRequired": ["SC"]
-      },
-      "factorApplicability": [
-        {
-          "uuid": "09cb54e8-aafe-43a5-aadf-e93125f10868",
-          "name": "occ_factor",
-          "type": "product",
-          "applicability": "mandatory"
+        "factor": {
+          "uuid": "4e4e679e-67e2-45b2-80b7-9b982a84b31a",
+          "default_factor_value": 1,
+          "variability": [
+            {
+              "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+              "provision_value": "none",
+              "factor_value": 0.86
+            },
+            {
+              "uuid": "a16cb68e-554c-4d15-bc56-1d6f8fd17920",
+              "provision_value": "3/12",
+              "factor_value": 0.88
+            },
+            {
+              "uuid": "b2781d33-8fda-4e1a-b56a-4d491761e7df",
+              "provision_value": "6/6",
+              "factor_value": 0.92
+            },
+            {
+              "uuid": "325e9725-bbac-4a4e-8fea-c86180ce3fba",
+              "provision_value": "6/12",
+              "factor_value": 0.96
+            },
+            {
+              "uuid": "93d50b6c-62f0-4a52-86cf-d5a007c43452",
+              "provision_value": "12/12",
+              "factor_value": 1
+            }
+          ]
         }
-      ]
-    }
-  ]
-}
+      },
+      {
+        "uuid": "48df59de-068a-4983-a48a-880815c2cd2e",
+        "name": "reductionAt70",
+        "text": "50% Reduction at Age 70",
+        "type": "checkbox",
+        "factor": {
+          "uuid": "2c8f70e6-95ec-4ecb-928f-a4dd57af3e32",
+          "default_factor_value": 1,
+          "variability": [
+            {
+              "uuid": "7bb80882-f788-440c-a33e-03108d6db494",
+              "provision_value": true,
+              "age": {
+                "uuid": "dabb6593-71ad-48db-a86b-a39da08010cf",
+                "comparison": "range",
+                "lower": 50,
+                "upper": 59
+              },
+              "factor_value": 0.92
+            },
+            {
+              "uuid": "dc93c64b-c1c6-486d-a645-6bef0758ac4f",
+              "provision_value": true,
+              "age": {
+                "uuid": "21649940-237e-46b9-80af-a9f2f54773ea",
+                "comparison": "ge",
+                "value": 60
+              },
+              "factor_value": 0.8
+            }
+          ]
+        }
+      },
+      {
+        "uuid": "afe1485a-a02a-4de4-846a-d204e130f4eb",
+        "name": "groupsize",
+        "text": "Group Size",
+        "type": "number",
+        "factor": {
+          "uuid": "83f6d3c4-cd58-465b-b173-04289ed539e9",
+          "default_factor_value": 1,
+          "variability": [
+            {
+              "uuid": "162d350f-5212-4b3d-b29d-3b4c8a3958e5",
+              "factor_value": 0.96,
+              "group_size": {
+                "uuid": "f79159f1-a4cb-4999-859f-e869b506293c",
+                "comparison": "lt",
+                "value": 500
+              }
+            },
+            {
+              "uuid": "0bf98444-67d0-4db0-af46-d071f9527a88",
+              "factor_value": 0.91,
+              "group_size": {
+                "uuid": "ba4dd30b-0fad-4b36-812a-a96c79834875",
+                "comparison": "range",
+                "lower": 500,
+                "upper": 999
+              }
+            },
+            {
+              "uuid": "2c642c39-4647-4c7f-9263-6daa7f0cf063",
+              "factor_value": 0.85,
+              "group_size": {
+                "uuid": "2eb6e6cc-443f-4c97-b666-aca94c92855f",
+                "comparison": "ge",
+                "value": 1000
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "benefits": [
+      {
+        "uuid": "146bb572-b486-4df4-80de-d2c6f1e4aa6f",
+        "name": "cancer",
+        "text": "Cancer",
+        "type": "face_amount",
+        "amounts": {
+          "uuid": "1da9d8f2-ecab-4991-9282-06519966982a",
+          "default": 100,
+          "min": 0,
+          "max": 100,
+          "step": 0.25,
+          "unit": "percent"
+        },
+        "rates": [
+          {
+            "age": 22,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+
+          {
+            "age": 22,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+          {
+            "age": 22,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+
+          {
+            "age": 22,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          }
+        ],
+        "variations": {
+          "uuid": "b6cf47c2-c6fa-47eb-b2b5-1fecf10eec0e",
+          "statesProhibited": [],
+          "statesRequired": []
+        },
+        "factorApplicability": [
+          {
+            "uuid": "4ed34a88-0964-4c3e-bf2a-3eea09b38f0b",
+            "name": "groupsize",
+            "type": "product",
+            "applicability": "prohibited"
+          }
+        ]
+      },
+      {
+        "name": "heart_attack",
+        "text": "Heart Attack",
+        "type": "face_amount",
+        "amounts": {
+          "default": 100,
+          "min": 0,
+          "max": 100,
+          "step": 0.25,
+          "unit": "percent"
+        },
+        "rates": [
+          {
+            "age": 22,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "EMP",
+            "smoker_status": "N",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+
+          {
+            "age": 22,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "EMP",
+            "smoker_status": "T",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+          {
+            "age": 22,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "SPO",
+            "smoker_status": "N",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          },
+
+          {
+            "age": 22,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 5,
+            "unit_value": 1000
+          },
+          {
+            "age": 27,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 6,
+            "unit_value": 1000
+          },
+          {
+            "age": 32,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 7,
+            "unit_value": 1000
+          },
+          {
+            "age": 37,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 8,
+            "unit_value": 1000
+          },
+          {
+            "age": 42,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 9,
+            "unit_value": 1000
+          },
+          {
+            "age": 47,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 10,
+            "unit_value": 1000
+          },
+          {
+            "age": 52,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 11,
+            "unit_value": 1000
+          },
+          {
+            "age": 57,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 12,
+            "unit_value": 1000
+          },
+          {
+            "age": 62,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 13,
+            "unit_value": 1000
+          },
+          {
+            "age": 67,
+            "family_code": "SPO",
+            "smoker_status": "T",
+            "cc_per_unit": 14,
+            "unit_value": 1000
+          }
+        ],
+        "variations": {
+          "statesProhibited": [],
+          "statesRequired": []
+        },
+        "factorApplicability": [
+          {
+            "name": "prex",
+            "type": "product",
+            "applicability": "prohibited"
+          }
+        ]
+      }
+    ]
+  }
+]
