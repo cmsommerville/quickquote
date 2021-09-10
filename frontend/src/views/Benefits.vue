@@ -2,20 +2,15 @@
   <div class="container">
     <div class="form-rater" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-select
-          :items="provisions_object.prex.options"
-          v-model="selections.prex"
-          :label="provisions_object.prex.text"
-          class="my-3"
-        ></v-select>
         <v-switch
-          v-model="selections.reductionAt70"
-          :label="provisions_object.reductionAt70.text"
-          color="primary"
-          value="primary"
-          hide-details
-          class="my-3"
-        ></v-switch>
+          v-for="benefit in benefits"
+          :key="benefit.name"
+          v-model="selections[benefit.name]"
+          :label="benefit.text"
+          :false-value="0"
+          :true-value="100"
+        >
+        </v-switch>
 
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
@@ -48,24 +43,19 @@ export default {
     };
   },
   computed: {
-    provisions() {
-      return this.plan_config.provisions;
-    },
-    provisions_object() {
-      return this.provisions.reduce(
-        (obj, item) => Object.assign(obj, { [item.name]: item }),
-        {}
-      );
+    benefits() {
+      return this.plan_config.benefits;
     },
     selectionHandler() {
-      return this.provisions
-        .filter((prov) => Object.keys(this.selections).includes(prov.name))
+      return this.benefits
+        .filter((bnft) => Object.keys(this.selections).includes(bnft.name))
         .map((item) => {
           return {
             plan_id: this.plan_id,
-            provision_code: item.name,
-            provision_value: String(this.selections[item.name]),
-            provision_data_type: typeof this.selections[item.name],
+            coverage_code: item.coverage_code,
+            benefit_code: item.name,
+            benefit_uuid: item.uuid,
+            benefit_value: this.selections[item.name],
           };
         });
     },
@@ -77,21 +67,26 @@ export default {
     );
     this.plan_id = +this.$route.query.plan_id;
     this.plan_config = { ...res.data[0] };
+
+    this.selections = [...res.data[0].benefits].reduce(
+      (acc, curr) => ((acc[curr.name] = 0), acc),
+      {}
+    );
     this.loaded = true;
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
       await axios.post(
-        "http://localhost:5000/selections/provisions",
+        "http://localhost:5000/selections/benefits",
         this.selectionHandler,
         {
           withCredentials: true,
         }
       );
       this.$router.push({
-        name: "plan-rate",
-        query: { plan_id: this.plan_id },
+        name: "provisions",
+        query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },
       });
     },
     onReset(event) {

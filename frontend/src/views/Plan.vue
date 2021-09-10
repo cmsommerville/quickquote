@@ -2,28 +2,28 @@
   <div class="container">
     <div class="form-rater my-6" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-btn-toggle v-model="selections.product_name" borderless class="my-3">
+        <v-btn-toggle v-model="selections.product_code" borderless class="my-3">
           <v-btn value="critical_illness">
             <span class="hidden-sm-and-down">Critical Illness</span>
 
-            <v-icon right> mdi-format-align-left </v-icon>
+            <v-icon right> mdi-heart-circle </v-icon>
           </v-btn>
 
           <v-btn value="accident">
             <span class="hidden-sm-and-down">Accident</span>
 
-            <v-icon right> mdi-format-align-center </v-icon>
+            <v-icon right> mdi-bone </v-icon>
           </v-btn>
 
           <v-btn value="hospital_indemnity">
             <span class="hidden-sm-and-down">Hospital Indemnity</span>
 
-            <v-icon right> mdi-format-align-right </v-icon>
+            <v-icon right> mdi-hospital-box </v-icon>
           </v-btn>
 
           <v-btn value="disability">
             <span class="hidden-sm-and-down">Disability</span>
-            <v-icon right> mdi-format-align-justify </v-icon>
+            <v-icon right> mdi-cash-multiple </v-icon>
           </v-btn>
         </v-btn-toggle>
 
@@ -60,8 +60,7 @@ export default {
       loaded: false,
       data: null,
       selections: {
-        group_id: null,
-        product_name: null,
+        product_code: null,
         rating_state: null,
         plan_effective_date: null,
       },
@@ -69,16 +68,15 @@ export default {
     };
   },
   async mounted() {
-    const res = await axios.get("http://localhost:5000/workflow/plan");
-    this.data = { ...res.data };
-    this.selections.group_id = +this.$route.query.group_id || null;
+    const res = await axios.get("http://localhost:5000/config/plans");
+    this.data = [...res.data];
     this.loaded = true;
   },
   computed: {
     states() {
-      if (this.selections.product_name) {
-        const product = this.data.products.find(
-          (product) => product.name === this.selections.product_name
+      if (this.selections.product_code) {
+        const product = this.data.find(
+          (product) => product.name === this.selections.product_code
         );
         return product.statesApproved.map((stateObj) => {
           return {
@@ -89,20 +87,29 @@ export default {
       }
       return ["AL", "AZ", "NC", "SC"];
     },
+    config_id() {
+      if (this.selections.product_code) {
+        const product = this.data.find(
+          (product) => product.name === this.selections.product_code
+        );
+        return product._id;
+      }
+      return null;
+    },
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
       const res = await axios.post(
-        "http://localhost:5000/workflow/plan",
+        "http://localhost:5000/selections/plan",
         this.selections,
         {
           withCredentials: true,
         }
       );
       this.$router.push({
-        name: "provisions",
-        query: { plan_id: res.data.plan_id },
+        name: "benefits",
+        query: { plan_id: res.data.plan_id, plan_config_id: this.config_id },
       });
     },
     onReset(event) {

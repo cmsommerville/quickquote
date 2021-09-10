@@ -48,8 +48,11 @@ def create_app(config):
     # from .resources.admin.CreateTables import CreateTables
     # from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
 
+    from .products.admin import CreateTables
     from .products.config import PlanConfig, PlanConfigList
-    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
+    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculator
+
+    api.add_resource(CreateTables, '/admin/create-tables')
 
     api.add_resource(PlanConfigList, '/config/plans')
     api.add_resource(PlanConfig, '/config/plan/<id>')
@@ -57,6 +60,7 @@ def create_app(config):
     api.add_resource(PlanSelections, '/selections/plan')
     api.add_resource(CoverageBenefitSelections, '/selections/benefits')
     api.add_resource(ProvisionSelections, '/selections/provisions')
+    api.add_resource(RatingCalculator, '/rating-calculator')
 
     # api.add_resource(Group, '/workflow/group')
     # api.add_resource(Plan, '/workflow/plan')

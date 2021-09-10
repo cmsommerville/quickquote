@@ -2,7 +2,11 @@
   <div class="container">
     <div class="form-rater d-flex justify-center">
       <v-btn depressed color="primary" @click="createTables" class="my-3"
-        >Create Tables</v-btn
+        >Create New Tables Only</v-btn
+      >
+      <v-spacer></v-spacer>
+      <v-btn depressed color="warning" @click="dropCreateTables" class="my-3"
+        >Drop and Recreate Tables</v-btn
       >
 
       <v-snackbar
@@ -41,7 +45,16 @@ export default {
   },
   methods: {
     async createTables() {
-      const res = await axios.get("http://localhost:5000/admin/create-tables");
+      const res = await axios.get(
+        "http://localhost:5000/admin/create-tables?drop='N'"
+      );
+      this.data = { ...res.data };
+      this.snackbar = true;
+    },
+    async dropCreateTables() {
+      const res = await axios.get(
+        "http://localhost:5000/admin/create-tables?drop='Y'"
+      );
       this.data = { ...res.data };
       this.snackbar = true;
     },

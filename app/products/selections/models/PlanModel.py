@@ -22,9 +22,12 @@ class PlanModel(db.Model):
         db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
     active_record_indicator = db.Column(db.String(1), default="Y")
 
-    coverages = db.relationship("CoverageModel", back_populates="plan")
-    benefits = db.relationship("BenefitModel", back_populates="plan")
-    provisions = db.relationship("ProvisionModel", back_populates="plan")
+    coverages = db.relationship("CoverageModel", back_populates="plan",
+                                primaryjoin="and_(PlanModel.plan_id == CoverageModel.plan_id, CoverageModel.active_record_indicator=='Y')")
+    benefits = db.relationship("BenefitModel", back_populates="plan",
+                               primaryjoin="and_(PlanModel.plan_id == BenefitModel.plan_id, BenefitModel.active_record_indicator=='Y')")
+    provisions = db.relationship("ProvisionModel", back_populates="plan",
+                                 primaryjoin="and_(PlanModel.plan_id == ProvisionModel.plan_id, ProvisionModel.active_record_indicator=='Y')")
     plan_rating_attributes = db.relationship(
         "PlanRatingAttributeModel", back_populates="plan")
 

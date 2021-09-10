@@ -1,6 +1,8 @@
 from app.extensions import db
 import datetime
 
+from .BenefitRateModel import BenefitRateModel
+
 
 class BenefitModel(db.Model):
     __tablename__ = "benefits"
@@ -18,6 +20,9 @@ class BenefitModel(db.Model):
 
     plan = db.relationship("PlanModel", back_populates="benefits")
     coverage = db.relationship("CoverageModel", back_populates="benefits")
+    benefit_rates = db.relationship(
+        "BenefitRateModel", back_populates="benefit",
+        primaryjoin="and_(BenefitModel.benefit_id == BenefitRateModel.benefit_id, BenefitRateModel.active_record_indicator=='Y')")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id} -- Benefit Code: `{self.benefit_code}`>"
@@ -42,6 +47,17 @@ class BenefitModel(db.Model):
     def save_to_db(self):
         try:
             db.session.add(self)
+        except:
+            db.session.rollback()
+            raise
+        else:
+            db.session.commit()
+
+    @classmethod
+    def update_all(cls, benefits, plan_id):
+        try:
+            for benefit in benefits:
+                db.session.add(benefit)
         except:
             db.session.rollback()
             raise

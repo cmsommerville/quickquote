@@ -17,7 +17,8 @@ class CoverageModel(db.Model):
     active_record_indicator = db.Column(db.String(1), default='Y')
 
     plan = db.relationship("PlanModel", back_populates="coverages")
-    benefits = db.relationship("BenefitModel", back_populates="coverage")
+    benefits = db.relationship("BenefitModel", back_populates="coverage",
+                               primaryjoin="and_(CoverageModel.coverage_id == BenefitModel.coverage_id, BenefitModel.active_record_indicator=='Y')")
 
     def __repr__(self):
         return f"<Coverage Id: {self.coverage_id} -- Coverage Code: `{self.coverage_code}`>"

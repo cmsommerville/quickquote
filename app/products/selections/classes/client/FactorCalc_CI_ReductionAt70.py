@@ -1,5 +1,5 @@
 from ..base.FactorCalc import FactorCalc
-from app.models import mongo
+from app.extensions import mongo
 
 
 class FactorCalc_CI_ReductionAt70(FactorCalc):

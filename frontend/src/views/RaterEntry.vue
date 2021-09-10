@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <router-link :to="{ name: 'group' }">
+      <router-link :to="{ name: 'plan' }">
         <v-card
           class="mx-auto my-6 rounded-lg elevation-3 v-card d-flex align-center"
           color="primary"
@@ -20,7 +20,7 @@
         </v-card>
       </router-link>
 
-      <router-link :to="{ name: 'group' }">
+      <router-link :to="{ name: 'plan' }">
         <v-card
           class="mx-auto my-6 rounded-lg elevation-3 v-card d-flex align-center"
         >

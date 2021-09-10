@@ -1,13 +1,17 @@
+from decimal import *
 from app.extensions import mongo
 
+from ...models import BenefitRateModel, BenefitModel
 from ..client import ELIGIBLE_FACTORS
 from .FactorAttributes import FactorAttributes
 from .FactorCalc import FactorCalc
 
+getcontext().prec = 5
+
 
 class Rater:
 
-    def __init__(self, plan, plan_rates, provisions, coverages, benefits, plan_rating_attributes=None, group=None):
+    def __init__(self, plan, provisions, coverages, benefits, plan_rates=None, plan_rating_attributes=None, group=None):
         self._provisions = provisions
         self._plan_rates = plan_rates
         self._plan = plan
@@ -16,12 +20,38 @@ class Rater:
         self._plan_rating_attributes = plan_rating_attributes
         self._group = group
 
-        self._config = self.getProductConfig(plan.product_name)
+        self._config = self.getProductConfig(plan.product_code)
 
         self._factors = []
 
     def getProductConfig(self, product_name):
         return mongo.db.products.find_one({"name": product_name})
+
+    def getFactorValue(self, factor_name):
+        return next(iter([factor.factor_value for factor in self._factors if factor.factor_name == factor_name]), None)
+
+    def calcBenefitRates(self):
+
+        for benefit in self._benefits:
+            BenefitRateModel.expire_by_benefit(benefit.benefit_id)
+            config = [bnft for bnft in self._config['benefits']
+                      if bnft['name'] == benefit.benefit_code][0]['rates']
+
+            benefit_rates = [
+                BenefitRateModel(
+                    plan_id=self._plan.plan_id,
+                    benefit_id=benefit.benefit_id,
+                    benefit_rate_uuid=benefit_rate_config['uuid'],
+                    benefit_rate_base_premium=Decimal(
+                        benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
+                    age=benefit_rate_config['age'],
+                    smoker_status=benefit_rate_config['smoker_status'],
+                    family_code=benefit_rate_config['family_code']
+                )
+                for benefit_rate_config in config
+            ]
+            benefit.benefit_rates = benefit_rates
+        BenefitModel.update_all(self._benefits, self._plan.plan_id)
 
     def calcFactors(self):
 

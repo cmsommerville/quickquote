@@ -41,7 +41,9 @@ class FactorCalc:
         if functional:
             pass
 
-        return val
+        self.factor_selection = 'default'
+        self.factor_selection_type = 'uuid'
+        self.factor_value = sel_value
 
     def _variabilityHandler(self, variability, factor_attributes, default_value, default_uuid):
 

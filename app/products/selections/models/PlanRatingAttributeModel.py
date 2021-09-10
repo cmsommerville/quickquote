@@ -35,6 +35,10 @@ class PlanRatingAttributeModel(db.Model):
     def find_by_id(cls, id):
         return cls.query.filter(cls.plan_id == id).first()
 
+    @classmethod
+    def find_plan_rating_attributes(cls, plan_id):
+        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
+
     def save_to_db(self):
         try:
             db.session.add(self)
