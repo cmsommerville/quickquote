@@ -1,17 +1,16 @@
 
 
 class FactorAttributes:
-    def __init__(self, group, plan, plan_rate, provision=None):
+    def __init__(self, plan, benefit, benefit_rate, provision):
         self._provision = provision
-        self._plan_rate = plan_rate
+        self._benefit = benefit
+        self._benefit_rate = benefit_rate
         self._plan = plan
-        self._group = group
 
-        self.set(group)
         self.set(plan)
-        self.set(plan_rate)
-        if provision:
-            self.set(provision)
+        self.set(benefit)
+        self.set(benefit_rate)
+        self.set(provision)
 
     def set(self, instance):
         for k, v in instance.__dict__.items():

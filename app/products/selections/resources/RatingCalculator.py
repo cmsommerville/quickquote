@@ -24,6 +24,7 @@ class RatingCalculator(Resource):
                       benefits=benefits, plan_rating_attributes=plan_rating_attributes)
 
         rater.calcBenefitRates()
+        rater.calcFactors()
 
         return "Success", 200
 

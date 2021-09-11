@@ -46,14 +46,14 @@ export default {
   methods: {
     async createTables() {
       const res = await axios.get(
-        "http://localhost:5000/admin/create-tables?drop='N'"
+        "http://localhost:5000/admin/create-tables?drop=N"
       );
       this.data = { ...res.data };
       this.snackbar = true;
     },
     async dropCreateTables() {
       const res = await axios.get(
-        "http://localhost:5000/admin/create-tables?drop='Y'"
+        "http://localhost:5000/admin/create-tables?drop=Y"
       );
       this.data = { ...res.data };
       this.snackbar = true;

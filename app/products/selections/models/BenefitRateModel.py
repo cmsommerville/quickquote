@@ -23,6 +23,7 @@ class BenefitRateModel(db.Model):
 
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
+    factors = db.relationship("FactorModel", back_populates="benefit_rate")
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"
@@ -33,11 +34,11 @@ class BenefitRateModel(db.Model):
 
     @classmethod
     def find_benefit_rates_by_plan(cls, plan_id):
-        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
+        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').options(db.joinedload(cls.benefit)).all()
 
     @classmethod
     def find_benefit_rates_by_benefit(cls, benefit_id):
-        return cls.query.filter(cls.benefit_id == benefit_id, cls.active_record_indicator == 'Y').all()
+        return cls.query.filter(cls.benefit_id == benefit_id, cls.active_record_indicator == 'Y').options(db.joinedload(cls.benefit)).all()
 
     @classmethod
     def expire_by_benefit(cls, benefit_id):
@@ -51,6 +52,17 @@ class BenefitRateModel(db.Model):
     def save_to_db(self):
         try:
             db.session.add(self)
+        except:
+            db.session.rollback()
+            raise
+        else:
+            db.session.commit()
+
+    @classmethod
+    def update_all(cls, benefit_rates, plan_id):
+        try:
+            for benefit_rate in benefit_rates:
+                db.session.add(benefit_rate)
         except:
             db.session.rollback()
             raise

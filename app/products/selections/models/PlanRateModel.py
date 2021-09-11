@@ -2,7 +2,7 @@ from app.extensions import db
 import datetime
 
 from .ProvisionModel import ProvisionModel
-from .FactorModel import FactorModel
+# from .FactorModel import FactorModel
 from .CoverageModel import CoverageModel
 from .BenefitModel import BenefitModel
 
@@ -23,7 +23,7 @@ class PlanRateModel(db.Model):
     active_record_indicator = db.Column(db.String(1), default='Y')
 
     # plan = db.relationship("PlanModel", back_populates="plan_rates")
-    factors = db.relationship("FactorModel", back_populates="plan_rate")
+    # factors = db.relationship("FactorModel", back_populates="plan_rate")
     # coverages = db.relationship("CoverageModel", back_populates="plan_rate")
     # benefits = db.relationship("BenefitModel", back_populates="plan_rate")
     # provisions = db.relationship("ProvisionModel", back_populates="plan")

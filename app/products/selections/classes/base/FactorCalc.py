@@ -6,7 +6,6 @@ class FactorCalc:
     def __init__(self, factor_attributes, factor_name, factor_type, config):
         self.config = config
         self.factor_attributes = factor_attributes
-        self.plan_rate_id = factor_attributes.plan_rate_id
         try:
             self.provision_id = factor_attributes.provision_id
         except AttributeError:
@@ -36,10 +35,11 @@ class FactorCalc:
             self.factor_selection = selection
             self.factor_selection_type = 'uuid'
             self.factor_value = sel_value
+            return
 
         functional = self.config.get('function')
         if functional:
-            pass
+            return
 
         self.factor_selection = 'default'
         self.factor_selection_type = 'uuid'

@@ -1,8 +1,6 @@
 from app.extensions import db
 import datetime
 
-from .BenefitRateModel import BenefitRateModel
-
 
 class BenefitModel(db.Model):
     __tablename__ = "benefits"
