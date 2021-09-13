@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 
 from ..classes import Rater
-from ..models import PlanModel, BenefitModel, ProvisionModel, PlanRatingAttributeModel, BenefitRateModel
+from ..models import PlanModel, BenefitModel, ProvisionModel, BenefitRateModel
 from ..schemas import BenefitRateSchema
 
 benefit_rate_list_schema = BenefitRateSchema(many=True)
@@ -20,11 +20,9 @@ class RatingCalculator(Resource):
         coverages = [benefit.coverage for benefit in benefits]
         plan = benefits[0].plan
         provisions = ProvisionModel.find_plan_provisions(plan_id)
-        plan_rating_attributes = PlanRatingAttributeModel.find_plan_rating_attributes(
-            plan_id)
 
         rater = Rater(plan=plan, provisions=provisions, coverages=coverages,
-                      benefits=benefits, plan_rating_attributes=plan_rating_attributes)
+                      benefits=benefits)
 
         benefit_rates = rater.execute()
         return benefit_rate_list_schema.dump(benefit_rates), 200

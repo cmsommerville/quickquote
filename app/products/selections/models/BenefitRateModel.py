@@ -22,25 +22,11 @@ class BenefitRateModel(db.Model):
 
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
-    factors = db.relationship("FactorModel", back_populates="benefit_rate")
+    factors = db.relationship(
+        "FactorModel", back_populates="benefit_rate", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"
-
-    def reset(self, **kwargs):
-        self.benefit_id = kwargs.get('benefit_id', self.benefit_id)
-        self.plan_id = kwargs.get('plan_id', self.plan_id)
-        self.age = kwargs.get('age', self.age)
-        self.family_code = kwargs.get('family_code', self.family_code)
-        self.smoker_status = kwargs.get('smoker_status', self.smoker_status)
-        self.benefit_rate_uuid = kwargs.get(
-            'benefit_rate_uuid', self.benefit_rate_uuid)
-        self.benefit_rate_base_premium = kwargs.get(
-            'benefit_rate_base_premium', self.benefit_rate_base_premium)
-        self.benefit_rate_factor = None
-        self.benefit_rate_benefit_factor = None
-        self.benefit_rate_final_premium = None
-        self.updated_dts = db.func.now()
 
     @classmethod
     def find_by_id(cls, id):
@@ -73,3 +59,17 @@ class BenefitRateModel(db.Model):
             raise
         else:
             db.session.commit()
+
+    @classmethod
+    def delete_by_benefit_id(cls, benefit_id, commit=False):
+        try:
+            benefits_for_delete = cls.query.filter(
+                cls.benefit_id == benefit_id).all()
+            for bnft in benefits_for_delete:
+                db.session.delete(bnft)
+        except:
+            db.session.rollback()
+            raise
+        else:
+            if commit:
+                db.session.commit()

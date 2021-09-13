@@ -57,41 +57,25 @@ class Rater:
             # get array of benefit rate configuration
             config = self.getBenefitRateConfig(benefit.benefit_code)
 
-            old_benefit_rates_dict = {}
-            # reset any existing benefit rates
             if benefit.benefit_rates:
-                old_benefit_rates_dict = {
-                    br.benefit_rate_uuid: br for br in benefit.benefit_rates}
-                benefit.benefit_rates = []
+                # delete existing benefit rates
+                BenefitRateModel.delete_by_benefit_id(
+                    benefit.benefit_id, commit=True)
 
+            # initialize benefit_rates array
             benefit_rates = []
             for benefit_rate_config in config:
-                # get old benefit rate instance if exists
-                old_br = old_benefit_rates_dict.get(
-                    benefit_rate_config['uuid'])
 
-                if old_br:
-                    old_br.reset(**{
-                        "plan_id": self._plan.plan_id,
-                        "benefit_rate_uuid": benefit_rate_config['uuid'],
-                        "benefit_rate_base_premium": Decimal(
-                            benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
-                        "age": benefit_rate_config['age'],
-                        "smoker_status": benefit_rate_config['smoker_status'],
-                        "family_code": benefit_rate_config['family_code']
-                    })
-                    benefit_rates.append(old_br)
-                else:
-                    benefit_rates.append(BenefitRateModel(
-                        plan_id=self._plan.plan_id,
-                        benefit_id=benefit.benefit_id,
-                        benefit_rate_uuid=benefit_rate_config['uuid'],
-                        benefit_rate_base_premium=Decimal(
-                            benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
-                        age=benefit_rate_config['age'],
-                        smoker_status=benefit_rate_config['smoker_status'],
-                        family_code=benefit_rate_config['family_code']
-                    ))
+                benefit_rates.append(BenefitRateModel(
+                    plan_id=self._plan.plan_id,
+                    benefit_id=benefit.benefit_id,
+                    benefit_rate_uuid=benefit_rate_config['uuid'],
+                    benefit_rate_base_premium=Decimal(
+                        benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
+                    age=benefit_rate_config['age'],
+                    smoker_status=benefit_rate_config['smoker_status'],
+                    family_code=benefit_rate_config['family_code']
+                ))
 
             benefit.benefit_rates = benefit_rates
             self._benefit_rates.extend(benefit_rates)
@@ -105,15 +89,14 @@ class Rater:
 
         # create a dictionary of all the provisions selected
         factor_dict = {
-            **{provision.provision_code: provision for provision in self._provisions},
-            **{rating_attr.plan_rating_attribute_code: rating_attr for rating_attr in self._plan_rating_attributes}
-        }
+            provision.provision_code: provision for provision in self._provisions}
 
         # loop over benefits
         for benefit_rate in self._benefit_rates:
-            # loop over each provision/rating attribute in factor_dict
 
+            # loop over each provision/rating attribute in factor_dict
             for factor_name, factor_obj in factor_dict.items():
+
                 factor_config = provisions_config_dict[factor_name].get(
                     'factor')
 
@@ -127,6 +110,7 @@ class Rater:
 
                 factor = FactorModel(
                     plan_id=plan_id,
+                    provision_id=factor_instance.provision_id,
                     factor_type=factor_instance.factor_type,
                     factor_name=factor_instance.factor_name,
                     factor_selection=factor_instance.factor_selection,
@@ -146,6 +130,14 @@ class Rater:
         BenefitModel.save_all_to_db(self._benefits, plan_id)
 
     def execute(self):
-        self.calcBenefitRates()
-        self.calcFactors()
+        try:
+            self.calcBenefitRates()
+
+            try:
+                self.calcFactors()
+            except:
+                print("no factors")
+        except:
+            print("no benefit rates")
+
         return self._benefit_rates

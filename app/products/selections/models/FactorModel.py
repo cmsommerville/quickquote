@@ -11,8 +11,6 @@ class FactorModel(db.Model):
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     provision_id = db.Column(
         db.Integer, db.ForeignKey('provisions.provision_id'))
-    plan_rating_attribute_id = db.Column(db.Integer, db.ForeignKey(
-        'plan_rating_attributes.plan_rating_attribute_id'))
     factor_type = db.Column(db.String(10), nullable=False)
     factor_name = db.Column(db.String(50), nullable=False)
     factor_selection = db.Column(db.String(36), nullable=False)
@@ -54,3 +52,14 @@ class FactorModel(db.Model):
             raise
         else:
             db.session.commit()
+
+    @classmethod
+    def delete_by_benefit_rate_id(cls, benefit_rate_id, commit=True):
+        try:
+            cls.query.filter(cls.benefit_rate_id == benefit_rate_id).delete()
+        except:
+            db.session.rollback()
+            raise
+        else:
+            if commit:
+                db.session.commit()
