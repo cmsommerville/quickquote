@@ -3,9 +3,10 @@ from flask_restful import Resource
 
 from ..classes import Rater
 from ..models import PlanModel, BenefitModel, ProvisionModel, BenefitRateModel
-from ..schemas import BenefitRateSchema
+from ..schemas import BenefitRateSchema, PremiumByBenefitRateSchema
 
 benefit_rate_list_schema = BenefitRateSchema(many=True)
+premium_by_benefit_rate_list_schema = PremiumByBenefitRateSchema(many=True)
 
 
 class RatingCalculator(Resource):
@@ -25,7 +26,7 @@ class RatingCalculator(Resource):
                       benefits=benefits)
 
         benefit_rates = rater.execute()
-        return benefit_rate_list_schema.dump(benefit_rates), 200
+        return premium_by_benefit_rate_list_schema.dump(benefit_rates), 200
 
     @classmethod
     def post(cls):

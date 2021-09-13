@@ -3,7 +3,7 @@
     <v-data-table
       v-if="benefit_rates && loaded"
       :headers="headers"
-      :items="benefit_rates"
+      :items="table_data"
       :items-per-page="10"
       :options="{ sortBy: ['family_code', 'smoker_status', 'age'] }"
       class="elevation-1"
@@ -24,6 +24,8 @@ export default {
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
         { text: "Age", value: "age" },
+        { text: "Benefit Code", value: "benefit_code" },
+        { text: "Benefit Selection", value: "benefit_value" },
         { text: "Premium", value: "benefit_rate_final_premium" },
       ],
       plan_id: null,
@@ -31,14 +33,14 @@ export default {
     };
   },
   computed: {
-    provisions() {
-      return this.plan_config.provisions;
-    },
-    provisions_object() {
-      return this.provisions.reduce(
-        (obj, item) => Object.assign(obj, { [item.name]: item }),
-        {}
-      );
+    table_data() {
+      return this.benefit_rates.map((br) => {
+        return {
+          ...br,
+          benefit_code: br.benefit.benefit_code,
+          benefit_value: br.benefit.benefit_value,
+        };
+      });
     },
   },
   async mounted() {
