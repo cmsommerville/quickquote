@@ -11,19 +11,17 @@ class BenefitModel(db.Model):
     benefit_code = db.Column(db.String(20), nullable=False)
     benefit_uuid = db.Column(db.String(36))
     benefit_value = db.Column(db.Numeric(12, 4), nullable=False)
-    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    row_exp_dts = db.Column(
-        db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
-    active_record_indicator = db.Column(db.String(1), default='Y')
+
+    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     plan = db.relationship("PlanModel", back_populates="benefits")
     coverage = db.relationship("CoverageModel", back_populates="benefits")
     benefit_rates = db.relationship(
-        "BenefitRateModel", back_populates="benefit",
-        primaryjoin="and_(BenefitModel.benefit_id == BenefitRateModel.benefit_id, BenefitRateModel.active_record_indicator=='Y')")
+        "BenefitRateModel", back_populates="benefit")
 
     def __repr__(self):
-        return f"<Benefit Id: {self.benefit_id} -- Benefit Code: `{self.benefit_code}`>"
+        return f"<Benefit Id: {self.benefit_id} -- Benefit Code: `{self.benefit_code}` -- Benefit Rates: {len(self.benefit_rates)}>"
 
     @classmethod
     def find_by_id(cls, id):
@@ -31,16 +29,7 @@ class BenefitModel(db.Model):
 
     @classmethod
     def find_benefits(cls, plan_id):
-        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
-
-    @classmethod
-    def expire_benefits(cls, plan_id):
-        benefits = cls.find_benefits(plan_id)
-        if benefits:
-            for benefit in benefits:
-                benefit.row_exp_dts = db.func.current_timestamp()
-                benefit.active_record_indicator = 'N'
-                db.session.add(benefit)
+        return cls.query.filter(cls.plan_id == plan_id).all()
 
     def save_to_db(self):
         try:
@@ -52,20 +41,8 @@ class BenefitModel(db.Model):
             db.session.commit()
 
     @classmethod
-    def update_all(cls, benefits, plan_id):
-        try:
-            for benefit in benefits:
-                db.session.add(benefit)
-        except:
-            db.session.rollback()
-            raise
-        else:
-            db.session.commit()
-
-    @classmethod
     def save_all_to_db(cls, benefits, plan_id):
         try:
-            cls.expire_benefits(plan_id)
             for benefit in benefits:
                 db.session.add(benefit)
         except:

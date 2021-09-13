@@ -12,6 +12,8 @@ class FactorAttributes:
         self.set(benefit_rate)
         self.set(provision)
 
+        self.provision_value = self._provision.getValue()
+
     def set(self, instance):
         for k, v in instance.__dict__.items():
             setattr(self, k, v)

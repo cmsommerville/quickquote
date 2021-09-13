@@ -12,10 +12,16 @@
           v-model="selections.reductionAt70"
           :label="provisions_object.reductionAt70.text"
           color="primary"
-          value="primary"
           hide-details
           class="my-3"
         ></v-switch>
+
+        <v-text-field
+          v-model.number="selections.groupsize"
+          label="Group Size"
+          type="number"
+          class="my-3"
+        ></v-text-field>
 
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
@@ -41,8 +47,8 @@ export default {
       plan_id: null,
       plan_config: null,
       selections: {
-        prex: null,
-        reductionAt70: false,
+        // prex: null,
+        // reductionAt70: false,
       },
       show: true,
     };
@@ -77,6 +83,10 @@ export default {
     );
     this.plan_id = +this.$route.query.plan_id;
     this.plan_config = { ...res.data[0] };
+    this.selections = [...res.data[0].provisions].reduce(
+      (acc, curr) => ((acc[curr.name] = null), acc),
+      {}
+    );
     this.loaded = true;
   },
   methods: {
@@ -90,7 +100,7 @@ export default {
         }
       );
       this.$router.push({
-        name: "plan-rate",
+        name: "premium",
         query: { plan_id: this.plan_id },
       });
     },

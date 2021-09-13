@@ -7,6 +7,7 @@ import Plan from "../views/Plan.vue";
 import Provisions from "../views/Provisions.vue";
 import Benefits from "../views/Benefits.vue";
 import PlanRates from "../views/PlanRates.vue";
+import Premium from "../views/Premium.vue";
 import CreateTables from "../views/admin/CreateTables.vue";
 
 Vue.use(VueRouter);
@@ -41,6 +42,11 @@ const routes = [
     path: "/benefits",
     name: "benefits",
     component: Benefits,
+  },
+  {
+    path: "/premium",
+    name: "premium",
+    component: Premium,
   },
   {
     path: "/plan-rate",

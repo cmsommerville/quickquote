@@ -8,7 +8,7 @@ from ariadne.constants import PLAYGROUND_HTML
 
 # from app.models import db, mongo
 # from app.schemas import ma
-from app.extensions import sess, db, mongo, ma
+from app.extensions import db, mongo, ma
 from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
@@ -33,7 +33,7 @@ def create_app(config):
     mongo.init_app(app)
     app.config["SESSION_SQLALCHEMY"] = db
 
-    sess.init_app(app)
+    # sess.init_app(app)
     api = Api(app)
 
     # from .resources.config import PlanConfig, PlanConfigList

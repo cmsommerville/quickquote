@@ -11,10 +11,8 @@ class ProvisionModel(db.Model):
     provision_value = db.Column(db.String(255), nullable=False)
     provision_data_type = db.Column(db.String(20), nullable=False)
 
-    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    row_exp_dts = db.Column(
-        db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
-    active_record_indicator = db.Column(db.String(1), default='Y')
+    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     plan = db.relationship("PlanModel", back_populates="provisions")
 
@@ -36,16 +34,7 @@ class ProvisionModel(db.Model):
 
     @classmethod
     def find_plan_provisions(cls, plan_id):
-        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
-
-    @classmethod
-    def expire_provisions(cls, plan_id):
-        provisions = cls.find_plan_provisions(plan_id)
-        if provisions:
-            for provision in provisions:
-                provision.row_exp_dts = db.func.current_timestamp()
-                provision.active_record_indicator = 'N'
-                db.session.add(provision)
+        return cls.query.filter(cls.plan_id == plan_id).all()
 
     def save_to_db(self):
         try:
@@ -59,7 +48,6 @@ class ProvisionModel(db.Model):
     @classmethod
     def save_all_to_db(cls, provisions, plan_id):
         try:
-            cls.expire_provisions(plan_id)
             for provision in provisions:
                 db.session.add(provision)
         except:

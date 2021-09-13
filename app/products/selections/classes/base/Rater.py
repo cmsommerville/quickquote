@@ -1,5 +1,5 @@
 from decimal import *
-from app.extensions import mongo
+from app.extensions import mongo, db
 
 from ...models import BenefitRateModel, BenefitModel, FactorModel
 from ..client import ELIGIBLE_FACTORS
@@ -22,6 +22,7 @@ class Rater:
 
         self._config = self.getProductConfig(plan.product_code)
 
+        self._benefit_rates = []
         self._factors = []
 
     def getProductConfig(self, product_name):
@@ -35,39 +36,72 @@ class Rater:
         return Decimal(benefit_rate.benefit_rate_base_premium) * Decimal(
             benefit_rate.benefit_rate_factor or 1) * Decimal(benefit_rate.benefit_rate_benefit_factor or 1)
 
+    def getBenefitRateConfig(self, benefit_code):
+        return [bnft for bnft in self._config['benefits']
+                if bnft['name'] == benefit_code][0]['rates']
+
+    def getProvisionConfigDict(self):
+        """
+        Return provision configuration as a dictionary with 
+        provision code as the key and configuration as the value
+        """
+        # get provision configuration
+        provisions_config = self._config.get('provisions')
+        return {
+            prov['name']: prov for prov in provisions_config
+        }
+
     def calcBenefitRates(self):
 
         for benefit in self._benefits:
-            BenefitRateModel.expire_by_benefit(benefit.benefit_id)
-            config = [bnft for bnft in self._config['benefits']
-                      if bnft['name'] == benefit.benefit_code][0]['rates']
+            # get array of benefit rate configuration
+            config = self.getBenefitRateConfig(benefit.benefit_code)
 
-            benefit_rates = [
-                BenefitRateModel(
-                    plan_id=self._plan.plan_id,
-                    benefit_id=benefit.benefit_id,
-                    benefit_rate_uuid=benefit_rate_config['uuid'],
-                    benefit_rate_base_premium=Decimal(
-                        benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
-                    age=benefit_rate_config['age'],
-                    smoker_status=benefit_rate_config['smoker_status'],
-                    family_code=benefit_rate_config['family_code']
-                )
-                for benefit_rate_config in config
-            ]
+            old_benefit_rates_dict = {}
+            # reset any existing benefit rates
+            if benefit.benefit_rates:
+                old_benefit_rates_dict = {
+                    br.benefit_rate_uuid: br for br in benefit.benefit_rates}
+                benefit.benefit_rates = []
+
+            benefit_rates = []
+            for benefit_rate_config in config:
+                # get old benefit rate instance if exists
+                old_br = old_benefit_rates_dict.get(
+                    benefit_rate_config['uuid'])
+
+                if old_br:
+                    old_br.reset(**{
+                        "plan_id": self._plan.plan_id,
+                        "benefit_rate_uuid": benefit_rate_config['uuid'],
+                        "benefit_rate_base_premium": Decimal(
+                            benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
+                        "age": benefit_rate_config['age'],
+                        "smoker_status": benefit_rate_config['smoker_status'],
+                        "family_code": benefit_rate_config['family_code']
+                    })
+                    benefit_rates.append(old_br)
+                else:
+                    benefit_rates.append(BenefitRateModel(
+                        plan_id=self._plan.plan_id,
+                        benefit_id=benefit.benefit_id,
+                        benefit_rate_uuid=benefit_rate_config['uuid'],
+                        benefit_rate_base_premium=Decimal(
+                            benefit.benefit_value) * Decimal(benefit_rate_config['cc_per_unit']) / Decimal(benefit_rate_config['unit_value']),
+                        age=benefit_rate_config['age'],
+                        smoker_status=benefit_rate_config['smoker_status'],
+                        family_code=benefit_rate_config['family_code']
+                    ))
+
             benefit.benefit_rates = benefit_rates
-        BenefitModel.update_all(self._benefits, self._plan.plan_id)
+            self._benefit_rates.extend(benefit_rates)
 
     def calcFactors(self):
 
         plan_id = self._plan.plan_id
-        benefit_rates = BenefitRateModel.find_benefit_rates_by_plan(plan_id)
 
-        # get provision configuration
-        provisions_config = self._config.get('provisions')
-        provisions_config_dict = {
-            prov['name']: prov for prov in provisions_config
-        }
+        # get provision configuration as a dictionary
+        provisions_config_dict = self.getProvisionConfigDict()
 
         # create a dictionary of all the provisions selected
         factor_dict = {
@@ -76,7 +110,7 @@ class Rater:
         }
 
         # loop over benefits
-        for benefit_rate in benefit_rates:
+        for benefit_rate in self._benefit_rates:
             # loop over each provision/rating attribute in factor_dict
 
             for factor_name, factor_obj in factor_dict.items():
@@ -109,4 +143,9 @@ class Rater:
 
                 benefit_rate.factors.append(factor)
 
-        BenefitRateModel.update_all(benefit_rates, plan_id)
+        BenefitModel.save_all_to_db(self._benefits, plan_id)
+
+    def execute(self):
+        self.calcBenefitRates()
+        self.calcFactors()
+        return self._benefit_rates

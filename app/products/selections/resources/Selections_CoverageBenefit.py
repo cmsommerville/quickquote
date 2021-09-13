@@ -31,6 +31,9 @@ class CoverageBenefitSelections(Resource):
     def post(cls):
         coverage_dict = {}
         data = request.get_json()
+
+        print(data)
+
         try:
             plan_id = data[0]["plan_id"]
         except Exception as e:

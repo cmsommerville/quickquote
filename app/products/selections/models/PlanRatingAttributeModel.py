@@ -11,10 +11,8 @@ class PlanRatingAttributeModel(db.Model):
     plan_attribute_value = db.Column(db.String(100), nullable=False)
     plan_attribute_data_type = db.Column(db.String(10), nullable=False)
 
-    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    row_exp_dts = db.Column(
-        db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
-    active_record_indicator = db.Column(db.String(1), default="Y")
+    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     plan = db.relationship(
         "PlanModel", back_populates="plan_rating_attributes")
@@ -37,7 +35,7 @@ class PlanRatingAttributeModel(db.Model):
 
     @classmethod
     def find_plan_rating_attributes(cls, plan_id):
-        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
+        return cls.query.filter(cls.plan_id == plan_id).all()
 
     def save_to_db(self):
         try:

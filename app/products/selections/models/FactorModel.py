@@ -19,10 +19,8 @@ class FactorModel(db.Model):
     factor_selection_type = db.Column(db.String(10), nullable=False)
     factor_value = db.Column(db.Float, nullable=False)
 
-    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    row_exp_dts = db.Column(
-        db.DateTime, default=datetime.datetime(9999, 12, 31, 0, 0, 0))
-    active_record_indicator = db.Column(db.String(1), default='Y')
+    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     benefit_rate = db.relationship(
         "BenefitRateModel", back_populates="factors")
@@ -36,16 +34,7 @@ class FactorModel(db.Model):
 
     @classmethod
     def find_plan_factors(cls, plan_id):
-        return cls.query.filter(cls.plan_id == plan_id, cls.active_record_indicator == 'Y').all()
-
-    @classmethod
-    def expire_factors(cls, plan_id):
-        factors = cls.find_plan_factors(plan_id)
-        if factors:
-            for factor in factors:
-                factor.row_exp_dts = db.func.current_timestamp()
-                factor.active_record_indicator = 'N'
-                db.session.add(factor)
+        return cls.query.filter(cls.plan_id == plan_id).all()
 
     def save_to_db(self):
         try:
@@ -58,7 +47,6 @@ class FactorModel(db.Model):
     @classmethod
     def save_all_to_db(cls, factors, plan_id):
         try:
-            cls.expire_factors(plan_id)
             for factor in factors:
                 db.session.add(factor)
         except:

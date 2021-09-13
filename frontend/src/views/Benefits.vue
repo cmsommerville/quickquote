@@ -28,7 +28,7 @@
 const axios = require("axios");
 
 export default {
-  name: "Provisions",
+  name: "Benefits",
   data() {
     return {
       loaded: false,

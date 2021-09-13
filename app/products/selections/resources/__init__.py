@@ -1,5 +1,5 @@
 # expose all selections resources
-from .PlanSelections import PlanSelections
-from .CoverageBenefitSelections import CoverageBenefitSelections
-from .ProvisionSelections import ProvisionSelections
-from .RatingCalculator import RatingCalculator
+from .Selections_Plan import PlanSelections
+from .Selections_CoverageBenefit import CoverageBenefitSelections
+from .Selections_Provision import ProvisionSelections
+from .Calculator_Rating import RatingCalculator

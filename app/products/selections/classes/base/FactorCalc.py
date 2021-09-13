@@ -1,4 +1,4 @@
-from app.shared import deep_getattr
+# from app.shared import deep_getattr
 from ...models.FactorModel import FactorModel
 
 
@@ -53,28 +53,31 @@ class FactorCalc:
                 if k in ['factor_value', '_id', 'uuid']:
                     continue
 
-                attr = deep_getattr(factor_attributes, k)
+                attr = getattr(factor_attributes, k)
                 if type(v) == list:
                     applyRule = (attr in v) and applyRule
                 elif type(v) == dict:
                     if v['comparison'] == "range":
-                        applyRule = (attr >= v['lower'] and
-                                     attr <= v['upper'] and
+                        applyRule = (float(attr) >= v['lower'] and
+                                     float(attr) <= v['upper'] and
                                      applyRule)
 
                     elif v['comparison'] == "nlist":
                         applyRule = attr in v['value'] and applyRule
-                    if v['comparison'] == "nrange":
-                        applyRule = not (attr >= v['lower'] and
-                                         attr <= v['upper']) and applyRule
+                    elif v['comparison'] == "nrange":
+                        applyRule = not (float(attr) >= v['lower'] and
+                                         float(attr) <= v['upper']) and applyRule
                     elif v['comparison'] == 'lt':
-                        applyRule = attr < v['value'] and applyRule
+                        applyRule = float(attr) < v['value'] and applyRule
                     elif v['comparison'] == 'le':
-                        applyRule = attr <= v['value'] and applyRule
+                        applyRule = float(attr) <= v['value'] and applyRule
                     elif v['comparison'] == 'gt':
-                        applyRule = attr > v['value'] and applyRule
+                        applyRule = float(attr) > v['value'] and applyRule
                     elif v['comparison'] == 'ge':
-                        applyRule = attr >= v['value'] and applyRule
+                        applyRule = float(attr) >= v['value'] and applyRule
+                elif type(v) == bool:
+                    attr = (str(attr).lower().strip() == 'true')
+                    applyRule = (attr == v) and applyRule
                 else:
                     applyRule = (attr == v) and applyRule
 

@@ -2,7 +2,10 @@ from flask import request
 from flask_restful import Resource
 
 from ..classes import Rater
-from ..models import PlanModel, BenefitModel, ProvisionModel, PlanRatingAttributeModel
+from ..models import PlanModel, BenefitModel, ProvisionModel, PlanRatingAttributeModel, BenefitRateModel
+from ..schemas import BenefitRateSchema
+
+benefit_rate_list_schema = BenefitRateSchema(many=True)
 
 
 class RatingCalculator(Resource):
@@ -23,10 +26,8 @@ class RatingCalculator(Resource):
         rater = Rater(plan=plan, provisions=provisions, coverages=coverages,
                       benefits=benefits, plan_rating_attributes=plan_rating_attributes)
 
-        rater.calcBenefitRates()
-        rater.calcFactors()
-
-        return "Success", 200
+        benefit_rates = rater.execute()
+        return benefit_rate_list_schema.dump(benefit_rates), 200
 
     @classmethod
     def post(cls):
