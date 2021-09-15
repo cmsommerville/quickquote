@@ -6,7 +6,7 @@ import Group from "../views/Group.vue";
 import Plan from "../views/Plan.vue";
 import Provisions from "../views/Provisions.vue";
 import Benefits from "../views/Benefits.vue";
-import PlanRates from "../views/PlanRates.vue";
+import AgeBands from "../views/AgeBands.vue";
 import Premium from "../views/Premium.vue";
 import CreateTables from "../views/admin/CreateTables.vue";
 
@@ -49,9 +49,9 @@ const routes = [
     component: Premium,
   },
   {
-    path: "/plan-rate",
-    name: "plan-rate",
-    component: PlanRates,
+    path: "/age-bands",
+    name: "age-bands",
+    component: AgeBands,
   },
   {
     path: "/admin/create-tables",
