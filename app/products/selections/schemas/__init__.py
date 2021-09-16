@@ -5,3 +5,4 @@ from .PlanSchema import PlanSchema
 from .ProvisionSchema import ProvisionSchema
 from .BenefitRateSchema import BenefitRateSchema
 from .PremiumByBenefitRateSchema import PremiumByBenefitRateSchema
+from .AgeBandsSchema import AgeBandsSchema

@@ -7,3 +7,4 @@ from .PlanModel import PlanModel
 from .PlanRateModel import PlanRateModel
 from .ProvisionModel import ProvisionModel
 from .BenefitRateModel import BenefitRateModel
+from .AgeBandsModel import AgeBandsModel

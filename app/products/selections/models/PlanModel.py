@@ -4,6 +4,7 @@ import datetime
 from .ProvisionModel import ProvisionModel
 from .CoverageModel import CoverageModel
 from .BenefitModel import BenefitModel
+from .AgeBandsModel import AgeBandsModel
 
 
 class PlanModel(db.Model):
@@ -21,6 +22,7 @@ class PlanModel(db.Model):
     coverages = db.relationship("CoverageModel", back_populates="plan")
     benefits = db.relationship("BenefitModel", back_populates="plan")
     provisions = db.relationship("ProvisionModel", back_populates="plan")
+    age_bands = db.relationship("AgeBandsModel", back_populates="plan")
 
     def __repr__(self):
         return f"<Plan Id: {self.plan_id} -- Product Name: `{self.product_code}`>"

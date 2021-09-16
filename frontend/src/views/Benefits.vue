@@ -85,7 +85,7 @@ export default {
         }
       );
       this.$router.push({
-        name: "provisions",
+        name: "age-bands",
         query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },
       });
     },
