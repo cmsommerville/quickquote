@@ -49,13 +49,14 @@ def create_app(config):
     # from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
 
     from .products.admin import CreateTables
-    from .products.config import PlanConfig, PlanConfigList
+    from .products.config import PlanConfig, PlanConfigList, RateTableList
     from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculator, AgeBandsSelections
 
     api.add_resource(CreateTables, '/admin/create-tables')
 
     api.add_resource(PlanConfigList, '/config/plans')
     api.add_resource(PlanConfig, '/config/plan/<id>')
+    api.add_resource(RateTableList, '/config/rate-table')
 
     api.add_resource(PlanSelections, '/selections/plan')
     api.add_resource(AgeBandsSelections, '/selections/age-bands')
