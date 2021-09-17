@@ -1,5 +1,9 @@
 from app.extensions import db
 import datetime
+from sqlalchemy import func
+
+from .RateTableModel import RateTableModel
+from .AgeBandsModel import AgeBandsModel
 
 
 class BenefitRateModel(db.Model):
@@ -8,10 +12,12 @@ class BenefitRateModel(db.Model):
     benefit_rate_id = db.Column(db.Integer, primary_key=True)
     benefit_id = db.Column(db.Integer, db.ForeignKey('benefits.benefit_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
+    age_band_id = db.Column(db.Integer, db.ForeignKey('age_bands.age_band_id'))
+    rate_table_id = db.Column(
+        db.Integer, db.ForeignKey('rate_table.rate_table_id'))
     age = db.Column(db.Integer, nullable=False)
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
-    benefit_rate_uuid = db.Column(db.String(36), nullable=False)
     benefit_rate_base_premium = db.Column(db.Numeric(12, 5), nullable=False)
     benefit_rate_factor = db.Column(db.Numeric(8, 5))
     benefit_rate_benefit_factor = db.Column(db.Numeric(8, 5))
@@ -22,8 +28,10 @@ class BenefitRateModel(db.Model):
 
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
+    age_band = db.relationship("AgeBandsModel")
+    rate_table = db.relationship("RateTableModel")
     factors = db.relationship(
-        "FactorModel", back_populates="benefit_rate", cascade="all, delete-orphan")
+        "FactorModel", back_populates="benefit_rate", passive_deletes=True)
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"
@@ -39,6 +47,18 @@ class BenefitRateModel(db.Model):
     @classmethod
     def find_benefit_rates_by_benefit(cls, benefit_id):
         return cls.query.filter(cls.benefit_id == benefit_id).options(db.joinedload(cls.benefit)).all()
+
+    @classmethod
+    def agg_benefit_rates_by_age_band(cls, plan_id):
+        qry = db.session.query(
+            cls.plan_id, cls.benefit_id, cls.age_band_id,
+            cls.smoker_status, cls.family_code,
+            func.sum(cls.benefit_rate_final_premium).label("benefit_rate_final_premium")) \
+            .filter(cls.plan_id == plan_id, cls.age_band_id != None)\
+            .group_by(
+                cls.plan_id, cls.benefit_id, cls.age_band_id,
+                cls.smoker_status, cls.family_code)
+        return qry.all()
 
     def save_to_db(self):
         try:

@@ -7,7 +7,7 @@ class FactorModel(db.Model):
 
     factor_id = db.Column(db.Integer, primary_key=True)
     benefit_rate_id = db.Column(
-        db.Integer, db.ForeignKey('benefit_rates.benefit_rate_id'))
+        db.Integer, db.ForeignKey('benefit_rates.benefit_rate_id', ondelete="CASCADE"))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     provision_id = db.Column(
         db.Integer, db.ForeignKey('provisions.provision_id'))

@@ -5,7 +5,9 @@
       :headers="headers"
       :items="table_data"
       :items-per-page="10"
-      :options="{ sortBy: ['family_code', 'smoker_status', 'age'] }"
+      :options="{
+        sortBy: ['benefit_id', 'family_code', 'smoker_status', 'age_band_id'],
+      }"
       class="elevation-1"
     ></v-data-table>
   </div>
@@ -21,11 +23,10 @@ export default {
       loaded: false,
       benefit_rates: null,
       headers: [
+        { text: "Benefit ID", value: "benefit_id" },
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
-        { text: "Age", value: "age" },
-        { text: "Benefit Code", value: "benefit_code" },
-        { text: "Benefit Selection", value: "benefit_value" },
+        { text: "Age Band ID", value: "age_band_id" },
         { text: "Premium", value: "benefit_rate_final_premium" },
       ],
       plan_id: null,
@@ -37,8 +38,6 @@ export default {
       return this.benefit_rates.map((br) => {
         return {
           ...br,
-          benefit_code: br.benefit.benefit_code,
-          benefit_value: br.benefit.benefit_value,
         };
       });
     },

@@ -31,11 +31,18 @@ class RateTableModel(db.Model):
         return cls.query.filter(cls.rate_table_id == id).first()
 
     @classmethod
-    def find_benefit_rateset(cls, product_code, product_variation_code, benefit):
+    def find_benefit_rateset(cls, product_code, product_variation_code, benefit_code):
         return cls.query.filter(
             cls.product_code == product_code,
             cls.product_variation_code == product_variation_code,
-            cls.benefit == benefit).all()
+            cls.benefit_code == benefit_code).all()
+
+    @classmethod
+    def find_many_benefit_ratesets(cls, product_code, product_variation_code, benefit_codes):
+        return cls.query.filter(
+            cls.product_code == product_code,
+            cls.product_variation_code == product_variation_code,
+            cls.benefit_code.in_(benefit_codes)).all()
 
     @classmethod
     def save_all_to_db(cls, rates):
