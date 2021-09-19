@@ -257,7 +257,26 @@
         "effectiveDate": "2021-07-01"
       }
     ],
-    "coverages": [],
+    "coverages": [
+      {
+        "name": "base",
+        "text": "Base Critical Illness",
+        "default": true,
+        "display": "main"
+      },
+      {
+        "name": "progressive_disease",
+        "text": "Progressive Disease Rider",
+        "display": "main",
+        "default": false
+      },
+      {
+        "name": "optional_benefits",
+        "text": "Optional Benefits",
+        "display": "main",
+        "default": false
+      }
+    ],
     "provisions": [
       {
         "uuid": "1c120bfc-55f6-4b8b-964a-1ab745dccbbb",
@@ -436,7 +455,7 @@
         "name": "ms",
         "text": "Multiple Sclerosis",
         "type": "face_amount",
-        "coverage_code": "base",
+        "coverage_code": "progressive_disease",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -453,7 +472,7 @@
         "name": "als",
         "text": "ALS",
         "type": "face_amount",
-        "coverage_code": "base",
+        "coverage_code": "progressive_disease",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -521,7 +540,7 @@
         "name": "parkinsons",
         "text": "Parkinson's Disease",
         "type": "face_amount",
-        "coverage_code": "base",
+        "coverage_code": "optional_benefits",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -538,7 +557,7 @@
         "name": "alzheimers",
         "text": "Alzheimer's Disease",
         "type": "face_amount",
-        "coverage_code": "base",
+        "coverage_code": "optional_benefits",
         "amounts": {
           "default": 100,
           "min": 0,
