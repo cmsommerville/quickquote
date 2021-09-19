@@ -11,14 +11,14 @@
         <v-icon>mdi-menu-down-outline</v-icon>
       </v-btn>
     </div>
-    <div class="content-benefits ml-6" v-if="selected">
+    <div class="content-benefits ml-6" v-if="!hidden">
       <v-switch
         v-for="benefit in coverage.benefits"
         :key="benefit.name"
         v-model="selections[benefit.name]"
         :label="benefit.text"
         :false-value="0"
-        :true-value="benefit.default"
+        :true-value="benefit.amounts.default"
         @change="setValue"
       >
       </v-switch>
@@ -48,12 +48,14 @@ export default {
       (acc, curr) => ((acc[curr.name] = curr.amounts.default), acc),
       {}
     );
+    this.toggleCoverage();
   },
   methods: {
     toggleCoverage() {
       this.coverage.benefits.map((bnft) => {
         this.selections[bnft.name] = this.selected ? bnft.amounts.default : 0;
       });
+      this.setValue();
     },
     setValue() {
       this.$emit("selections-change", this.selections);

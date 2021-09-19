@@ -1,34 +1,16 @@
 <template>
   <div class="container">
     <div class="form-rater" v-if="loaded">
-      <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+      <v-form class="form" @submit="onSubmit" @reset="onReset">
         <div
           class="content-coverage"
           v-for="covg in coverages"
           :key="covg.name"
         >
-          <div class="d-flex justify-space-between">
-            <v-switch
-              v-model="coverage_selections[covg.name]"
-              :label="covg.text"
-              @change="toggleCoverage(covg)"
-            >
-            </v-switch>
-            <v-btn color="primary" fab dark small @click="showCoverage(covg)">
-              <v-icon>mdi-menu-down-outline</v-icon>
-            </v-btn>
-          </div>
-          <div class="content-benefits ml-6" v-if="showBenefitsPane[covg.name]">
-            <v-switch
-              v-for="benefit in covg.benefits"
-              :key="benefit.name"
-              v-model="benefit_selections[benefit.name]"
-              :label="benefit.text"
-              :false-value="0"
-              :true-value="benefit.default"
-            >
-            </v-switch>
-          </div>
+          <coverage-selections-expansion-panel
+            :coverage="covg"
+            @selections-change="selectionChangeHandler"
+          />
         </div>
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
@@ -44,24 +26,23 @@
 
 <script>
 const axios = require("axios");
+import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
 
 export default {
   name: "Benefits",
+  components: { CoverageSelectionsExpansionPanel },
   data() {
     return {
       loaded: false,
       plan_config_id: null,
       plan_id: null,
       plan_config: null,
-      coverage_selections: {},
-      benefit_selections: {},
-      show: {},
-      hidden: false,
+      selections: {},
     };
   },
   computed: {
-    showBenefitsPane() {
-      return this.show;
+    benefits() {
+      return this.plan_config.benefits;
     },
     coverages() {
       let covg_index;
@@ -82,60 +63,33 @@ export default {
 
       return coverages;
     },
-    benefits() {
-      return this.plan_config.benefits;
-    },
     selectionHandler() {
       return this.benefits
-        .filter((bnft) =>
-          Object.keys(this.benefit_selections).includes(bnft.name)
-        )
+        .filter((bnft) => Object.keys(this.selections).includes(bnft.name))
         .map((item) => {
           return {
             plan_id: this.plan_id,
             coverage_code: item.coverage_code,
             benefit_code: item.name,
             benefit_uuid: item.uuid,
-            benefit_value: this.benefit_selections[item.name],
+            benefit_value: this.selections[item.name],
           };
         });
     },
   },
   async mounted() {
     this.plan_config_id = this.$route.query.plan_config_id;
+    this.plan_id = +this.$route.query.plan_id;
+
     const res = await axios.get(
       `http://localhost:5000/config/plan/${this.plan_config_id}`
     );
-    this.plan_id = +this.$route.query.plan_id;
     this.plan_config = { ...res.data[0] };
-
-    this.benefit_selections = [...res.data[0].benefits].reduce(
-      (acc, curr) => ((acc[curr.name] = curr.amounts.default), acc),
-      {}
-    );
-
-    for (let coverage of res.data[0].coverages) {
-      this.coverage_selections[coverage.name] = coverage.default;
-      this.show[coverage.name] = false;
-    }
-
-    for (let coverage of this.coverages) {
-      this.toggleCoverage(coverage);
-    }
     this.loaded = true;
   },
   methods: {
-    showCoverage(coverage) {
-      this.show[coverage.name] = !this.show[coverage.name];
-      console.log(this.show);
-    },
-    toggleCoverage(coverage) {
-      const selected = this.coverage_selections[coverage.name];
-      coverage.benefits.map((bnft) => {
-        this.benefit_selections[bnft.name] = selected
-          ? bnft.amounts.default
-          : 0;
-      });
+    selectionChangeHandler(selections) {
+      this.selections = { ...this.selections, ...selections };
     },
     async onSubmit(event) {
       event.preventDefault();
