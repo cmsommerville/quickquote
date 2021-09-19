@@ -19,8 +19,8 @@ class BenefitRateModel(db.Model):
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
     benefit_rate_base_premium = db.Column(db.Numeric(12, 5), nullable=False)
-    benefit_rate_factor = db.Column(db.Numeric(8, 5))
-    benefit_rate_benefit_factor = db.Column(db.Numeric(8, 5))
+    benefit_rate_factor = db.Column(db.Numeric(8, 5), default=1)
+    benefit_rate_benefit_factor = db.Column(db.Numeric(8, 5), default=1)
     benefit_rate_final_premium = db.Column(db.Numeric(12, 5))
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -70,10 +70,11 @@ class BenefitRateModel(db.Model):
             db.session.commit()
 
     @classmethod
-    def save_all_to_db(cls, benefit_rates, benefit_id):
+    def save_all_to_db(cls, benefit_rates):
         try:
-            for benefit_rate in benefit_rates:
-                db.session.add(benefit_rate)
+            # for benefit_rate in benefit_rates:
+            #     db.session.add(benefit_rate)
+            db.session.bulk_save_objects(benefit_rates)
         except:
             db.session.rollback()
             raise
@@ -83,13 +84,26 @@ class BenefitRateModel(db.Model):
     @classmethod
     def delete_by_benefit_id(cls, benefit_id, commit=False):
         try:
-            benefits_for_delete = cls.query.filter(
-                cls.benefit_id == benefit_id).all()
-            for bnft in benefits_for_delete:
-                db.session.delete(bnft)
+            # benefits_for_delete = cls.query.filter(
+            #     cls.benefit_id == benefit_id).all()
+            # for bnft in benefits_for_delete:
+            #     db.session.delete(bnft)
+            cls.query.filter(
+                cls.benefit_id == benefit_id).delete()
         except:
             db.session.rollback()
             raise
         else:
             if commit:
                 db.session.commit()
+
+    @classmethod
+    def delete_by_plan_id(cls, plan_id):
+        try:
+            cls.query.filter(
+                cls.plan_id == plan_id).delete()
+        except:
+            db.session.rollback()
+            raise
+        else:
+            db.session.commit()

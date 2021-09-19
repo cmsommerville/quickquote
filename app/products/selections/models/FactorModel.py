@@ -43,10 +43,11 @@ class FactorModel(db.Model):
             db.session.commit()
 
     @classmethod
-    def save_all_to_db(cls, factors, plan_id):
+    def save_all_to_db(cls, factors):
         try:
-            for factor in factors:
-                db.session.add(factor)
+            # for factor in factors:
+            #     db.session.add(factor)
+            db.session.bulk_save_objects(factors)
         except:
             db.session.rollback()
             raise

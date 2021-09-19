@@ -6,5 +6,5 @@ class FactorCalc_CI_GroupSize(FactorCalc):
 
     def __init__(self, factor_attributes, config):
         factor_type = 'product'
-        factor_name = 'groupsize'
+        factor_name = 'group_size'
         super().__init__(factor_attributes, factor_name, factor_type, config)

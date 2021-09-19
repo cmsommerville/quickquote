@@ -4,7 +4,7 @@ from .FactorCalc_CI_ReductionAt70 import FactorCalc_CI_ReductionAt70
 
 
 ELIGIBLE_FACTORS = {
-    'groupsize': FactorCalc_CI_GroupSize,
+    'group_size': FactorCalc_CI_GroupSize,
     'prex': FactorCalc_CI_Prex,
     'reductionAt70': FactorCalc_CI_ReductionAt70
 }

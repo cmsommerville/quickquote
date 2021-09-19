@@ -17,7 +17,7 @@
         ></v-switch>
 
         <v-text-field
-          v-model.number="selections.groupsize"
+          v-model.number="selections.group_size"
           label="Group Size"
           type="number"
           class="my-3"
