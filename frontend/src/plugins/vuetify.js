@@ -11,7 +11,7 @@ export default new Vuetify({
       light: {
         primary: colors.teal.darken1, // #E53935
         secondary: colors.teal.lighten4, // #FFCDD2
-        accent: colors.indigo.base, // #3F51B5
+        accent: colors.pink.base, // #3F51B5
         softer: colors.teal.lighten4,
       },
     },

@@ -21,6 +21,13 @@
         </div>
       </v-form>
     </div>
+    <v-speed-dial absolute right bottom direction="top">
+      <template v-slot:activator>
+        <v-btn color="accent" dark fab>
+          <v-icon> mdi-pencil </v-icon>
+        </v-btn>
+      </template>
+    </v-speed-dial>
   </div>
 </template>
 
@@ -33,6 +40,7 @@ export default {
   components: { CoverageSelectionsExpansionPanel },
   data() {
     return {
+      fab: false,
       loaded: false,
       plan_config_id: null,
       plan_id: null,

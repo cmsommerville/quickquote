@@ -16,7 +16,10 @@
         v-for="benefit in coverage.benefits"
         :key="benefit.name"
         v-model="selections[benefit.name]"
-        :label="benefit.text"
+        :label="
+          benefit.text +
+          (selections[benefit.name] ? ` (${selections[benefit.name]}%)` : '')
+        "
         :false-value="0"
         :true-value="benefit.amounts.default"
         @change="setValue"

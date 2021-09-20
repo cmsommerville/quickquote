@@ -9,7 +9,10 @@
         transition="scale-transition"
         width="40"
       />
-      <v-toolbar-title>QuickQuote</v-toolbar-title>
+      <v-toolbar-title
+        ><span class="brand-name-front secondary--text">Pi</span
+        ><span class="brand-name-back">Rate</span></v-toolbar-title
+      >
     </div>
 
     <v-spacer></v-spacer>
@@ -22,4 +25,27 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.brand-name-front {
+  font-weight: 500;
+  font-size: 2rem;
+  text-transform: lowercase;
+  font-family: "Wallpoet", cursive;
+}
+.brand-name-back {
+  font-weight: 200;
+  font-size: 2rem;
+  text-transform: lowercase;
+  font-family: "Wallpoet", cursive;
+}
+
+.dummy-fonts {
+  font-family: "Griffy", cursive;
+  font-family: "Metal Mania", cursive;
+  font-family: "Monofett", cursive;
+  font-family: "Train One", cursive;
+  font-family: "Turret Road", cursive;
+  font-family: "Uncial Antiqua", cursive;
+  font-family: "Wallpoet", cursive;
+}
+</style>
