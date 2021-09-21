@@ -21,23 +21,27 @@
         </div>
       </v-form>
     </div>
-    <v-speed-dial absolute right bottom direction="top">
-      <template v-slot:activator>
-        <v-btn color="accent" dark fab>
-          <v-icon> mdi-pencil </v-icon>
-        </v-btn>
-      </template>
-    </v-speed-dial>
+    <selections-modal
+      title="Customize Benefit Selections"
+      :columnDefs="benefitsGrid.columnDefs"
+      :rowData="benefitsGrid.rowData"
+      @customized-benefits="customBenefitsHandler"
+    />
   </div>
 </template>
 
 <script>
 const axios = require("axios");
 import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
+import SelectionsModal from "../components/SelectionsModal.vue";
+
+function numberParser(params) {
+  return Number(params.newValue);
+}
 
 export default {
   name: "Benefits",
-  components: { CoverageSelectionsExpansionPanel },
+  components: { CoverageSelectionsExpansionPanel, SelectionsModal },
   data() {
     return {
       fab: false,
@@ -51,6 +55,36 @@ export default {
   computed: {
     benefits() {
       return this.plan_config.benefits;
+    },
+    benefitsGrid() {
+      const columnDefs = [
+        { headerName: "Benefit Code", field: "name", hide: true },
+        { headerName: "Benefit Name", field: "text" },
+        {
+          headerName: "Selected Amount",
+          field: "amount",
+          editable: true,
+          valueParser: numberParser,
+        },
+        { headerName: "Unit", field: "unit" },
+      ];
+      if (this.plan_config) {
+        return {
+          columnDefs: columnDefs,
+          rowData: this.plan_config.benefits.map((bnft) => {
+            return {
+              name: bnft.name,
+              text: bnft.text,
+              amount: bnft.amounts.default,
+              unit: bnft.amounts.unit === "percent" ? "%" : "$",
+            };
+          }),
+        };
+      }
+      return {
+        columnDefs: columnDefs,
+        rowData: [],
+      };
     },
     coverages() {
       let covg_index;
@@ -96,6 +130,9 @@ export default {
     this.loaded = true;
   },
   methods: {
+    customBenefitsHandler(payload) {
+      this.selections[payload.name] = payload.amount;
+    },
     selectionChangeHandler(selections) {
       this.selections = { ...this.selections, ...selections };
     },

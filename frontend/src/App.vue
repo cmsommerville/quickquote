@@ -18,13 +18,14 @@ export default {
     TheSidebar,
     TheHeader,
   },
-  data: () => ({
-    //
-  }),
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-material.css";
+
 .container {
   display: flex;
 }
