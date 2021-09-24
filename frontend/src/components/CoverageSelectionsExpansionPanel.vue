@@ -13,12 +13,12 @@
     </div>
     <div class="content-benefits ml-6" v-if="!hidden">
       <v-switch
-        v-for="benefit in coverage.benefits"
+        v-for="benefit in benefits"
         :key="benefit.name"
-        v-model="selections[benefit.name]"
+        v-model="benefit.selectedValue"
         :label="
           benefit.text +
-          (selections[benefit.name] ? ` (${selections[benefit.name]}%)` : '')
+          (benefit.selectedValue !== 0 ? ` (${benefit.selectedValue}%)` : '')
         "
         :false-value="0"
         :true-value="benefit.amounts.default"
@@ -42,26 +42,25 @@ export default {
     return {
       hidden: true,
       selected: false,
-      selections: {},
+      benefits: [],
     };
   },
   mounted() {
     this.selected = this.coverage.default;
-    this.selections = [...this.coverage.benefits].reduce(
-      (acc, curr) => ((acc[curr.name] = curr.amounts.default), acc),
-      {}
-    );
+    this.benefits = this.coverage.benefits.map((bnft) => {
+      return { ...bnft, selectedValue: bnft.amounts.default };
+    });
     this.toggleCoverage();
   },
   methods: {
     toggleCoverage() {
-      this.coverage.benefits.map((bnft) => {
-        this.selections[bnft.name] = this.selected ? bnft.amounts.default : 0;
+      this.benefits.map((bnft) => {
+        bnft.selectedValue = this.selected ? bnft.amounts.default : 0;
       });
       this.setValue();
     },
     setValue() {
-      this.$emit("selections-change", this.selections);
+      this.$emit("selections-change", this.benefits);
     },
   },
 };

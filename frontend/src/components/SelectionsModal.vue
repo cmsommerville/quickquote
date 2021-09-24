@@ -33,6 +33,10 @@
 <script>
 import { AgGridVue } from "ag-grid-vue";
 
+function numberParser(params) {
+  return Number(params.newValue);
+}
+
 export default {
   name: "SelectionsModal",
   props: {
@@ -40,22 +44,43 @@ export default {
       required: true,
       type: String,
     },
-    columnDefs: {
+    selections: {
       required: true,
-      type: Array,
-    },
-    rowData: {
-      required: true,
-      type: Array,
+      type: Object,
     },
   },
   components: {
     AgGridVue,
   },
+  computed: {
+    columnDefs() {
+      return [
+        { headerName: "Benefit Code", field: "name", hide: true },
+        { headerName: "Benefit Name", field: "text" },
+        {
+          headerName: "Selected Amount",
+          field: "selectedValue",
+          editable: true,
+          valueParser: numberParser,
+        },
+        { headerName: "Unit", field: "unit" },
+      ];
+    },
+    rowData() {
+      const benefits = [];
+      for (const key in this.selections) {
+        benefits.push({
+          ...this.selections[key],
+          unit: this.selections[key].amounts.unit === "percent" ? "%" : "$",
+        });
+      }
+      return benefits;
+    },
+  },
   methods: {
     onCellValueChanged(e) {
       const r = this.rowData.find((row) => row.text === e.data.text);
-      this.$emit("customized-benefits", { ...r, amount: e.data.amount });
+      this.$emit("customized-benefits", { ...r });
     },
   },
 };
