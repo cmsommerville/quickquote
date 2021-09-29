@@ -51,7 +51,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "../services/axios.js";
 
 export default {
   name: "Plan",
@@ -68,7 +68,7 @@ export default {
     };
   },
   async mounted() {
-    const res = await axios.get("http://localhost:5000/config/plans");
+    const res = await axios.get("/config/plans");
     this.data = [...res.data];
     this.loaded = true;
   },
@@ -100,14 +100,10 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      const res = await axios.post(
-        "http://localhost:5000/selections/plan",
-        this.selections,
-        {
-          params: { plan_config_id: this.config_id },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post("/selections/plan", this.selections, {
+        params: { plan_config_id: this.config_id },
+        // withCredentials: true,
+      });
       this.$router.push({
         name: "benefits",
         query: { plan_id: res.data.plan_id, plan_config_id: this.config_id },

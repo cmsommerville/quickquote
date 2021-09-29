@@ -14,7 +14,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "../services/axios.js";
 
 export default {
   name: "Premium",
@@ -45,7 +45,7 @@ export default {
   async mounted() {
     this.plan_id = this.$route.query.plan_id;
     const res = await axios.post(
-      `http://localhost:5000/rating-calculator?plan_id=${this.plan_id}`,
+      `/rating-calculator?plan_id=${this.plan_id}`,
       {},
       {
         withCredentials: true,
@@ -57,17 +57,7 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post(
-        "http://localhost:5000/selections/provisions",
-        this.selectionHandler,
-        {
-          withCredentials: true,
-        }
-      );
-      this.$router.push({
-        name: "plan-rate",
-        query: { plan_id: this.plan_id },
-      });
+      console.log("clicked");
     },
     onReset(event) {
       event.preventDefault();

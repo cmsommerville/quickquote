@@ -36,7 +36,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "../services/axios.js";
 
 export default {
   name: "Provisions",
@@ -78,9 +78,7 @@ export default {
   },
   async mounted() {
     this.plan_config_id = this.$route.query.plan_config_id;
-    const res = await axios.get(
-      `http://localhost:5000/config/plan/${this.plan_config_id}`
-    );
+    const res = await axios.get(`/config/plan/${this.plan_config_id}`);
     this.plan_id = +this.$route.query.plan_id;
     this.plan_config = { ...res.data[0] };
     this.selections = [...res.data[0].provisions].reduce(
@@ -92,13 +90,9 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post(
-        "http://localhost:5000/selections/provisions",
-        this.selectionHandler,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("/selections/provisions", this.selectionHandler, {
+        withCredentials: true,
+      });
       this.$router.push({
         name: "premium",
         query: { plan_id: this.plan_id },

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "../services/axios.js";
 import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
 import SelectionsModal from "../components/SelectionsModal.vue";
 
@@ -85,9 +85,7 @@ export default {
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
 
-    const res = await axios.get(
-      `http://localhost:5000/config/plan/${this.plan_config_id}`
-    );
+    const res = await axios.get(`/config/plan/${this.plan_config_id}`);
     this.plan_config = { ...res.data[0] };
     this.loaded = true;
   },
@@ -105,13 +103,9 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post(
-        "http://localhost:5000/selections/benefits",
-        this.selectionFormatter,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("/selections/benefits", this.selectionFormatter, {
+        withCredentials: true,
+      });
       this.$router.push({
         name: "age-bands",
         query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },

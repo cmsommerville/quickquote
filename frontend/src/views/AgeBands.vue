@@ -70,7 +70,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "../services/axios.js";
 
 export default {
   name: "AgeBands",
@@ -92,7 +92,7 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
       await axios.post(
-        "http://localhost:5000/selections/age-bands",
+        "/selections/age-bands",
         {
           age_bands: this.age_bands,
           plan_id: this.plan_id,
