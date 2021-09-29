@@ -56,5 +56,6 @@ class RatingCalculatorResource(Resource):
             benefits=benefits
         )
         benefit_rates = rater.calculate()
+        print(benefit_rates[0])
 
         return premium_by_benefit_age_band_rate_list_schema.dump(benefit_rates), 200

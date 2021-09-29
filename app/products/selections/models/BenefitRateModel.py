@@ -63,9 +63,9 @@ class BenefitRateModel(db.Model):
     @classmethod
     def save_all_to_db(cls, benefit_rates):
         try:
-            # for benefit_rate in benefit_rates:
-            #     db.session.add(benefit_rate)
-            db.session.bulk_save_objects(benefit_rates)
+            for benefit_rate in benefit_rates:
+                db.session.add(benefit_rate)
+            # db.session.bulk_save_objects(benefit_rates)
         except:
             db.session.rollback()
             raise
