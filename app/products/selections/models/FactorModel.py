@@ -6,8 +6,6 @@ class FactorModel(db.Model):
     __tablename__ = "factors"
 
     factor_id = db.Column(db.Integer, primary_key=True)
-    benefit_rate_id = db.Column(
-        db.Integer, db.ForeignKey('benefit_rates.benefit_rate_id', ondelete="CASCADE"))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     provision_id = db.Column(
         db.Integer, db.ForeignKey('provisions.provision_id'))
@@ -20,8 +18,8 @@ class FactorModel(db.Model):
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    benefit_rate = db.relationship(
-        "BenefitRateModel", back_populates="factors")
+    # benefit_rate = db.relationship(
+    #     "BenefitRateModel", back_populates="factors")
 
     def __repr__(self):
         return f"<Factor Id: {self.factor_id} -- Factor Name: `{self.factor_name}`>"

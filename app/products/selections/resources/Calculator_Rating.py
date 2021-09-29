@@ -1,10 +1,14 @@
-from flask import request
+from flask import request, session
 from flask_restful import Resource
 
-from ..classes import Rater, RatingCalculator
-from ..models import PlanModel, BenefitModel, ProvisionModel, BenefitRateModel
-from ..schemas import BenefitRateSchema, PremiumByBenefitAgeBandRateSchema
+from ..classes import Rater, RatingCalculator, Rating_PremiumCalculator
+from ..models import PlanModel, BenefitModel, ProvisionModel, AgeBandsModel, BenefitRateModel
+from ..schemas import PlanSchema, BenefitSchema, ProvisionSchema,  AgeBandsSchema, BenefitRateSchema, PremiumByBenefitAgeBandRateSchema
 
+benefit_list_schema = BenefitSchema(many=True)
+plan_schema = PlanSchema()
+provision_list_schema = ProvisionSchema(many=True)
+age_bands_list_schema = AgeBandsSchema(many=True)
 benefit_rate_list_schema = BenefitRateSchema(many=True)
 premium_by_benefit_age_band_rate_list_schema = PremiumByBenefitAgeBandRateSchema(
     many=True)
@@ -31,27 +35,26 @@ class RatingCalculatorResource(Resource):
 
     @classmethod
     def post(cls):
-        coverage_dict = {}
-        data = request.get_json()
-        try:
-            plan_id = data[0]["plan_id"]
-        except Exception as e:
-            return str(e), 400
+        plan_id = request.args.get("plan_id")
+        if plan_id is None:
+            raise Exception("Please provide a plan_id query parameter")
+        BenefitRateModel.delete_by_plan_id(plan_id)
 
-        for item in data:
-            coverage_code = item['coverage_code']
-            if coverage_dict.get(coverage_code) is None:
-                coverage_dict[coverage_code] = CoverageModel(
-                    plan_id=plan_id, coverage_code=coverage_code)
+        session_data = session.get("PLAN-" + str(plan_id))
 
-            benefit = benefit_schema.load(
-                {k: v for k, v in item.items() if k in benefit_keys})
-            coverage_dict[coverage_code].benefits.append(benefit)
+        plan = plan_schema.load(session_data['plan'])
+        plan_config = session_data['plan_config'][0]
+        age_bands = age_bands_list_schema.load(session_data['age_bands'])
+        provisions = provision_list_schema.load(session_data['provisions'])
+        benefits = benefit_list_schema.load(session_data['benefits'])
 
-        try:
-            coverages = [v for k, v in coverage_dict.items()]
-            CoverageModel.save_all_to_db(coverages, plan_id)
-        except Exception as e:
-            return str(e), 400
+        rater = Rating_PremiumCalculator(
+            plan=plan,
+            plan_config=plan_config,
+            provisions=provisions,
+            age_bands=age_bands,
+            benefits=benefits
+        )
+        benefit_rates = rater.calculate()
 
-        return "created", 201
+        return premium_by_benefit_age_band_rate_list_schema.dump(benefit_rates), 200

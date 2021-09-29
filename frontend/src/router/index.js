@@ -9,6 +9,7 @@ import Benefits from "../views/Benefits.vue";
 import AgeBands from "../views/AgeBands.vue";
 import Premium from "../views/Premium.vue";
 import CreateTables from "../views/admin/CreateTables.vue";
+import Session from "../views/Session.vue";
 
 Vue.use(VueRouter);
 
@@ -57,6 +58,11 @@ const routes = [
     path: "/admin/create-tables",
     name: "create-tables",
     component: CreateTables,
+  },
+  {
+    path: "/session",
+    name: "session",
+    component: Session,
   },
 ];
 

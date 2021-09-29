@@ -13,15 +13,9 @@ class BenefitRateModel(db.Model):
     benefit_id = db.Column(db.Integer, db.ForeignKey('benefits.benefit_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     age_band_id = db.Column(db.Integer, db.ForeignKey('age_bands.age_band_id'))
-    rate_table_id = db.Column(
-        db.Integer, db.ForeignKey('rate_table.rate_table_id'))
-    age = db.Column(db.Integer, nullable=False)
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
-    benefit_rate_base_premium = db.Column(db.Numeric(12, 5), nullable=False)
-    benefit_rate_factor = db.Column(db.Numeric(8, 5), default=1)
-    benefit_rate_benefit_factor = db.Column(db.Numeric(8, 5), default=1)
-    benefit_rate_final_premium = db.Column(db.Numeric(12, 5))
+    benefit_rate_premium = db.Column(db.Numeric(12, 5))
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -29,9 +23,6 @@ class BenefitRateModel(db.Model):
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
     age_band = db.relationship("AgeBandsModel")
-    rate_table = db.relationship("RateTableModel")
-    factors = db.relationship(
-        "FactorModel", back_populates="benefit_rate", passive_deletes=True)
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"

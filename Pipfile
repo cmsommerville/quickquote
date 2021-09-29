@@ -19,6 +19,8 @@ dnspython = "*"
 psycopg2 = "*"
 pytest = "*"
 ariadne = "*"
+typing = "*"
+requests = "*"
 
 [dev-packages]
 

@@ -1,4 +1,5 @@
-from flask import request
+import requests
+from flask import request, session
 from flask_restful import Resource
 
 from ..models.PlanModel import PlanModel
@@ -19,18 +20,19 @@ class PlanSelections(Resource):
         return plan_schema.dump(plan), 200
 
     def post(self):
-
+        plan_config_id = request.args.get("plan_config_id")
         data = request.get_json()
-        plan_id = data.get("plan_id")
-        if plan_id:
-            oldPlan = PlanModel.find_by_id(plan_id)
-            plan = plan_schema.load(
-                {**data, "plan_number": oldPlan.plan_number})
-        else:
-            plan = plan_schema.load(data)
+        plan = plan_schema.load(data)
+        config = requests.get(
+            f"{request.url_root}config/plan/{plan_config_id}").json()
 
         try:
             plan.save_to_db()
+            plan_id = plan.plan_id
+            session["PLAN-" + str(plan_id)] = {
+                "plan": plan_schema.dump(plan),
+                "plan_config": config
+            }
         except Exception as e:
             print(e)
 

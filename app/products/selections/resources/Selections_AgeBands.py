@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session
 from flask_restful import Resource
 
 from ..models.AgeBandsModel import AgeBandsModel
@@ -23,12 +23,15 @@ class AgeBandsSelections(Resource):
         data = request.get_json()
         plan_id = data.get("plan_id")
         age_bands_data = data['age_bands']
+        session_data = session.get("PLAN-" + str(plan_id))
 
         age_bands = age_bands_list_schema.load(
             [{**band, "plan_id": plan_id} for band in age_bands_data])
         try:
             AgeBandsModel.delete_by_plan_id(plan_id)
             AgeBandsModel.save_all_to_db(age_bands, plan_id)
+            session["PLAN-" + str(plan_id)] = {
+                **session_data, "age_bands": age_bands_list_schema.dump(age_bands)}
         except Exception as e:
             print(e)
 

@@ -426,7 +426,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -439,11 +439,18 @@
         "text": "Cancer",
         "type": "face_amount",
         "coverage_code": "base",
+        "ui": {
+          "widget": "switch",
+          "attrs": {
+            "false-value": 0,
+            "true-value": 100
+          }
+        },
         "amounts": {
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -460,7 +467,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -477,7 +484,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -494,7 +501,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -511,7 +518,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -528,7 +535,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -545,7 +552,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },
@@ -562,7 +569,7 @@
           "default": 100,
           "min": 0,
           "max": 100,
-          "step": 0.25,
+          "step": 6.25,
           "unit": "percent"
         },
         "variations": { "statesProhibited": [], "statesRequired": [] },

@@ -104,6 +104,7 @@ export default {
         "http://localhost:5000/selections/plan",
         this.selections,
         {
+          params: { plan_config_id: this.config_id },
           withCredentials: true,
         }
       );

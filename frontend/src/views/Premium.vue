@@ -27,7 +27,7 @@ export default {
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
         { text: "Age Band ID", value: "age_band_id" },
-        { text: "Premium", value: "benefit_rate_final_premium" },
+        { text: "Premium", value: "benefit_rate_premium" },
       ],
       plan_id: null,
       show: true,
@@ -44,8 +44,12 @@ export default {
   },
   async mounted() {
     this.plan_id = this.$route.query.plan_id;
-    const res = await axios.get(
-      `http://localhost:5000/rating-calculator?plan_id=${this.plan_id}`
+    const res = await axios.post(
+      `http://localhost:5000/rating-calculator?plan_id=${this.plan_id}`,
+      {},
+      {
+        withCredentials: true,
+      }
     );
     this.benefit_rates = [...res.data];
     this.loaded = true;

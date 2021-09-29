@@ -1,14 +1,12 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_restful import Api
 from dotenv import load_dotenv
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 
-# from app.models import db, mongo
-# from app.schemas import ma
-from app.extensions import db, mongo, ma
+from app.extensions import db, mongo, ma, sess
 from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
@@ -33,20 +31,8 @@ def create_app(config):
     mongo.init_app(app)
     app.config["SESSION_SQLALCHEMY"] = db
 
-    # sess.init_app(app)
+    sess.init_app(app)
     api = Api(app)
-
-    # from .resources.config import PlanConfig, PlanConfigList
-    # from .resources.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections
-
-    # from .resources.workflow.rating.GroupResource import Group
-    # from .resources.workflow.rating.ProvisionResource import Provision, ProvisionList
-    # from .resources.workflow.rating.PlanResource import Plan
-    # from .resources.workflow.rating.PlanRateResource import PlanRate
-    # from .resources.workflow.rating.BenefitResource import BenefitsList
-    # from .resources.workflow.rating.FactorResource import FactorCalculator
-    # from .resources.admin.CreateTables import CreateTables
-    # from .resources.admin.ProductConfig import ProductConfig, ProductConfigList
 
     from .products.admin import CreateTables
     from .products.config import PlanConfig, PlanConfigList
@@ -89,4 +75,11 @@ def create_app(config):
         )
         status_code = 200 if success else 400
         return jsonify(result), status_code
+
+    @app.route("/session/<id>", methods=["GET"])
+    def getSessionData(id):
+        data = session["PLAN-" + id]
+        print(session)
+        return jsonify(data), 200
+
     return app

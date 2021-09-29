@@ -161,9 +161,6 @@ class RatingCalculator:
             print(datetime.datetime.now())
             BenefitRateModel.delete_by_plan_id(self.plan_id)
             print(datetime.datetime.now())
-            # self.calcBenefitRates()
-            # print(datetime.datetime.now())
-            # self.calcFactors()
 
             self.calculator()
             print(datetime.datetime.now())
