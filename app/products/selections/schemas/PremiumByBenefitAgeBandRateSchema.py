@@ -3,6 +3,7 @@ from app.extensions import ma
 from marshmallow import Schema, fields, post_dump
 
 from .AgeBandsSchema import AgeBandsSchema
+from .BenefitSchema import BenefitSchema
 
 
 class PremiumByBenefitAgeBandRateSchema(Schema):
@@ -15,6 +16,7 @@ class PremiumByBenefitAgeBandRateSchema(Schema):
     family_code = fields.Str()
     benefit_rate_premium = fields.Decimal()
     age_band = fields.Nested(AgeBandsSchema)
+    benefit = fields.Nested(BenefitSchema)
 
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):

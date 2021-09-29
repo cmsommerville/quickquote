@@ -6,7 +6,7 @@
       :items="table_data"
       :items-per-page="10"
       :options="{
-        sortBy: ['benefit_id', 'family_code', 'smoker_status', 'age_band_id'],
+        sortBy: ['benefit_code', 'family_code', 'smoker_status', 'age_band_id'],
       }"
       class="elevation-1"
     ></v-data-table>
@@ -23,10 +23,11 @@ export default {
       loaded: false,
       benefit_rates: null,
       headers: [
-        { text: "Benefit ID", value: "benefit_id" },
+        { text: "Benefit Code", value: "benefit_code" },
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
-        { text: "Age Band ID", value: "age_band_id" },
+        { text: "Lower Age", value: "lower_age" },
+        { text: "Upper Age", value: "upper_age" },
         { text: "Premium", value: "benefit_rate_premium" },
       ],
       plan_id: null,
@@ -51,7 +52,17 @@ export default {
         withCredentials: true,
       }
     );
-    this.benefit_rates = [...res.data];
+    this.benefit_rates = [
+      ...res.data.map((bnft) => {
+        return {
+          ...bnft,
+          benefit_code: bnft.benefit.benefit_code,
+          benefit_selected_value: bnft.benefit.benefit_value,
+          lower_age: bnft.age_band.lower_age,
+          upper_age: bnft.age_band.upper_age,
+        };
+      }),
+    ];
     this.loaded = true;
   },
   methods: {
