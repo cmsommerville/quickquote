@@ -35,6 +35,16 @@ export default {
           icon: "mdi-table-large",
           to: "create-tables",
         },
+        {
+          title: "Insert Rates",
+          icon: "mdi-currency-usd",
+          to: "admin-rate-tables",
+        },
+        {
+          title: "View Session",
+          icon: "mdi-account-cog",
+          to: "session",
+        },
       ],
       right: null,
     };
