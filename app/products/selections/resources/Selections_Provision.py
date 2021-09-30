@@ -26,13 +26,13 @@ class ProvisionSelections(Resource):
         except Exception as e:
             return str(e), 400
 
-        session_data = session.get("PLAN-" + str(plan_id))
+        session_data = session.get(int(plan_id))
 
         try:
             provisions = provision_list_schema.load(data)
             ProvisionModel.save_all_to_db(provisions, plan_id)
-            session["PLAN-" + str(plan_id)] = {**session_data,
-                                               "provisions": provision_list_schema.dump(provisions)}
+            session[int(plan_id)] = {**session_data,
+                                     "provisions": provision_list_schema.dump(provisions)}
         except Exception as e:
             return str(e), 400
 

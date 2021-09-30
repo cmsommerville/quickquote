@@ -34,11 +34,12 @@ def create_app(config):
     sess.init_app(app)
     api = Api(app)
 
-    from .products.admin import CreateTables
+    from .products.admin import CreateTables, SessionData
     from .products.config import PlanConfig, PlanConfigList
     from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList
 
     api.add_resource(CreateTables, '/admin/create-tables')
+    api.add_resource(SessionData, '/admin/session-data')
 
     api.add_resource(PlanConfigList, '/config/plans')
     api.add_resource(PlanConfig, '/config/plan/<id>')
@@ -49,16 +50,6 @@ def create_app(config):
     api.add_resource(CoverageBenefitSelections, '/selections/benefits')
     api.add_resource(ProvisionSelections, '/selections/provisions')
     api.add_resource(RatingCalculatorResource, '/rating-calculator')
-
-    # api.add_resource(Group, '/workflow/group')
-    # api.add_resource(Plan, '/workflow/plan')
-    # api.add_resource(PlanRate, '/workflow/plan-rate')
-    # api.add_resource(ProvisionList, '/workflow/provisions')
-    # api.add_resource(BenefitsList, '/workflow/benefits')
-    # api.add_resource(FactorCalculator, '/workflow/factor-calc')
-    # api.add_resource(CreateTables, '/admin/create-tables')
-    # api.add_resource(ProductConfig, '/admin/product')
-    # api.add_resource(ProductConfigList, '/admin/products')
 
     @app.route("/graphql", methods=["GET"])
     def graphql_playground():

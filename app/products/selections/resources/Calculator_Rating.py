@@ -1,8 +1,10 @@
 from flask import request, session
 from flask_restful import Resource
 
-from ..classes import Rater, RatingCalculator, Rating_PremiumCalculator
-from ..models import PlanModel, BenefitModel, ProvisionModel, AgeBandsModel, BenefitRateModel
+from ..classes import Rating_PremiumCalculator
+from ..models import PlanModel, BenefitModel, ProvisionModel, AgeBandsModel, \
+    BenefitRateModel, BenefitAgeRateModel, BenefitFactorModel
+
 from ..schemas import PlanSchema, BenefitSchema, ProvisionSchema,  AgeBandsSchema, BenefitRateSchema, PremiumByBenefitAgeBandRateSchema
 
 benefit_list_schema = BenefitSchema(many=True)
@@ -18,29 +20,18 @@ class RatingCalculatorResource(Resource):
 
     @classmethod
     def get(cls):
-        plan_id = request.args.get("plan_id")
-        if plan_id is None:
-            raise Exception("Please provide a plan_id query parameter")
-
-        benefits = BenefitModel.find_benefits(plan_id)
-        coverages = [benefit.coverage for benefit in benefits]
-        plan = benefits[0].plan
-        provisions = ProvisionModel.find_plan_provisions(plan_id)
-
-        rater = RatingCalculator(
-            plan=plan, provisions=provisions, coverages=coverages, benefits=benefits)
-
-        benefit_rates = rater.execute()
-        return premium_by_benefit_age_band_rate_list_schema.dump(benefit_rates), 200
+        return "success", 200
 
     @classmethod
     def post(cls):
         plan_id = request.args.get("plan_id")
         if plan_id is None:
             raise Exception("Please provide a plan_id query parameter")
+        BenefitFactorModel.delete_by_plan_id(plan_id)
+        BenefitAgeRateModel.delete_by_plan_id(plan_id)
         BenefitRateModel.delete_by_plan_id(plan_id)
 
-        session_data = session.get("PLAN-" + str(plan_id))
+        session_data = session.get(int(plan_id))
 
         plan = plan_schema.load(session_data['plan'])
         plan_config = session_data['plan_config'][0]

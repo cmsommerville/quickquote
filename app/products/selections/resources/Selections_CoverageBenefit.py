@@ -38,7 +38,7 @@ class CoverageBenefitSelections(Resource):
         except Exception as e:
             return str(e), 400
 
-        session_data = session.get("PLAN-" + str(plan_id))
+        session_data = session.get(int(plan_id))
 
         for item in data:
             coverage_code = item['coverage_code']
@@ -58,8 +58,8 @@ class CoverageBenefitSelections(Resource):
             return str(e), 400
 
         try:
-            session["PLAN-" + str(plan_id)] = {**session_data,
-                                               "benefits": benefit_list_schema.dump(benefits_list)}
+            session[int(plan_id)] = {**session_data,
+                                     "benefits": benefit_list_schema.dump(benefits_list)}
         except Exception as e:
             return str(e), 400
 

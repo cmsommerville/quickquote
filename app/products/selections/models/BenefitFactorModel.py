@@ -1,11 +1,15 @@
 from app.extensions import db
 import datetime
 
+from .BenefitAgeRateModel import BenefitAgeRateModel
 
-class FactorModel(db.Model):
-    __tablename__ = "factors"
 
-    factor_id = db.Column(db.Integer, primary_key=True)
+class BenefitFactorModel(db.Model):
+    __tablename__ = "benefit_factors"
+
+    benefit_factor_id = db.Column(db.Integer, primary_key=True)
+    benefit_age_rate_id = db.Column(db.Integer, db.ForeignKey(
+        "benefit_age_rates.benefit_age_rate_id"))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     provision_id = db.Column(
         db.Integer, db.ForeignKey('provisions.provision_id'))
@@ -18,11 +22,11 @@ class FactorModel(db.Model):
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    # benefit_rate = db.relationship(
-    #     "BenefitRateModel", back_populates="factors")
+    benefit_age_rate = db.relationship(
+        "BenefitAgeRateModel", back_populates="benefit_factors")
 
     def __repr__(self):
-        return f"<Factor Id: {self.factor_id} -- Factor Name: `{self.factor_name}`>"
+        return f"<Benefit Factor Id: {self.factor_id} -- Factor Name: `{self.factor_name}`>"
 
     @classmethod
     def find_by_id(cls, id):
@@ -53,9 +57,9 @@ class FactorModel(db.Model):
             db.session.commit()
 
     @classmethod
-    def delete_by_benefit_rate_id(cls, benefit_rate_id, commit=True):
+    def delete_by_plan_id(cls, plan_id, commit=True):
         try:
-            cls.query.filter(cls.benefit_rate_id == benefit_rate_id).delete()
+            cls.query.filter(cls.plan_id == plan_id).delete()
         except:
             db.session.rollback()
             raise

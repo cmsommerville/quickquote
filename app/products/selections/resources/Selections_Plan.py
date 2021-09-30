@@ -29,7 +29,7 @@ class PlanSelections(Resource):
         try:
             plan.save_to_db()
             plan_id = plan.plan_id
-            session["PLAN-" + str(plan_id)] = {
+            session[plan_id] = {
                 "plan": plan_schema.dump(plan),
                 "plan_config": config
             }

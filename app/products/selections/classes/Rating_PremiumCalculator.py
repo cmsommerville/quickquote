@@ -5,10 +5,10 @@ from functools import reduce
 from app.shared import list_to_dict
 from collections import defaultdict
 
-from ...models import PlanModel, BenefitModel, AgeBandsModel, RateTableModel, \
-    BenefitRateModel, FactorModel, ProvisionModel
-from .BenefitAgeRate import BenefitAgeRate
-from .Rating_ProductFactorsCalculator import ProductFactorsCalculator
+from ..models import PlanModel, BenefitModel, AgeBandsModel, RateTableModel, \
+    BenefitRateModel, BenefitFactorModel, ProvisionModel, BenefitAgeRateModel
+from .Rating_BenefitAgeRate import BenefitAgeRate
+from .Rating_BenefitFactorsCalculator import BenefitFactorsCalculator
 
 PRODUCT_CODE = 'critical_illness'
 PRODUCT_VARIATION_CODE = 'issue_age'
@@ -33,7 +33,7 @@ class Rating_PremiumCalculator:
         self.age_distribution = {}
 
         self.benefit_rates = []
-        self.factors = []
+        self.benefit_factors = []
 
     def getRateTables(self) -> None:
         """
@@ -81,6 +81,7 @@ class Rating_PremiumCalculator:
         # loop over rate keys to get list of rates/benefits belonging to an age band
         for rate_key, rate_data_list in age_band_rates.items():
             benefit_age_rate_list = []
+            benefit_age_rate_model_list = []
             # within each age band, loop over each rate to create benefit_rate object
             for rate_data in rate_data_list:
                 # unpack data from rate_data dictionary
@@ -102,6 +103,8 @@ class Rating_PremiumCalculator:
                 # calculate final premium and factors
                 benefit_age_rate.calculate()
                 benefit_age_rate_list.append(benefit_age_rate)
+                benefit_age_rate_model_list.append(
+                    benefit_age_rate.returnBenefitAgeRateModel())
 
             # calculate weighted average final premium per age band
             final_premium = self.weightedAverageAgeBandRates(
@@ -116,6 +119,7 @@ class Rating_PremiumCalculator:
                 smoker_status=rate_table.smoker_status,
                 benefit_rate_premium=final_premium
             )
+            benefit_rate.benefit_age_rates.extend(benefit_age_rate_model_list)
             # self.factors.extend(benefit_rate.factors)
             self.benefit_rates.append(benefit_rate)
 
@@ -126,6 +130,5 @@ class Rating_PremiumCalculator:
         self.calculateBenefitRates()
 
         BenefitRateModel.save_all_to_db(self.benefit_rates)
-        FactorModel.save_all_to_db(self.factors)
 
         return(self.benefit_rates)

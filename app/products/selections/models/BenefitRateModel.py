@@ -23,6 +23,8 @@ class BenefitRateModel(db.Model):
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
     age_band = db.relationship("AgeBandsModel")
+    benefit_age_rates = db.relationship(
+        "BenefitAgeRateModel", back_populates="benefit_rate")
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"

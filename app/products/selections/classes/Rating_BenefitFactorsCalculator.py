@@ -1,9 +1,9 @@
 from typing import List, Union, Tuple
 from decimal import Decimal
-from ...models import FactorModel, PlanModel, BenefitModel, RateTableModel, ProvisionModel
+from ..models import BenefitFactorModel, PlanModel, BenefitModel, RateTableModel, ProvisionModel
 
 
-class ProductFactorsCalculator:
+class BenefitFactorsCalculator:
 
     def __init__(self,
                  config: dict,
@@ -18,7 +18,7 @@ class ProductFactorsCalculator:
         self.benefit = benefit
         self.rate_table = rate_table
         self.provisions = provisions
-        self.factors = []
+        self.benefit_factors = []
 
         self.factor_data = self._factor_config_formatter()
 
@@ -41,16 +41,16 @@ class ProductFactorsCalculator:
             raise
         return output
 
-    def calculate(self):
+    def calculate(self) -> List[BenefitFactorModel]:
         """
         Loop over all the factor data and create factor objects.
         """
 
         for name, data in self.factor_data.items():
-            # this instantiates a product factor object
-            factor_calc = ProductFactor(
+            # this instantiates a benefit factor object
+            factor_calc = BenefitFactor(
                 factor_name=name,
-                factor_type="product",
+                factor_type="benefit",
                 factor_config=data['config'],
                 plan=self.plan,
                 benefit=self.benefit,
@@ -58,12 +58,14 @@ class ProductFactorsCalculator:
                 provision=data['selection']
             )
 
-            # this outputs a database factor model
+            # this outputs a database benefit factor model
             factor = factor_calc.calculate()
-            self.factors.append(factor)
+            self.benefit_factors.append(factor)
+
+        return self.benefit_factors
 
 
-class ProductFactor:
+class BenefitFactor:
 
     def __init__(self,
                  factor_name: str,
@@ -102,12 +104,12 @@ class ProductFactor:
         for k, v in instance.__dict__.items():
             setattr(self, k, v)
 
-    def _create_factor(self) -> FactorModel:
+    def _create_factor(self) -> BenefitFactorModel:
         """
         Create a factor database model after all the 
         calculations have completed
         """
-        self.__factor = FactorModel(
+        self.__factor = BenefitFactorModel(
             plan_id=self.plan_id,
             provision_id=self.provision_id,
             factor_type=self.__factor_type,
@@ -118,7 +120,7 @@ class ProductFactor:
         )
         return self.__factor
 
-    def calculate(self) -> FactorModel:
+    def calculate(self) -> BenefitFactorModel:
         """
         Calculate the factor value and selection.
         This function mostly calls other functions to do the processing.
