@@ -1,1 +1,1 @@
-from .Rating_PremiumCalculator import Rating_PremiumCalculator
+from .Rating_Main import Rating_Main

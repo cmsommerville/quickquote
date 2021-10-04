@@ -9,6 +9,7 @@ class BenefitModel(db.Model):
     coverage_id = db.Column(db.Integer, db.ForeignKey('coverages.coverage_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     benefit_code = db.Column(db.String(20), nullable=False)
+    plan_rate_code = db.Column(db.String(20), nullable=False)
     benefit_uuid = db.Column(db.String(36))
     benefit_value = db.Column(db.Numeric(12, 4), nullable=False)
 

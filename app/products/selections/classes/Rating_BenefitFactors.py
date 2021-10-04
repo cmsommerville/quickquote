@@ -3,7 +3,7 @@ from decimal import Decimal
 from ..models import BenefitFactorModel, PlanModel, BenefitModel, RateTableModel, ProvisionModel
 
 
-class BenefitFactorsCalculator:
+class Rating_BenefitFactorList:
 
     def __init__(self,
                  config: dict,
@@ -48,7 +48,7 @@ class BenefitFactorsCalculator:
 
         for name, data in self.factor_data.items():
             # this instantiates a benefit factor object
-            factor_calc = BenefitFactor(
+            factor_calc = Rating_BenefitFactor(
                 factor_name=name,
                 factor_type="benefit",
                 factor_config=data['config'],
@@ -58,14 +58,15 @@ class BenefitFactorsCalculator:
                 provision=data['selection']
             )
 
+            factor_calc.calculate()
             # this outputs a database benefit factor model
-            factor = factor_calc.calculate()
+            factor = factor_calc.returnModel()
             self.benefit_factors.append(factor)
 
         return self.benefit_factors
 
 
-class BenefitFactor:
+class Rating_BenefitFactor:
 
     def __init__(self,
                  factor_name: str,
@@ -104,7 +105,7 @@ class BenefitFactor:
         for k, v in instance.__dict__.items():
             setattr(self, k, v)
 
-    def _create_factor(self) -> BenefitFactorModel:
+    def returnModel(self) -> BenefitFactorModel:
         """
         Create a factor database model after all the 
         calculations have completed
@@ -154,8 +155,6 @@ class BenefitFactor:
             self.__factor_selection = 'default'
             self.__factor_selection_type = 'uuid'
             self.__factor_value = val
-
-        return self._create_factor()
 
     def _variabilityHandler(
         self,

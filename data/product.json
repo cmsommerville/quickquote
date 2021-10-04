@@ -422,6 +422,7 @@
         "text": "Heart Attack",
         "type": "face_amount",
         "coverage_code": "base",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -439,6 +440,7 @@
         "text": "Cancer",
         "type": "face_amount",
         "coverage_code": "base",
+        "plan_rate_code": "apu",
         "ui": {
           "widget": "switch",
           "attrs": {
@@ -463,6 +465,7 @@
         "text": "Multiple Sclerosis",
         "type": "face_amount",
         "coverage_code": "progressive_disease",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -480,6 +483,7 @@
         "text": "ALS",
         "type": "face_amount",
         "coverage_code": "progressive_disease",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -497,6 +501,7 @@
         "text": "Stroke",
         "type": "face_amount",
         "coverage_code": "base",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -514,6 +519,7 @@
         "text": "Renal Failure",
         "type": "face_amount",
         "coverage_code": "base",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -531,6 +537,7 @@
         "text": "Major Organ Transplant",
         "type": "face_amount",
         "coverage_code": "base",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -548,6 +555,7 @@
         "text": "Parkinson's Disease",
         "type": "face_amount",
         "coverage_code": "optional_benefits",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,
@@ -565,6 +573,7 @@
         "text": "Alzheimer's Disease",
         "type": "face_amount",
         "coverage_code": "optional_benefits",
+        "plan_rate_code": "apu",
         "amounts": {
           "default": 100,
           "min": 0,

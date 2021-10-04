@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <v-data-table
-      v-if="benefit_rates && loaded"
+      v-if="plan_rates && loaded"
       :headers="headers"
       :items="table_data"
       :items-per-page="10"
       :options="{
-        sortBy: ['benefit_code', 'family_code', 'smoker_status', 'age_band_id'],
+        sortBy: ['plan_rate_code', 'family_code', 'smoker_status', 'age_band'],
       }"
       class="elevation-1"
     ></v-data-table>
@@ -21,14 +21,13 @@ export default {
   data() {
     return {
       loaded: false,
-      benefit_rates: null,
+      plan_rates: null,
       headers: [
-        { text: "Benefit Code", value: "benefit_code" },
+        { text: "Plan Rate Code", value: "plan_rate_code" },
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
-        { text: "Lower Age", value: "lower_age" },
-        { text: "Upper Age", value: "upper_age" },
-        { text: "Premium", value: "benefit_rate_premium" },
+        { text: "Age Band", value: "age_band" },
+        { text: "Premium", value: "plan_rate_premium" },
       ],
       plan_id: null,
       show: true,
@@ -36,7 +35,7 @@ export default {
   },
   computed: {
     table_data() {
-      return this.benefit_rates.map((br) => {
+      return this.plan_rates.map((br) => {
         return {
           ...br,
         };
@@ -47,19 +46,13 @@ export default {
     this.plan_id = this.$route.query.plan_id;
     const res = await axios.post(
       `/rating-calculator?plan_id=${this.plan_id}`,
-      {},
-      {
-        withCredentials: true,
-      }
+      {}
     );
-    this.benefit_rates = [
-      ...res.data.map((bnft) => {
+    this.plan_rates = [
+      ...res.data.map((pr) => {
         return {
-          ...bnft,
-          benefit_code: bnft.benefit.benefit_code,
-          benefit_selected_value: bnft.benefit.benefit_value,
-          lower_age: bnft.age_band.lower_age,
-          upper_age: bnft.age_band.upper_age,
+          ...pr,
+          age_band: pr.age_band.lower_age + " - " + pr.age_band.upper_age,
         };
       }),
     ];

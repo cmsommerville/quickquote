@@ -73,6 +73,7 @@ export default {
         selections.push({
           plan_id: this.plan_id,
           coverage_code: this.selections[key].coverage_code,
+          plan_rate_code: this.selections[key].plan_rate_code,
           benefit_code: this.selections[key].name,
           benefit_uuid: this.selections[key].uuid,
           benefit_value: this.selections[key].selectedValue,

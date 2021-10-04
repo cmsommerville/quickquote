@@ -12,6 +12,8 @@ class BenefitRateModel(db.Model):
     benefit_rate_id = db.Column(db.Integer, primary_key=True)
     benefit_id = db.Column(db.Integer, db.ForeignKey('benefits.benefit_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
+    plan_rate_id = db.Column(
+        db.Integer, db.ForeignKey('plan_rates.plan_rate_id'))
     age_band_id = db.Column(db.Integer, db.ForeignKey('age_bands.age_band_id'))
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
@@ -23,6 +25,8 @@ class BenefitRateModel(db.Model):
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
     age_band = db.relationship("AgeBandsModel")
+    plan_rate = db.relationship(
+        "PlanRateModel", back_populates="benefit_rates")
     benefit_age_rates = db.relationship(
         "BenefitAgeRateModel", back_populates="benefit_rate")
 
