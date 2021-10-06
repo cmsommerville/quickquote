@@ -11,6 +11,7 @@ import Premium from "../views/Premium.vue";
 import CreateTables from "../views/admin/CreateTables.vue";
 import Session from "../views/admin/Session.vue";
 import InsertRateTables from "../views/admin/InsertRateTables.vue";
+import BenefitWork from "../views/BenefitWork.vue";
 
 Vue.use(VueRouter);
 
@@ -69,6 +70,11 @@ const routes = [
     path: "/session",
     name: "session",
     component: Session,
+  },
+  {
+    path: "/work",
+    name: "work",
+    component: BenefitWork,
   },
 ];
 

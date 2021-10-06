@@ -2,37 +2,51 @@
   <div class="container">
     <div class="form-rater my-6" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-btn-toggle v-model="selections.product_code" borderless class="my-3">
-          <v-btn value="critical_illness">
-            <span class="hidden-sm-and-down">Critical Illness</span>
+        <v-item-group v-model="selections.product_code">
+          <v-container>
+            <v-row>
+              <v-col
+                v-for="product in data"
+                :key="product.name"
+                cols="12"
+                md="6"
+              >
+                <v-item v-slot="{ active, toggle }" :value="product.name">
+                  <v-card
+                    :color="active ? 'primary' : 'secondary'"
+                    class="d-flex align-center"
+                    height="200"
+                    @click="toggle"
+                  >
+                    <div
+                      :class="`text-h4 flex-grow-1 text-center ${
+                        active ? 'white--text' : ''
+                      }`"
+                    >
+                      {{ product.text }}
+                    </div>
+                  </v-card>
+                </v-item>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-item-group>
 
-            <v-icon right> mdi-heart-circle </v-icon>
-          </v-btn>
-
-          <v-btn value="accident">
-            <span class="hidden-sm-and-down">Accident</span>
-
-            <v-icon right> mdi-bone </v-icon>
-          </v-btn>
-
-          <v-btn value="hospital_indemnity">
-            <span class="hidden-sm-and-down">Hospital Indemnity</span>
-
-            <v-icon right> mdi-hospital-box </v-icon>
-          </v-btn>
-
-          <v-btn value="disability">
-            <span class="hidden-sm-and-down">Disability</span>
-            <v-icon right> mdi-cash-multiple </v-icon>
-          </v-btn>
-        </v-btn-toggle>
+        <v-select
+          :disabled="variations.length === 0"
+          :items="variations"
+          v-model="selections.product_variation_code"
+          label="Product Variation"
+          class="my-3"
+        ></v-select>
 
         <v-select
           :items="states"
           v-model="selections.rating_state"
           label="Rating State"
           class="my-3"
-        ></v-select>
+        >
+        </v-select>
 
         <v-text-field
           v-model="selections.plan_effective_date"
@@ -61,6 +75,7 @@ export default {
       data: null,
       selections: {
         product_code: null,
+        product_variation_code: null,
         rating_state: null,
         plan_effective_date: null,
       },
@@ -73,6 +88,16 @@ export default {
     this.loaded = true;
   },
   computed: {
+    variations() {
+      if (this.selections.product_code) {
+        const product = this.data.find(
+          (product) => product.name === this.selections.product_code
+        );
+        if (product.variations) return product.variations;
+        return [];
+      }
+      return [];
+    },
     states() {
       if (this.selections.product_code) {
         const product = this.data.find(

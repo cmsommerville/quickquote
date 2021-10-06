@@ -2,26 +2,14 @@
   <div class="container">
     <div class="form-rater" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-select
-          :items="provisions_object.prex.options"
-          v-model="selections.prex"
-          :label="provisions_object.prex.text"
-          class="my-3"
-        ></v-select>
-        <v-switch
-          v-model="selections.reductionAt70"
-          :label="provisions_object.reductionAt70.text"
-          color="primary"
-          hide-details
-          class="my-3"
-        ></v-switch>
-
-        <v-text-field
-          v-model.number="selections.group_size"
-          label="Group Size"
-          type="number"
-          class="my-3"
-        ></v-text-field>
+        <component
+          v-for="provision in plan_config.provisions"
+          :key="provision.name"
+          :is="provision.component"
+          v-bind="{ ...provision }"
+          :name="provision.name"
+          v-model="selections[provision.name]"
+        />
 
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
@@ -37,9 +25,15 @@
 
 <script>
 import axios from "../services/axios.js";
+import { VTextField, VSelect, VSwitch } from "vuetify/lib";
 
 export default {
   name: "Provisions",
+  components: {
+    VSelect,
+    VTextField,
+    VSwitch,
+  },
   data() {
     return {
       loaded: false,

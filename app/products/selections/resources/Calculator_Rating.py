@@ -10,8 +10,8 @@ from ..schemas import PlanSchema, BenefitSchema, ProvisionSchema, \
     PlanRateSchema
 
 
-PRODUCT_CODE = os.getenv("PRODUCT_CODE")
-PRODUCT_VARIATION_CODE = os.getenv("PRODUCT_VARIATION_CODE")
+# PRODUCT_CODE = os.getenv("PRODUCT_CODE")
+# PRODUCT_VARIATION_CODE = os.getenv("PRODUCT_VARIATION_CODE")
 
 
 benefit_list_schema = BenefitSchema(many=True)
@@ -52,8 +52,8 @@ class RatingCalculatorResource(Resource):
             provisions=provisions,
             age_bands=age_bands,
             benefits=benefits,
-            product_code=PRODUCT_CODE,
-            product_variation_code=PRODUCT_VARIATION_CODE
+            product_code=plan.product_code,
+            product_variation_code=plan.product_variation_code
         )
         plan_rates = rater.calculate()
 

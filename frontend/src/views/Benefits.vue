@@ -36,7 +36,10 @@ import SelectionsModal from "../components/SelectionsModal.vue";
 
 export default {
   name: "Benefits",
-  components: { CoverageSelectionsExpansionPanel, SelectionsModal },
+  components: {
+    CoverageSelectionsExpansionPanel,
+    SelectionsModal,
+  },
   data() {
     return {
       loaded: false,

@@ -12,6 +12,7 @@ class PlanModel(db.Model):
 
     plan_id = db.Column(db.Integer, primary_key=True)
     product_code = db.Column(db.String(50), nullable=False)
+    product_variation_code = db.Column(db.String(50), nullable=False)
     rating_state = db.Column(db.String(2), nullable=False)
     plan_effective_date = db.Column(db.Date, nullable=False)
     plan_status = db.Column(db.String(50), default="Quoted")

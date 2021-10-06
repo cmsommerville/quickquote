@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     async createRateTables() {
+      console.log(rateTables);
       await axios.post("/config/rate-table", rateTables);
       this.snackbar = true;
     },

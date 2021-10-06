@@ -1,0 +1,328 @@
+{
+  "name": "accident",
+  "text": "Accident",
+  "variations": [
+    {
+      "text": "Base",
+      "value": "base",
+      "default": true
+    }
+  ],
+  "statesApproved": [
+    {
+      "state": "SC",
+      "effectiveDate": "2020-01-01"
+    },
+    {
+      "state": "NC",
+      "effectiveDate": "2021-07-01"
+    }
+  ],
+  "coverages": [
+    {
+      "name": "frac_disl",
+      "text": "Fractures and Dislocations",
+      "default": true,
+      "display": "main"
+    },
+    {
+      "name": "hospitalization",
+      "text": "Hospitalizations",
+      "display": "main",
+      "default": false
+    },
+    {
+      "name": "life_changing_events",
+      "text": "Life Changing Events",
+      "display": "main",
+      "default": false
+    }
+  ],
+  "provisions": [
+    {
+      "name": "occ_class",
+      "label": "Occupational Class",
+      "component": "v-select",
+      "items": [
+        {
+          "value": "24hr",
+          "text": "24 Hour"
+        },
+        {
+          "value": "nonocc",
+          "text": "Non-Occupational"
+        }
+      ],
+      "factor": {
+        "default_factor_value": 1,
+        "variability": [
+          {
+            "provision_value": "24hr",
+            "factor_value": 1.25
+          },
+          {
+            "provision_value": "nonocc",
+            "factor_value": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "ac_factor1",
+      "label": "Accident Factor 1",
+      "component": "v-select",
+      "items": [
+        {
+          "value": 30,
+          "text": 30
+        },
+        {
+          "value": 365,
+          "text": 365
+        }
+      ],
+      "factor": {
+        "default_factor_value": 1,
+        "variability": [
+          {
+            "provision_value": 365,
+            "factor_value": 1.5
+          },
+          {
+            "provision_value": 30,
+            "factor_value": 0.95
+          }
+        ]
+      }
+    },
+    {
+      "name": "group_size",
+      "label": "Group Size",
+      "component": "v-text-field",
+      "type": "number",
+      "factor": {
+        "default_factor_value": 1,
+        "variability": [
+          {
+            "factor_value": 0.96,
+            "provision_value": {
+              "comparison": "lt",
+              "value": 500
+            }
+          },
+          {
+            "factor_value": 0.91,
+            "provision_value": {
+              "comparison": "range",
+              "lower": 500,
+              "upper": 999
+            }
+          },
+          {
+            "factor_value": 0.85,
+            "provision_value": {
+              "comparison": "ge",
+              "value": 1000
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "benefits": [
+    {
+      "name": "frac_skull",
+      "text": "Skull Fracture",
+      "type": "indemnity",
+      "coverage_code": "frac_disl",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 2000,
+        "min": 0,
+        "max": 5000,
+        "step": 25,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": [
+        {
+          "name": "hospitalization_days",
+          "type": "benefit",
+          "applicability": "prohibited"
+        }
+      ]
+    },
+    {
+      "name": "frac_ankle",
+      "text": "Ankle Fracture",
+      "type": "indemnity",
+      "coverage_code": "frac_disl",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 400,
+        "min": 0,
+        "max": 2500,
+        "step": 25,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": [
+        {
+          "name": "hospitalization_days",
+          "type": "benefit",
+          "applicability": "prohibited"
+        }
+      ]
+    },
+    {
+      "name": "frac_wrist",
+      "text": "Wrist Fracture",
+      "type": "indemnity",
+      "coverage_code": "frac_disl",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 300,
+        "min": 0,
+        "max": 2500,
+        "step": 25,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": [
+        {
+          "name": "hospitalization_days",
+          "type": "benefit",
+          "applicability": "prohibited"
+        }
+      ]
+    },
+    {
+      "name": "hosp_adm",
+      "text": "Hospital Admission",
+      "type": "indemnity",
+      "coverage_code": "hospitalization",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 1000,
+        "min": 100,
+        "max": 5000,
+        "step": 50,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": []
+    },
+    {
+      "name": "hosp_conf",
+      "text": "Hospital Confinement",
+      "type": "indemnity",
+      "coverage_code": "hospitalization",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 200,
+        "min": 50,
+        "max": 1000,
+        "step": 50,
+        "unit": "dollar"
+      },
+      "duration": {
+        "default": 30,
+        "component": "select",
+        "items": [
+          { "value": 30, "text": 30, "factor": 1 },
+          { "value": 365, "text": 365, "factor": 1.47 }
+        ]
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": []
+    },
+    {
+      "name": "icu_conf",
+      "text": "ICU Confinement",
+      "type": "indemnity",
+      "coverage_code": "hospitalization",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 100,
+        "min": 0,
+        "max": 500,
+        "step": 25,
+        "unit": "dollar"
+      },
+      "duration": {
+        "default": 10,
+        "component": "select",
+        "items": [
+          { "value": 10, "text": 10, "factor": 1 },
+          { "value": 30, "text": 30, "factor": 1.2 }
+        ]
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": []
+    },
+    {
+      "name": "quad",
+      "text": "Quadriplegia",
+      "type": "indemnity",
+      "coverage_code": "life_changing_events",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 5000,
+        "min": 0,
+        "max": 25000,
+        "step": 2500,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": []
+    },
+    {
+      "name": "para",
+      "text": "Paralysis",
+      "type": "indemnity",
+      "coverage_code": "life_changing_events",
+      "plan_rate_code": "base",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
+      "amounts": {
+        "default": 2500,
+        "min": 0,
+        "max": 25000,
+        "step": 500,
+        "unit": "dollar"
+      },
+      "variations": { "statesProhibited": [], "statesRequired": [] },
+      "factorApplicability": []
+    }
+  ]
+}

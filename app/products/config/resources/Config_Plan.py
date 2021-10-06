@@ -33,6 +33,7 @@ class PlanConfigList(Resource):
 
     @classmethod
     def post(cls):
-        req = generateUUID(request.get_json())
-        mongo.db.products.insert_one(req)
+        req = request.get_json()
+        data = generateUUID(req)
+        mongo.db.products.insert_many(data)
         return req, 201
