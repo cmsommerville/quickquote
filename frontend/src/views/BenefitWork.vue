@@ -2,7 +2,7 @@
   <div v-if="loaded">
     <v-card
       class="mx-auto mt-6"
-      width="800"
+      width="80%"
       tile
       v-for="bnft in plan_config.benefits"
       :key="bnft.name"
@@ -10,10 +10,16 @@
       <v-list-item>
         <v-list-item-content>
           <v-row>
-            <v-col class="d-flex justify-center">
+            <v-col
+              class="d-flex justify-center"
+              cols="12"
+              xs="12"
+              sm="8"
+              lg="9"
+            >
               <v-list-item-title>{{ bnft.text }}</v-list-item-title>
             </v-col>
-            <v-col>
+            <v-col cols="12" xs="12" sm="4" lg="3">
               <component
                 :is="bnft.ui.component"
                 v-bind="{ ...bnft.ui }"

@@ -1,3 +1,4 @@
+from sqlalchemy import event
 from app.extensions import db
 import datetime
 
@@ -10,6 +11,10 @@ class CoverageModel(db.Model):
     coverage_id = db.Column(db.Integer, primary_key=True)
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     coverage_code = db.Column(db.String(20), nullable=False)
+
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())

@@ -13,6 +13,10 @@ class BenefitModel(db.Model):
     benefit_uuid = db.Column(db.String(36))
     benefit_value = db.Column(db.Numeric(12, 4), nullable=False)
 
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
+
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 

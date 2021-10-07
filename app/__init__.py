@@ -1,4 +1,5 @@
 import os
+from sqlalchemy import event
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_restful import Api
@@ -6,7 +7,7 @@ from dotenv import load_dotenv
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 
-from app.extensions import db, mongo, ma, sess
+from app.extensions import db, mongo, ma, sess, expire_old_records
 from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
@@ -33,6 +34,8 @@ def create_app(config):
 
     sess.init_app(app)
     api = Api(app)
+
+    db.event.listen(db.session, "before_flush", expire_old_records)
 
     from .products.admin import CreateTables, SessionData
     from .products.config import PlanConfig, PlanConfigList
