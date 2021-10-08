@@ -39,7 +39,7 @@ def create_app(config):
 
     from .products.admin import CreateTables, SessionData
     from .products.config import PlanConfig, PlanConfigList
-    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList
+    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList, BenefitResource
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
@@ -53,6 +53,7 @@ def create_app(config):
     api.add_resource(CoverageBenefitSelections, '/selections/benefits')
     api.add_resource(ProvisionSelections, '/selections/provisions')
     api.add_resource(RatingCalculatorResource, '/rating-calculator')
+    api.add_resource(BenefitResource, '/benefit-test')
 
     @app.route("/graphql", methods=["GET"])
     def graphql_playground():

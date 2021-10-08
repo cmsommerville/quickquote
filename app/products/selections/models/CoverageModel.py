@@ -19,8 +19,10 @@ class CoverageModel(db.Model):
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    plan = db.relationship("PlanModel", back_populates="coverages")
-    benefits = db.relationship("BenefitModel", back_populates="coverage")
+    plan = db.relationship("PlanModel", back_populates="coverages",
+                           primaryjoin="and_(PlanModel.plan_id == CoverageModel.plan_id, PlanModel.active_record_indicator == 'Y')")
+    benefits = db.relationship("BenefitModel", back_populates="coverage",
+                               primaryjoin="and_(CoverageModel.coverage_id == BenefitModel.coverage_id, BenefitModel.active_record_indicator == 'Y')")
 
     def __repr__(self):
         return f"<Coverage Id: {self.coverage_id} -- Coverage Code: `{self.coverage_code}`>"
