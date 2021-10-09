@@ -1,4 +1,5 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 
 from .ProvisionModel import ProvisionModel
@@ -7,7 +8,7 @@ from .BenefitModel import BenefitModel
 from .AgeBandsModel import AgeBandsModel
 
 
-class PlanModel(db.Model):
+class PlanModel(db.Model, VersionedTable):
     __tablename__ = "plans"
 
     plan_id = db.Column(db.Integer, primary_key=True)
@@ -29,8 +30,10 @@ class PlanModel(db.Model):
                                 primaryjoin="and_(PlanModel.plan_id == CoverageModel.plan_id, CoverageModel.active_record_indicator == 'Y')")
     benefits = db.relationship("BenefitModel", back_populates="plan",
                                primaryjoin="and_(PlanModel.plan_id == BenefitModel.plan_id, BenefitModel.active_record_indicator == 'Y')")
-    provisions = db.relationship("ProvisionModel", back_populates="plan")
-    age_bands = db.relationship("AgeBandsModel", back_populates="plan")
+    provisions = db.relationship("ProvisionModel", back_populates="plan",
+                                 primaryjoin="and_(PlanModel.plan_id == ProvisionModel.plan_id, ProvisionModel.active_record_indicator == 'Y')")
+    age_bands = db.relationship("AgeBandsModel", back_populates="plan",
+                                primaryjoin="and_(PlanModel.plan_id == AgeBandsModel.plan_id, AgeBandsModel.active_record_indicator == 'Y')")
 
     def __repr__(self):
         return f"<Plan Id: {self.plan_id} -- Product Name: `{self.product_code}`>"

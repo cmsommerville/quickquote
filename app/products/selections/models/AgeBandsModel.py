@@ -1,14 +1,19 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 
 
-class AgeBandsModel(db.Model):
+class AgeBandsModel(db.Model, VersionedTable):
     __tablename__ = "age_bands"
 
     age_band_id = db.Column(db.Integer, primary_key=True)
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
     lower_age = db.Column(db.Integer, nullable=False)
     upper_age = db.Column(db.Integer, nullable=False)
+
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())

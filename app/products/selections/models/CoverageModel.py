@@ -1,11 +1,12 @@
 from sqlalchemy import event
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 
 from .BenefitModel import BenefitModel
 
 
-class CoverageModel(db.Model):
+class CoverageModel(db.Model, VersionedTable):
     __tablename__ = "coverages"
 
     coverage_id = db.Column(db.Integer, primary_key=True)

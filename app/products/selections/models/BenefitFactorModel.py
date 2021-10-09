@@ -1,10 +1,11 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 
 from .BenefitAgeRateModel import BenefitAgeRateModel
 
 
-class BenefitFactorModel(db.Model):
+class BenefitFactorModel(db.Model, VersionedTable):
     __tablename__ = "benefit_factors"
 
     benefit_factor_id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +19,10 @@ class BenefitFactorModel(db.Model):
     factor_selection = db.Column(db.String(36), nullable=False)
     factor_selection_type = db.Column(db.String(10), nullable=False)
     factor_value = db.Column(db.Float, nullable=False)
+
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())

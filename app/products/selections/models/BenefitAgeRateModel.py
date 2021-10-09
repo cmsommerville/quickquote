@@ -1,4 +1,5 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 from sqlalchemy import func
 
@@ -6,7 +7,7 @@ from .RateTableModel import RateTableModel
 from .AgeBandsModel import AgeBandsModel
 
 
-class BenefitAgeRateModel(db.Model):
+class BenefitAgeRateModel(db.Model, VersionedTable):
     __tablename__ = "benefit_age_rates"
 
     benefit_age_rate_id = db.Column(db.Integer, primary_key=True)
@@ -23,6 +24,10 @@ class BenefitAgeRateModel(db.Model):
     benefit_age_rate_benefit_factor = db.Column(db.Numeric(12, 5))
     benefit_age_rate_final_premium = db.Column(db.Numeric(12, 5))
 
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
+
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -31,7 +36,8 @@ class BenefitAgeRateModel(db.Model):
     benefit_rate = db.relationship(
         "BenefitRateModel", back_populates="benefit_age_rates")
     benefit_factors = db.relationship(
-        "BenefitFactorModel", back_populates="benefit_age_rate")
+        "BenefitFactorModel", back_populates="benefit_age_rate",
+        primaryjoin="and_(BenefitFactorModel.benefit_age_rate_id == BenefitAgeRateModel.benefit_age_rate_id, BenefitFactorModel.active_record_indicator == 'Y')")
 
     def __repr__(self):
         return f"<Benefit Age Rate Id: {self.benefit_rate_id}>"

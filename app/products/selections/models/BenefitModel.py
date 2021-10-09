@@ -1,8 +1,9 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 
 
-class BenefitModel(db.Model):
+class BenefitModel(db.Model, VersionedTable):
     __tablename__ = "benefits"
 
     benefit_id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +24,8 @@ class BenefitModel(db.Model):
     plan = db.relationship("PlanModel", back_populates="benefits")
     coverage = db.relationship("CoverageModel", back_populates="benefits")
     benefit_rates = db.relationship(
-        "BenefitRateModel", back_populates="benefit")
+        "BenefitRateModel", back_populates="benefit",
+        primaryjoin="and_(BenefitModel.benefit_id == BenefitRateModel.benefit_id, BenefitRateModel.active_record_indicator == 'Y')")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id} -- Benefit Code: `{self.benefit_code}` -- Benefit Rates: {len(self.benefit_rates)}>"

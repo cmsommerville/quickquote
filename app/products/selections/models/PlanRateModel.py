@@ -1,11 +1,12 @@
 from app.extensions import db
+from app.shared import VersionedTable
 import datetime
 from sqlalchemy import func
 
 from .AgeBandsModel import AgeBandsModel
 
 
-class PlanRateModel(db.Model):
+class PlanRateModel(db.Model, VersionedTable):
     __tablename__ = "plan_rates"
 
     plan_rate_id = db.Column(db.Integer, primary_key=True)
@@ -16,13 +17,18 @@ class PlanRateModel(db.Model):
     smoker_status = db.Column(db.String(1), nullable=False)
     plan_rate_premium = db.Column(db.Numeric(12, 5))
 
+    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
+    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
+    active_record_indicator = db.Column(db.String(1), default='Y')
+
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     plan = db.relationship("PlanModel")
     age_band = db.relationship("AgeBandsModel")
     benefit_rates = db.relationship(
-        "BenefitRateModel", back_populates="plan_rate")
+        "BenefitRateModel", back_populates="plan_rate",
+        primaryjoin="and_(PlanRateModel.plan_rate_id == BenefitRateModel.plan_rate_id, BenefitRateModel.active_record_indicator == 'Y')")
 
     def __repr__(self):
         return f"<Plan Rate ID: {self.plan_rate_id}>"
