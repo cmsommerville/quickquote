@@ -13,11 +13,31 @@ class PlanSelections(Resource):
     @classmethod
     def get(cls):
         plan_id = request.args.get("plan_id")
+        # if a new plan request
         if plan_id is None:
-            raise Exception("Please provide a plan_id query parameter")
+            # get plan config
+            config = requests.get(
+                f"{request.url_root}config/plan/{plan_config_id}").json()
 
+            return {
+                "plan": {},
+                "plan_config": config
+            }
+
+        # if data exists in session
+        session_data = session.get(int(plan_id))
+        if session_data:
+            return session_data
+
+        # if looking up a plan not in session
         plan = PlanModel.find_by_id(plan_id)
-        return plan_schema.dump(plan), 200
+        config = requests.get(
+            f"{request.url_root}config/plan/{plan_config_id}").json()
+
+        return {
+            "plan": plan_schema.dump(plan),
+            "plan_config": config
+        }, 200
 
     def post(self):
         plan_config_id = request.args.get("plan_config_id")

@@ -89,8 +89,11 @@ export default {
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
 
-    const res = await axios.get(`/config/plan/${this.plan_config_id}`);
-    this.plan_config = { ...res.data[0] };
+    // const res = await axios.get(`/config/plan/${this.plan_config_id}`);
+    const res = await axios.get("/selections/benefits", {
+      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
+    });
+    this.plan_config = { ...res.data.plan_config[0] };
     this.loaded = true;
   },
   methods: {

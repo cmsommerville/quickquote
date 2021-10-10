@@ -1,9 +1,12 @@
+import requests
 from flask import request, session
 from flask_restful import Resource
 
+from ..models.PlanModel import PlanModel
 from ..models.BenefitModel import BenefitModel
 from ..models.CoverageModel import CoverageModel
 
+from ..schemas.PlanSchema import PlanSchema
 from ..schemas.BenefitSchema import BenefitSchema
 from ..schemas.CoverageSchema import CoverageSchema
 
@@ -11,6 +14,7 @@ benefit_schema = BenefitSchema()
 benefit_list_schema = BenefitSchema(many=True)
 coverage_schema = CoverageSchema()
 coverage_list_schema = CoverageSchema(many=True)
+plan_schema = PlanSchema()
 
 benefit_keys = [k for k, v in benefit_schema.fields.items()]
 coverage_keys = [k for k, v in coverage_schema.fields.items()]
@@ -21,11 +25,27 @@ class CoverageBenefitSelections(Resource):
     @classmethod
     def get(cls):
         plan_id = request.args.get("plan_id")
+        plan_config_id = request.args.get("plan_config_id")
+        # if a new plan request
         if plan_id is None:
-            raise Exception("Please provide a plan_id query parameter")
+            raise Exception("Please provide a plan ID query parameter")
 
+        # if data exists in session
+        session_data = session.get(int(plan_id))
+        if session_data:
+            return session_data
+
+        # if looking up a plan not in session
         benefits = BenefitModel.find_benefits(plan_id)
-        return benefit_list_schema.dump(benefits), 200
+        plan = PlanModel.find_by_id(plan_id)
+        config = requests.get(
+            f"{request.url_root}config/plan/{plan_config_id}").json()
+
+        return {
+            "plan": plan_schema.dump(plan),
+            "plan_config": config,
+            "benefits": benefit_list_schema.dump(benefits)
+        }, 200
 
     @classmethod
     def post(cls):
