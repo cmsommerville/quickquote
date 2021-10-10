@@ -7,7 +7,7 @@ from .RateTableModel import RateTableModel
 from .AgeBandsModel import AgeBandsModel
 
 
-class BenefitRateModel(db.Model, VersionedTable):
+class BenefitRateModel(db.Model):
     __tablename__ = "benefit_rates"
 
     benefit_rate_id = db.Column(db.Integer, primary_key=True)
@@ -103,8 +103,10 @@ class BenefitRateModel(db.Model, VersionedTable):
     @classmethod
     def delete_by_plan_id(cls, plan_id):
         try:
-            cls.query.filter(
-                cls.plan_id == plan_id).delete()
+            cls.query.filter(cls.plan_id == plan_id).update({
+                cls.row_exp_dts: db.func.current_timestamp(),
+                cls.active_record_indicator: "N"
+            })
         except:
             db.session.rollback()
             raise

@@ -65,6 +65,11 @@ class Rating_Main:
         Append the benefit age rate objects into a dictionary with
         BenefitRate (not BenefitAgeRate) natural keys
         """
+
+        # expire the old benefit age rate and factor records
+        BenefitFactorModel.delete_by_plan_id(self.plan.plan_id)
+        BenefitAgeRateModel.delete_by_plan_id(self.plan.plan_id)
+
         for rate in self.rate_table:
             # look up age band
             age_band = self._age_band_dict[rate.age]
@@ -99,6 +104,10 @@ class Rating_Main:
         """
         Calculate the benefit rates. 
         """
+
+        # expire the old benefit rate records
+        BenefitRateModel.delete_by_plan_id(self.plan.plan_id)
+
         for age_band_rate_key, benefit_age_rates in self._benefit_age_rates_dict.items():
             # unpack the age_band_rate_key tuple
             (product_code, product_variation_code, age_band_id,
@@ -128,6 +137,10 @@ class Rating_Main:
         """
         Calculate the plan rates
         """
+
+        # expire the old plan rate records
+        PlanRateModel.delete_by_plan_id(self.plan.plan_id)
+
         for plan_rate_key, benefit_rates in self._benefit_rates_dict.items():
             (product_code, product_variation_code, age_band_id,
              family_code, smoker_status, plan_rate_code) = plan_rate_key

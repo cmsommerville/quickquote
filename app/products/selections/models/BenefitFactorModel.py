@@ -5,7 +5,7 @@ import datetime
 from .BenefitAgeRateModel import BenefitAgeRateModel
 
 
-class BenefitFactorModel(db.Model, VersionedTable):
+class BenefitFactorModel(db.Model):
     __tablename__ = "benefit_factors"
 
     benefit_factor_id = db.Column(db.Integer, primary_key=True)
@@ -62,12 +62,14 @@ class BenefitFactorModel(db.Model, VersionedTable):
             db.session.commit()
 
     @classmethod
-    def delete_by_plan_id(cls, plan_id, commit=True):
+    def delete_by_plan_id(cls, plan_id):
         try:
-            cls.query.filter(cls.plan_id == plan_id).delete()
+            cls.query.filter(cls.plan_id == plan_id).update({
+                cls.row_exp_dts: db.func.current_timestamp(),
+                cls.active_record_indicator: "N"
+            })
         except:
             db.session.rollback()
             raise
         else:
-            if commit:
-                db.session.commit()
+            db.session.commit()

@@ -28,7 +28,7 @@ class AgeBandsSelections(Resource):
         age_bands = age_bands_list_schema.load(
             [{**band, "plan_id": plan_id} for band in age_bands_data])
         try:
-            AgeBandsModel.delete_by_plan_id(plan_id)
+            # AgeBandsModel.delete_by_plan_id(plan_id)
             AgeBandsModel.save_all_to_db(age_bands, plan_id)
             session[int(plan_id)] = {
                 **session_data, "age_bands": age_bands_list_schema.dump(age_bands)}

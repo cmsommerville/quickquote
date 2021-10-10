@@ -6,7 +6,7 @@ from sqlalchemy import func
 from .AgeBandsModel import AgeBandsModel
 
 
-class PlanRateModel(db.Model, VersionedTable):
+class PlanRateModel(db.Model):
     __tablename__ = "plan_rates"
 
     plan_rate_id = db.Column(db.Integer, primary_key=True)
@@ -56,8 +56,10 @@ class PlanRateModel(db.Model, VersionedTable):
     @classmethod
     def delete_by_plan_id(cls, plan_id):
         try:
-            cls.query.filter(
-                cls.plan_id == plan_id).delete()
+            cls.query.filter(cls.plan_id == plan_id).update({
+                cls.row_exp_dts: db.func.current_timestamp(),
+                cls.active_record_indicator: "N"
+            })
         except:
             db.session.rollback()
             raise
