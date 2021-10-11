@@ -138,7 +138,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 2000,
@@ -164,7 +165,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 400,
@@ -190,7 +192,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 300,
@@ -216,7 +219,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 1000,
@@ -236,7 +240,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 200,
@@ -247,7 +252,10 @@
       },
       "duration": {
         "default": 30,
-        "component": "select",
+        "component": "v-select",
+        "name": "hosp_confinement_days",
+        "outlined": true,
+        "label": "Confinement Days",
         "items": [
           { "value": 30, "text": 30, "factor": 1 },
           { "value": 365, "text": 365, "factor": 1.47 }
@@ -264,7 +272,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 100,
@@ -275,7 +284,10 @@
       },
       "duration": {
         "default": 10,
-        "component": "select",
+        "component": "v-select",
+        "outlined": true,
+        "name": "icu_confinement_days",
+        "label": "ICU Days",
         "items": [
           { "value": 10, "text": 10, "factor": 1 },
           { "value": 30, "text": 30, "factor": 1.2 }
@@ -292,7 +304,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 5000,
@@ -312,7 +325,8 @@
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number"
+        "type": "number",
+        "outlined": true
       },
       "amounts": {
         "default": 2500,

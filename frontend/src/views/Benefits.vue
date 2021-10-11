@@ -2,16 +2,12 @@
   <div class="container">
     <div class="form-rater" v-if="loaded">
       <v-form class="form" @submit="onSubmit">
-        <div
-          class="content-coverage"
-          v-for="covg in coverages"
-          :key="covg.name"
-        >
-          <coverage-selections-expansion-panel
-            :coverage="covg"
-            @selections-change="selectionChangeHandler"
-          />
-        </div>
+        <coverage-selections-expansion-panel
+          v-for="coverage in coverages"
+          :key="coverage.name"
+          :coverage="coverage"
+        />
+
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
             Submit
@@ -21,24 +17,25 @@
         </div>
       </v-form>
     </div>
-    <selections-modal
+    <!-- <selections-modal
       title="Customize Benefit Selections"
       :selections="selections"
       @customized-benefits="customBenefitsHandler"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import axios from "../services/axios.js";
+
 import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
-import SelectionsModal from "../components/SelectionsModal.vue";
+// import SelectionsModal from "../components/SelectionsModal.vue";
 
 export default {
   name: "Benefits",
   components: {
     CoverageSelectionsExpansionPanel,
-    SelectionsModal,
+    // SelectionsModal,
   },
   data() {
     return {
@@ -46,10 +43,26 @@ export default {
       plan_config_id: null,
       plan_id: null,
       plan_config: null,
+      plan: {},
+      benefit_selections: [],
       selections: {},
     };
   },
   computed: {
+    benefits() {
+      return this.plan_config.benefits.map((bnft) => {
+        const sel_value = this.benefit_selections.find((selection) => {
+          return selection.benefit_code === bnft.name;
+        });
+        return {
+          ...bnft,
+          amounts: {
+            ...bnft.amounts,
+            selected: sel_value ? sel_value.benefit_value : null,
+          },
+        };
+      });
+    },
     coverages() {
       let covg_index;
       const coverages = [...this.plan_config.coverages];
@@ -88,12 +101,11 @@ export default {
   async mounted() {
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
-
-    // const res = await axios.get(`/config/plan/${this.plan_config_id}`);
     const res = await axios.get("/selections/benefits", {
       params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
     });
     this.plan_config = { ...res.data.plan_config[0] };
+    this.plan = { ...res.data.plan };
     this.loaded = true;
   },
   methods: {
@@ -130,7 +142,7 @@ export default {
 }
 
 .form-rater {
-  min-width: 60%;
+  min-width: 80%;
   border: 1px solid #ddd;
   padding: 2rem;
 }
