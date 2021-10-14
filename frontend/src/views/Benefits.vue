@@ -1,11 +1,12 @@
 <template>
   <div class="container">
-    <div class="form-rater" v-if="loaded">
+    <div class="content" v-if="loaded">
       <v-form class="form" @submit="onSubmit">
         <coverage-selections-expansion-panel
           v-for="coverage in coverages"
           :key="coverage.name"
           :coverage="coverage"
+          @selections-change="selectionChangeHandler"
         />
 
         <div class="d-flex justify-center my-3">
@@ -17,11 +18,10 @@
         </div>
       </v-form>
     </div>
-    <!-- <selections-modal
-      title="Customize Benefit Selections"
-      :selections="selections"
-      @customized-benefits="customBenefitsHandler"
-    /> -->
+
+    <selection-sidepane :selections="selectedBenefits"
+      >Selections</selection-sidepane
+    >
   </div>
 </template>
 
@@ -29,12 +29,14 @@
 import axios from "../services/axios.js";
 
 import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
+import SelectionSidepane from "../components/SelectionSidepane.vue";
 // import SelectionsModal from "../components/SelectionsModal.vue";
 
 export default {
   name: "Benefits",
   components: {
     CoverageSelectionsExpansionPanel,
+    SelectionSidepane,
     // SelectionsModal,
   },
   data() {
@@ -44,24 +46,18 @@ export default {
       plan_id: null,
       plan_config: null,
       plan: {},
-      benefit_selections: [],
       selections: {},
     };
   },
   computed: {
-    benefits() {
-      return this.plan_config.benefits.map((bnft) => {
-        const sel_value = this.benefit_selections.find((selection) => {
-          return selection.benefit_code === bnft.name;
-        });
-        return {
-          ...bnft,
-          amounts: {
-            ...bnft.amounts,
-            selected: sel_value ? sel_value.benefit_value : null,
-          },
-        };
-      });
+    selectedBenefits() {
+      const selected_benefits = [];
+      for (const bnft in this.selections) {
+        if (+this.selections[bnft].selectedValue > 0) {
+          selected_benefits.push(this.selections[bnft]);
+        }
+      }
+      return selected_benefits;
     },
     coverages() {
       let covg_index;
@@ -73,10 +69,16 @@ export default {
         if (coverages[covg_index].benefits) {
           coverages[covg_index].benefits = [
             ...coverages[covg_index].benefits,
-            bnft,
+            {
+              ...bnft,
+            },
           ];
         } else {
-          coverages[covg_index].benefits = [bnft];
+          coverages[covg_index].benefits = [
+            {
+              ...bnft,
+            },
+          ];
         }
       });
 
@@ -109,9 +111,6 @@ export default {
     this.loaded = true;
   },
   methods: {
-    customBenefitsHandler(payload) {
-      this.selections[payload.name].selectedValue = payload.selectedValue;
-    },
     selectionChangeHandler(selections) {
       const selections_obj = {};
 
@@ -138,12 +137,14 @@ export default {
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  position: relative;
 }
 
-.form-rater {
-  min-width: 80%;
+.content {
+  min-width: 70%;
   border: 1px solid #ddd;
   padding: 2rem;
+  margin-right: 220px;
 }
 </style>

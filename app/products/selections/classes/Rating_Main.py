@@ -72,6 +72,9 @@ class Rating_Main:
 
         for rate in self.rate_table:
             # look up age band
+            if not self._age_band_dict.get(rate.age):
+                continue
+
             age_band = self._age_band_dict[rate.age]
 
             # make a tuple of the rate table natural key, but by AGE BAND

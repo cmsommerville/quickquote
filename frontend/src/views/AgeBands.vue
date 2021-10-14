@@ -79,22 +79,47 @@ export default {
       loaded: false,
       plan_id: null,
       plan_config_id: null,
+      plan: null,
+      plan_config: null,
       age_bands: [{ lower_age: 18, upper_age: 99 }],
     };
   },
   async mounted() {
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
+
+    const res = await axios.get("/selections/age-bands", {
+      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
+    });
+    this.plan_config = { ...res.data.plan_config[0] };
+    this.plan = { ...res.data.plan };
+
+    // if plan variation is not age banded, then send default age bands
+    // then redirect to the next stage
+    const variation = this.plan_config.variations.find(
+      (variation) => variation.value === this.plan.product_variation_code
+    );
+    if (!variation.age_bands) {
+      await this.saveAgeBands();
+    }
+
+    this.age_bands =
+      variation.age_bands[this.plan.rating_state] ||
+      variation.age_bands.default;
     this.loaded = true;
   },
   computed: {},
   methods: {
-    async onSubmit(event) {
-      event.preventDefault();
+    async saveAgeBands() {
       await axios.post(
         "/selections/age-bands",
         {
-          age_bands: this.age_bands,
+          age_bands: this.age_bands.map((ab) => {
+            return {
+              lower_age: ab.lower_age,
+              upper_age: ab.upper_age,
+            };
+          }),
           plan_id: this.plan_id,
           plan_config_id: this.plan_config_id,
         },
@@ -106,6 +131,10 @@ export default {
         name: "provisions",
         query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },
       });
+    },
+    onSubmit(event) {
+      event.preventDefault();
+      this.saveAgeBands();
     },
     onReset() {
       this.age_bands = [{ lower_age: 18, upper_age: 99 }];

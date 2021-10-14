@@ -12,11 +12,29 @@ class AgeBandsSelections(Resource):
     @classmethod
     def get(cls):
         plan_id = request.args.get("plan_id")
+        plan_config_id = request.args.get("plan_config_id")
+        # if a new plan request
         if plan_id is None:
-            raise Exception("Please provide a plan_id query parameter")
+            raise Exception("Please provide a plan ID query parameter")
 
-        plan = AgeBandsModel.find_by_plan_id(plan_id)
-        return age_bands_list_schema.dump(plan), 200
+        # if data exists in session
+        session_data = session.get(int(plan_id))
+        if session_data:
+            return session_data
+
+        # if looking up a plan not in session
+        age_bands = AgeBandsModel.find_by_plan_id(plan_id)
+        benefits = BenefitModel.find_benefits(plan_id)
+        plan = PlanModel.find_by_id(plan_id)
+        config = requests.get(
+            f"{request.url_root}config/plan/{plan_config_id}").json()
+
+        return {
+            "plan": plan_schema.dump(plan),
+            "plan_config": config,
+            "benefits": benefit_list_schema.dump(benefits),
+            "age_bands": age_bands_list_schema.dump(age_bands)
+        }, 200
 
     def post(self):
 

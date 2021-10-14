@@ -23,8 +23,8 @@
             :name="benefit.name"
             :label="benefit.text"
             v-model="benefit.selectedValue"
-            :prefix="benefit.amounts.unit === 'dollar' ? '$' : false"
-            :suffix="benefit.amounts.unit === 'percent' ? '%' : false"
+            :prefix="benefit.amounts.unit === 'dollar' ? '$' : ''"
+            :suffix="benefit.amounts.unit === 'percent' ? '%' : ''"
             @change="setValue"
           />
         </v-col>

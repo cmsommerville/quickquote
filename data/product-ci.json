@@ -6,11 +6,28 @@
     {
       "text": "Issue Age",
       "value": "issue_age",
-      "default": true
+      "default": true,
+      "age_bands": {
+        "default": [
+          { "lower_age": 18, "upper_age": 29 },
+          { "lower_age": 30, "upper_age": 39 },
+          { "lower_age": 40, "upper_age": 49 },
+          { "lower_age": 50, "upper_age": 59 },
+          { "lower_age": 60, "upper_age": 69 }
+        ],
+        "SC": [
+          { "lower_age": 18, "upper_age": 29 },
+          { "lower_age": 30, "upper_age": 39 },
+          { "lower_age": 40, "upper_age": 49 },
+          { "lower_age": 50, "upper_age": 59 },
+          { "lower_age": 60, "upper_age": 64 }
+        ]
+      }
     },
     {
       "text": "Attained Age",
-      "value": "attained_age"
+      "value": "attained_age",
+      "age_banded": true
     }
   ],
   "statesApproved": [
