@@ -1,7 +1,7 @@
 <template>
-  <v-navigation-drawer permanent app clipped>
+  <v-navigation-drawer app temporary :value="drawer" @input="inputHandler">
     <v-list dense nav>
-      <v-list-item-group color="primary">
+      <v-list-item-group color="accent">
         <v-list-item
           v-for="item in items"
           :key="item.title"
@@ -25,6 +25,12 @@
 <script>
 export default {
   name: "TheSidebar",
+  props: {
+    drawer: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       items: [
@@ -48,6 +54,11 @@ export default {
       ],
       right: null,
     };
+  },
+  methods: {
+    inputHandler(payload) {
+      this.$emit("toggle", payload);
+    },
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <the-header />
-    <the-sidebar />
+    <the-header @click-hamburger="drawer = !drawer" />
+    <the-sidebar :drawer="drawer" @toggle="toggleDrawer" />
     <v-main>
       <router-view />
     </v-main>
@@ -17,6 +17,16 @@ export default {
   components: {
     TheSidebar,
     TheHeader,
+  },
+  data() {
+    return {
+      drawer: false,
+    };
+  },
+  methods: {
+    toggleDrawer(payload) {
+      this.drawer = payload;
+    },
   },
 };
 </script>

@@ -1,19 +1,25 @@
 <template>
   <div class="container">
-    <v-data-table
-      v-if="plan_rates && loaded"
-      :headers="headers"
-      :items="table_data"
-      :items-per-page="10"
-      :options="{
-        sortBy: ['plan_rate_code', 'family_code', 'smoker_status', 'age_band'],
-      }"
-      class="elevation-1"
-    ></v-data-table>
+    <div class="content">
+      <div class="rate-table-grid" v-if="plan_rates && loaded">
+        <v-card class="rate-table" v-for="(tbl, key) in table_data2" :key="key">
+          <v-card-title> Rates: {{ key }} </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="tbl"
+            :options="{
+              sortBy: ['family_code', 'smoker_status', 'age_band'],
+            }"
+            class="elevation-1"
+          ></v-data-table>
+        </v-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+const _ = require("lodash");
 import axios from "../services/axios.js";
 
 export default {
@@ -23,11 +29,10 @@ export default {
       loaded: false,
       plan_rates: null,
       headers: [
-        { text: "Plan Rate Code", value: "plan_rate_code" },
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
         { text: "Age Band", value: "age_band" },
-        { text: "Premium", value: "plan_rate_premium" },
+        { text: "Rate", value: "plan_rate_premium" },
       ],
       plan_id: null,
       show: true,
@@ -39,6 +44,11 @@ export default {
         return {
           ...br,
         };
+      });
+    },
+    table_data2() {
+      return _.groupBy(this.plan_rates, (obj) => {
+        return obj.family_code + "-" + obj.smoker_status;
       });
     },
   },
@@ -78,9 +88,18 @@ export default {
   align-items: center;
 }
 
-.form-rater {
-  min-width: 60%;
+.content {
+  min-width: 90%;
   border: 1px solid #ddd;
   padding: 2rem;
+}
+
+.rate-table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-gap: 2rem;
+  align-items: center;
+  justify-items: center;
+  margin: 0 auto;
 }
 </style>

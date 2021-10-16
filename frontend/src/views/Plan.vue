@@ -2,20 +2,20 @@
   <div class="container">
     <div class="form-rater my-6" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-item-group v-model="selections.product_code">
+        <v-item-group v-model="selected_config">
           <v-container>
             <v-row>
               <v-col
-                v-for="product in data"
+                v-for="product in all_config"
                 :key="product.name"
                 cols="12"
                 md="6"
               >
-                <v-item v-slot="{ active, toggle }" :value="product.name">
+                <v-item v-slot="{ active, toggle }" :value="product">
                   <v-card
-                    :color="active ? 'primary' : 'secondary'"
+                    :color="active ? 'accent' : 'secondary'"
                     class="d-flex align-center"
-                    height="200"
+                    height="100"
                     @click="toggle"
                   >
                     <div
@@ -33,15 +33,21 @@
         </v-item-group>
 
         <v-select
-          :disabled="variations.length === 0"
-          :items="variations"
+          outlined
+          rounded
+          background-color="lightest"
+          :disabled="!selected_config"
+          :items="selected_config ? selected_config.variations : []"
           v-model="selections.product_variation_code"
           label="Product Variation"
           class="my-3"
         ></v-select>
 
         <v-select
-          :items="states"
+          outlined
+          rounded
+          background-color="lightest"
+          :items="select_states"
           v-model="selections.rating_state"
           label="Rating State"
           class="my-3"
@@ -49,14 +55,19 @@
         </v-select>
 
         <v-text-field
+          outlined
+          rounded
+          background-color="lightest"
+          :disabled="!selections.rating_state"
           v-model="selections.plan_effective_date"
           label="Plan Effective Date"
           type="date"
           class="my-3"
+          :rules="[rules.effective_date]"
         ></v-text-field>
 
-        <div class="d-flex justify-content my-3">
-          <v-btn type="submit" color="primary" class="mx-3">Submit</v-btn>
+        <div class="d-flex justify-center my-3">
+          <v-btn type="submit" color="accent" class="mx-3">Submit</v-btn>
           <v-btn type="reset" color="secondary" class="mx-3">Reset</v-btn>
         </div>
       </v-form>
@@ -72,79 +83,78 @@ export default {
   data() {
     return {
       loaded: false,
-      data: null,
+      all_config: null,
+      selected_config: null,
       selections: {
         product_code: null,
         product_variation_code: null,
         rating_state: null,
         plan_effective_date: null,
       },
+      rules: {
+        effective_date: (v) => {
+          if (this.selections.rating_state) {
+            const dt = new Date(v);
+            const min_eff_dt = new Date(
+              this.selections.rating_state.effectiveDate
+            );
+            return (
+              dt >= min_eff_dt ||
+              `Must be greater than ${this.selections.rating_state.effectiveDate}`
+            );
+          }
+          return "Please enter an effective date";
+        },
+      },
       show: true,
     };
   },
   async mounted() {
     const res = await axios.get("/config/plans");
-    this.data = [...res.data];
+    this.all_config = [...res.data];
     this.loaded = true;
   },
   computed: {
-    variations() {
-      if (this.selections.product_code) {
-        const product = this.data.find(
-          (product) => product.name === this.selections.product_code
-        );
-        if (product.variations) return product.variations;
-        return [];
-      }
-      return [];
+    selections_formatted() {
+      return {
+        ...this.selections,
+        product_code: this.selected_config.name,
+        rating_state: this.selections.rating_state.state,
+        plan_config_id: this.selected_config._id,
+      };
     },
-    states() {
-      if (this.selections.product_code) {
-        const product = this.data.find(
-          (product) => product.name === this.selections.product_code
-        );
-        return product.statesApproved.map((stateObj) => {
+    select_states() {
+      if (this.selected_config) {
+        return this.selected_config.statesApproved.map((stateObj) => {
           return {
-            value: stateObj.state,
+            value: stateObj,
             text: stateObj.state,
           };
         });
       }
-      return ["AL", "AZ", "NC", "SC"];
-    },
-    config_id() {
-      if (this.selections.product_code) {
-        const product = this.data.find(
-          (product) => product.name === this.selections.product_code
-        );
-        return product._id;
-      }
-      return null;
+      return [];
     },
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      const res = await axios.post("/selections/plan", this.selections, {
-        params: { plan_config_id: this.config_id },
-        // withCredentials: true,
-      });
+      const res = await axios.post(
+        "/selections/plan",
+        this.selections_formatted,
+        {
+          params: { plan_config_id: this.selected_config._id },
+        }
+      );
       this.$router.push({
         name: "benefits",
-        query: { plan_id: res.data.plan_id, plan_config_id: this.config_id },
+        query: {
+          plan_id: res.data.plan_id,
+          plan_config_id: this.selected_config._id,
+        },
       });
     },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.selections.product_name = null;
-      this.selections.plan_effective_date = null;
-      this.selections.rating_state = null;
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    onReset() {
+      console.log("Reset");
     },
   },
 };

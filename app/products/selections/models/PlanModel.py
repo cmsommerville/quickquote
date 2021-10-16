@@ -1,6 +1,7 @@
 from app.extensions import db
 from app.shared import VersionedTable
 import datetime
+from sqlalchemy import cast
 
 from .ProvisionModel import ProvisionModel
 from .CoverageModel import CoverageModel
@@ -18,6 +19,7 @@ class PlanModel(db.Model, VersionedTable):
     rating_state = db.Column(db.String(2), nullable=False)
     plan_effective_date = db.Column(db.Date, nullable=False)
     plan_status = db.Column(db.String(50), default="Quoted")
+    plan_config_id = db.Column(db.String(36), nullable=False)
 
     row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
@@ -41,6 +43,10 @@ class PlanModel(db.Model, VersionedTable):
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter(cls.plan_id == id).first()
+
+    @classmethod
+    def search_by_id(cls, id):
+        return cls.query.filter(cast(cls.plan_id, db.String).contains(str(id))).limit(10).all()
 
     def save_to_db(self):
         try:

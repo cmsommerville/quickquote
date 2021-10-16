@@ -6,3 +6,4 @@ from .Selections_AgeBands import AgeBandsSelections
 from .Calculator_Rating import RatingCalculatorResource
 from .Config_RateTable import RateTableList
 from .BenefitTest import BenefitResource
+from .Search_Plan import PlanSearch

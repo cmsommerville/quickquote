@@ -7,8 +7,8 @@
         @change="toggleCoverage"
       >
       </v-switch>
-      <v-btn color="primary" fab dark small @click="hidden = !hidden">
-        <v-icon>mdi-menu-down-outline</v-icon>
+      <v-btn color="accent" fab dark small outlined @click="hidden = !hidden">
+        <v-icon>mdi-arrow-down</v-icon>
       </v-btn>
     </div>
     <div class="content-benefits ml-6 mb-6" v-if="!hidden">
@@ -26,6 +26,10 @@
             :prefix="benefit.amounts.unit === 'dollar' ? '$' : ''"
             :suffix="benefit.amounts.unit === 'percent' ? '%' : ''"
             @change="setValue"
+            outlined
+            dense
+            rounded
+            background-color="lightest"
           />
         </v-col>
         <v-col v-if="!!benefit.duration" cols="12" sm="3">
@@ -36,6 +40,10 @@
             :label="benefit.duration.label"
             v-model="benefit.selectedDuration"
             @change="setValue"
+            outlined
+            dense
+            rounded
+            background-color="lightest"
           />
         </v-col>
         <v-spacer></v-spacer>
