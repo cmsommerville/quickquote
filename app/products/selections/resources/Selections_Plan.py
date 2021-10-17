@@ -12,11 +12,12 @@ class PlanSelections(Resource):
 
     @classmethod
     def get(cls):
-        plan_id = request.args.get("plan_id")
-        plan_config_id = request.args.get("plan_config_id")
+        plan_id = request.args.get("plan_id", type=int)
+        plan_config_id = request.args.get("plan_config_id", type=str)
 
         # if a new plan request
         if plan_id is None:
+            print("no plan id")
             # get plan config
             if plan_config_id:
                 config = requests.get(
@@ -27,14 +28,23 @@ class PlanSelections(Resource):
                     "plan_config": config
                 }
 
+            config = requests.get(
+                f"{request.url_root}config/plans").json()
+            return {
+                "plan": {},
+                "plan_config": config
+            }
+
         # if data exists in session
-        if plan_id:
-            session_data = session.get(int(plan_id))
+        if session.get(plan_id):
+            print("session")
+            session_data = session.get(plan_id)
             if session_data:
                 return session_data
 
         # if looking up a plan not in session
         try:
+            print("fetch from db")
             plan = PlanModel.find_by_id(plan_id)
             plan_config_id = plan.plan_config_id
             config = requests.get(

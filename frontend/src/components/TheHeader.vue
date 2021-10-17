@@ -25,8 +25,7 @@
         hide-selected
         item-text="plan_description"
         item-value="plan_id"
-        label="Public APIs"
-        placeholder="Start typing to Search"
+        label="Search for a plan"
         prepend-icon="mdi-magnify"
         return-object
         @input="searchHandler"
@@ -61,19 +60,29 @@ export default {
       return this.data.map((item) => {
         return {
           ...item,
-          plan_description: `Plan: ${item.plan_id} - ${item.product_code}`,
+          plan_description: `Plan: ${item.plan_id}`,
         };
       });
     },
   },
   methods: {
     searchHandler() {
-      // handle input event for search br
-      console.log("Search Click Handler");
+      // handle input event for search bar
+      this.$router.push({
+        name: "plan",
+        query: {
+          plan_id: this.model.plan_id,
+          plan_config_id: this.model.plan_config_id,
+        },
+      });
     },
   },
   watch: {
     search(val) {
+      if (!val) {
+        this.data = [];
+        return;
+      }
       // Items have already been loaded
       if (this.items.length > 0) return;
 

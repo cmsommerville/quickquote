@@ -83,6 +83,7 @@ export default {
   data() {
     return {
       loaded: false,
+      data: null,
       all_config: null,
       selected_config: null,
       selections: {
@@ -110,8 +111,21 @@ export default {
     };
   },
   async mounted() {
-    const res = await axios.get("/config/plans");
-    this.all_config = [...res.data];
+    this.plan_config_id = this.$route.query.plan_config_id;
+    this.plan_id = +this.$route.query.plan_id;
+    const res = await axios.get("/selections/plan", {
+      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
+    });
+    this.data = { ...res.data };
+    this.all_config = [...res.data.plan_config];
+    if (this.plan_id) {
+      this.selected_config = res.data.plan_config[0];
+    }
+    if (this.plan_id) {
+      this.selections = {
+        ...this.loadSelectionsHandler(this.selections, res.data),
+      };
+    }
     this.loaded = true;
   },
   computed: {
@@ -136,6 +150,19 @@ export default {
     },
   },
   methods: {
+    loadSelectionsHandler(inputSelections, data) {
+      const selections = {};
+      for (const key in inputSelections) {
+        if (key === "rating_state") {
+          selections[key] = data.plan_config[0].statesApproved.find(
+            (item) => item.state === data.plan.rating_state
+          );
+        } else {
+          selections[key] = data.plan[key] || null;
+        }
+      }
+      return selections;
+    },
     async onSubmit(event) {
       event.preventDefault();
       const res = await axios.post(

@@ -3,7 +3,7 @@
     <the-header @click-hamburger="drawer = !drawer" />
     <the-sidebar :drawer="drawer" @toggle="toggleDrawer" />
     <v-main>
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </v-main>
   </v-app>
 </template>
