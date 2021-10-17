@@ -6,8 +6,7 @@
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>
-        <span class="brand-name-front secondary--text">Pi</span
-        ><span class="brand-name-back">Rate</span>
+        <the-logo dark />
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -24,7 +23,7 @@
         color="white"
         hide-no-data
         hide-selected
-        item-text="plan"
+        item-text="plan_description"
         item-value="plan_id"
         label="Public APIs"
         placeholder="Start typing to Search"
@@ -43,9 +42,11 @@
 
 <script>
 import axios from "../services/axios.js";
+import TheLogo from "./TheLogo";
 
 export default {
   name: "TheHeader",
+  components: { TheLogo },
   data() {
     return {
       search: null,
@@ -58,7 +59,10 @@ export default {
   computed: {
     items() {
       return this.data.map((item) => {
-        return { ...item, plan: `PLAN-${item.plan_id}` };
+        return {
+          ...item,
+          plan_description: `Plan: ${item.plan_id} - ${item.product_code}`,
+        };
       });
     },
   },
@@ -98,27 +102,5 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-}
-.brand-name-front {
-  font-weight: 500;
-  font-size: 2rem;
-  text-transform: lowercase;
-  font-family: "Wallpoet", cursive;
-}
-.brand-name-back {
-  font-weight: 200;
-  font-size: 2rem;
-  text-transform: lowercase;
-  font-family: "Wallpoet", cursive;
-}
-
-.dummy-fonts {
-  font-family: "Griffy", cursive;
-  font-family: "Metal Mania", cursive;
-  font-family: "Monofett", cursive;
-  font-family: "Train One", cursive;
-  font-family: "Turret Road", cursive;
-  font-family: "Uncial Antiqua", cursive;
-  font-family: "Wallpoet", cursive;
 }
 </style>

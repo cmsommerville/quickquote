@@ -1,5 +1,14 @@
 <template>
   <v-navigation-drawer app temporary :value="drawer" @input="inputHandler">
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title class="text-h6">
+          <the-logo />
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-divider></v-divider>
     <v-list dense nav>
       <v-list-item-group color="accent">
         <v-list-item
@@ -23,8 +32,11 @@
 </template>
 
 <script>
+import TheLogo from "./TheLogo.vue";
+
 export default {
   name: "TheSidebar",
+  components: { TheLogo },
   props: {
     drawer: {
       type: Boolean,
