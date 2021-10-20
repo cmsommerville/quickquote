@@ -2,35 +2,22 @@
   <div class="container">
     <div class="form-rater my-6" v-if="loaded">
       <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
-        <v-item-group v-model="selected_config">
-          <v-container>
-            <v-row>
-              <v-col
-                v-for="product in all_config"
-                :key="product.name"
-                cols="12"
-                md="6"
-              >
-                <v-item v-slot="{ active, toggle }" :value="product">
-                  <v-card
-                    :color="active ? 'accent' : 'secondary'"
-                    class="d-flex align-center"
-                    height="100"
-                    @click="toggle"
-                  >
-                    <div
-                      :class="`text-h4 flex-grow-1 text-center ${
-                        active ? 'white--text' : ''
-                      }`"
-                    >
-                      {{ product.text }}
-                    </div>
-                  </v-card>
-                </v-item>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-item-group>
+        <tile-list-group
+          v-if="!existingQuote"
+          :config="all_config"
+          @tile:selected="tileSelectionHandler"
+        />
+
+        <v-text-field
+          v-if="existingQuote"
+          outlined
+          rounded
+          background-color="lightest"
+          disabled
+          v-model="selected_config.text"
+          label="Product"
+          class="my-3"
+        ></v-text-field>
 
         <v-select
           outlined
@@ -67,7 +54,7 @@
         ></v-text-field>
 
         <div class="d-flex justify-center my-3">
-          <v-btn type="submit" color="accent" class="mx-3">Submit</v-btn>
+          <v-btn type="submit" color="primary" class="mx-3">Submit</v-btn>
           <v-btn type="reset" color="secondary" class="mx-3">Reset</v-btn>
         </div>
       </v-form>
@@ -77,12 +64,15 @@
 
 <script>
 import axios from "../services/axios.js";
+import TileListGroup from "../components/TileListGroup.vue";
 
 export default {
   name: "Plan",
+  components: { TileListGroup },
   data() {
     return {
       loaded: false,
+      existingQuote: false,
       data: null,
       all_config: null,
       selected_config: null,
@@ -120,6 +110,7 @@ export default {
     this.all_config = [...res.data.plan_config];
     if (this.plan_id) {
       this.selected_config = res.data.plan_config[0];
+      this.existingQuote = true;
     }
     if (this.plan_id) {
       this.selections = {
@@ -150,6 +141,10 @@ export default {
     },
   },
   methods: {
+    tileSelectionHandler(selection) {
+      this.selected_config = selection;
+    },
+
     loadSelectionsHandler(inputSelections, data) {
       const selections = {};
       for (const key in inputSelections) {
