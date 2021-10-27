@@ -2,8 +2,8 @@
   <v-app>
     <the-header @click-hamburger="drawer = !drawer" />
     <the-sidebar :drawer="drawer" @toggle="toggleDrawer" />
-    <v-main>
-      <router-view :key="$route.fullPath" />
+    <v-main class="app-container">
+      <router-view :key="$route.fullPath" class="app-content" />
     </v-main>
   </v-app>
 </template>
@@ -36,7 +36,15 @@ export default {
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-material.css";
 
-.container {
+.app-container {
   display: flex;
+}
+
+.app-content {
+  min-width: 60%;
+  max-width: 90%;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  margin: 1rem auto;
 }
 </style>
