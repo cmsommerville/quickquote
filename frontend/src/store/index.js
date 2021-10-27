@@ -41,7 +41,20 @@ export default new Vuex.Store({
       ];
     },
     [SET_FACTOR_CONFIG](state, payload) {
-      state.factorConfig = { ...state.factorConfig, ...payload };
+      state.config_provisions = [
+        ...state.config_provisions.filter(
+          (item) => item.name !== payload.factor_code
+        ),
+        {
+          ...state.config_provisions.find(
+            (item) => item.name === payload.factor_code
+          ),
+          factor: {
+            default_factor_value: payload.default_factor_value,
+            variability: payload.variability,
+          },
+        },
+      ];
     },
   },
   actions: {

@@ -38,6 +38,10 @@
                   class="mr-2"
                   v-bind="attrs"
                   v-on="on"
+                  :to="{
+                    name: 'config-factor',
+                    query: { code: prov.name },
+                  }"
                   ><v-icon color="primary"
                     >mdi-file-percent-outline</v-icon
                   ></v-btn

@@ -96,11 +96,24 @@ export default {
       rules: [],
     };
   },
+  async mounted() {
+    const code = this.$route.query.code;
+    if (code) {
+      const prov = this.$store.getters.getProvisionConfig.find(
+        (item) => item.name === code
+      );
+      this.factor_code = prov.name;
+      this.factor_name = prov.label;
+      if (prov.factor) {
+        this.default_factor_value = prov.factor.default_factor_value;
+        this.rules = prov.factor.variability;
+      }
+    }
+  },
   computed: {
     output() {
       return {
         factor_code: this.factor_code,
-        factor_name: this.factor_name,
         default_factor_value: this.default_factor_value,
         variability: this.rules,
       };
@@ -111,7 +124,8 @@ export default {
       this.rules = [...this.rules, payload];
     },
     saveFactorHandler() {
-      this.$store.dispatch("setFactorConfig", this.output);
+      this.$store.commit("SET_FACTOR_CONFIG", this.output);
+      this.$router.push({ name: "config-provision-list" });
     },
     ruleDisplayHandler(rule) {
       const operators = {
