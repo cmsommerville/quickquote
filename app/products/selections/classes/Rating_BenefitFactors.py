@@ -173,7 +173,7 @@ class Rating_BenefitFactor:
         """
         for item in variability:
             applyRule = True
-            for k, v in item.items():
+            for k, v in item['rules'].items():
                 if k in ['factor_value', '_id', 'uuid']:
                     continue
 

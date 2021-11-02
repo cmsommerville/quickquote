@@ -1,139 +1,140 @@
 <template>
-  <div class="content d-flex justify-center align-start">
-    <v-row>
-      <v-col sm="4">
-        <v-form>
-          <v-text-field
-            v-model="label"
-            filled
-            outlined
-            label="Provision Name"
-          />
+  <div>
+    <div class="mb-4" v-if="loaded">
+      <v-row>
+        <v-col sm="5">
+          <v-form>
+            <v-text-field
+              v-model="label"
+              filled
+              outlined
+              label="Provision Name"
+            />
 
-          <v-text-field v-model="name" filled outlined label="Provision Code" />
+            <v-text-field
+              v-model="name"
+              filled
+              outlined
+              label="Provision Code"
+            />
 
+            <v-row>
+              <v-col :sm="ui.component === 'v-select' ? 9 : 12">
+                <v-select
+                  v-model="ui.component"
+                  filled
+                  outlined
+                  label="Component Type"
+                  :items="componentTypes"
+                  item-text="label"
+                  item-value="code"
+                />
+              </v-col>
+              <v-col v-if="ui.component === 'v-select'" sm="3">
+                <app-modal-list-form
+                  v-if="ui.component === 'v-select'"
+                  title="Select Options"
+                  :schema="[
+                    { code: 'text', label: 'Label' },
+                    { code: 'value', label: 'Value' },
+                  ]"
+                  @submit:list-data="selectListItemsHandler"
+                  class="ma-2"
+                >
+                  <v-icon>mdi-pencil-outline</v-icon>
+                </app-modal-list-form>
+              </v-col>
+            </v-row>
+
+            <v-select
+              v-if="ui.component === 'v-text-field'"
+              v-model="ui.type"
+              filled
+              outlined
+              label="Input Type"
+              :items="inputTypes"
+              item-text="label"
+              item-value="code"
+            />
+          </v-form>
+        </v-col>
+        <v-col></v-col>
+        <v-col sm="6" class="d-flex flex-column">
           <v-row>
-            <v-col :sm="ui.component === 'v-select' ? 9 : 12">
-              <v-select
-                v-model="ui.component"
-                filled
-                outlined
-                label="Component Type"
-                :items="componentTypes"
-                item-text="label"
-                item-value="code"
-              />
-            </v-col>
-            <v-col v-if="ui.component === 'v-select'" sm="3">
-              <app-modal-list-form
-                v-if="ui.component === 'v-select'"
-                title="Select Options"
-                :schema="[
-                  { code: 'text', label: 'Label' },
-                  { code: 'value', label: 'Value' },
-                ]"
-                @submit:list-data="selectListItemsHandler"
-                class="ma-2"
+            <v-col sm="12">
+              <app-dashboard-card
+                title="States"
+                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+                @click:configure="configureStates"
               >
-                <v-icon>mdi-pencil-outline</v-icon>
-              </app-modal-list-form>
+                {{
+                  states === "inherit"
+                    ? "Applicability inherited"
+                    : states.length
+                    ? `${states.length} states configured`
+                    : "Setup States!"
+                }}
+              </app-dashboard-card>
             </v-col>
           </v-row>
 
-          <v-select
-            v-if="ui.component === 'v-text-field'"
-            v-model="ui.type"
-            filled
-            outlined
-            label="Input Type"
-            :items="inputTypes"
-            item-text="label"
-            item-value="code"
-          />
-
-          <div class="call-to-action d-flex justify-center align-center">
-            <v-btn color="primary" class="mx-4" @click="submitProvision">
-              Save
-            </v-btn>
-          </div>
-        </v-form>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col sm="8" class="config-states">
-        <v-list-item v-for="state in states" :key="state.code" dense>
           <v-row>
-            <v-col sm="2" class="d-flex justify-center align-self-start">
-              <v-list-item-content>
-                <v-list-item-title class="text-right">{{
-                  state.label
-                }}</v-list-item-title>
-              </v-list-item-content>
-            </v-col>
-            <v-col sm="3" class="d-flex justify-center align-self-start">
-              <v-select
-                :items="requirementTypes"
-                item-text="label"
-                item-value="code"
-                v-model="state.value"
-                filled
-                outlined
-                dense
-              ></v-select>
-            </v-col>
-
-            <v-col sm="3" class="d-flex justify-center align-self-start">
-              <v-text-field
-                v-model="state.effectiveDate"
-                filled
-                outlined
-                dense
-                :disabled="state.value && state.value === 'prohibited'"
-                type="date"
-                label="Effective Date"
-              />
-            </v-col>
-
-            <v-col sm="3" class="d-flex justify-center align-self-start">
-              <v-text-field
-                v-model="state.expiryDate"
-                filled
-                outlined
-                dense
-                :disabled="state.value && state.value === 'prohibited'"
-                type="date"
-                label="Expiry Date"
-              />
+            <v-col sm="12">
+              <app-dashboard-card
+                title="Factors"
+                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+                @click:configure="configureStates"
+              >
+                {{
+                  config && config.factor
+                    ? `${config.factor.variability.length} factor variations`
+                    : "Setup Factors!"
+                }}
+              </app-dashboard-card>
             </v-col>
           </v-row>
-        </v-list-item>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </div>
+    <v-divider></v-divider>
+    <div class="call-to-action d-flex justify-center align-center mt-4">
+      <v-btn
+        color="primary"
+        class="mx-4"
+        @click="saveProvision"
+        :disabled="!formIsValid"
+      >
+        Save
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
 import AppModalListForm from "../../components/AppModalListForm.vue";
+import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
   name: "ConfigProvision",
-  components: { AppModalListForm },
+  components: { AppModalListForm, AppDashboardCard },
   async mounted() {
+    this.loaded = false;
     const code = this.$route.query.code;
     if (code) {
-      const prov = this.$store.getters.getProvisionConfig.find(
-        (item) => item.name === code
-      );
-      if (prov) {
-        this.config = { ...prov };
-        this.label = prov.label;
-        this.name = prov.name;
-        this.ui = { ...prov.ui };
-        this.states = prov.statesApproved ? prov.statesApproved : this.states;
-      }
+      const prov = await this.$store.getters.getProvisionConfig;
+      // if (prov) {
+      this.config = { ...prov };
+      this.label = prov.label;
+      this.name = prov.name;
+      this.ui = { ...prov.ui };
+      this.states = prov.states ? prov.states : this.states;
+      // }
     }
+    this.loaded = true;
   },
   data() {
     return {
+      loaded: false,
       modal: false,
       config: null,
       label: null,
@@ -146,11 +147,6 @@ export default {
         { label: "Arkansas", code: "AR", value: "permitted" },
         { label: "North Carolina", code: "NC", value: "permitted" },
         { label: "South Carolina", code: "SC", value: "permitted" },
-      ],
-      requirementTypes: [
-        { code: "permitted", label: "Permitted" },
-        { code: "prohibited", label: "Prohibited" },
-        { code: "mandatory", label: "Mandatory" },
       ],
 
       componentTypes: [
@@ -170,20 +166,52 @@ export default {
     };
   },
   computed: {
+    formIsValid() {
+      return !!this.label && !!this.name;
+    },
+    stateAvailabilityList() {
+      return {
+        permitted: {
+          color: "primary",
+          states: this.states.filter((state) => state.value === "permitted"),
+        },
+        mandatory: {
+          color: "teal",
+          states: this.states.filter((state) => state.value === "mandatory"),
+        },
+        prohibited: {
+          color: "red",
+          states: this.states.filter((state) => state.value === "prohibited"),
+        },
+      };
+    },
     outputProvision() {
       return {
         ...this.config,
         label: this.label,
         name: this.name,
         ui: { ...this.ui },
-        statesApproved: this.states,
+        states: this.states,
       };
     },
   },
   methods: {
-    submitProvision() {
-      this.$store.commit("SET_PROVISION_CONFIG", [this.outputProvision]);
-      this.$router.push({ name: "config-provision-list" });
+    storeProvision() {
+      this.$store.commit("SET_NEW_PROVISION_CONFIG", this.outputProvision);
+    },
+    configureStates() {
+      this.storeProvision();
+      this.$router.push({
+        name: "config-provision-states",
+        params: { code: this.name, input: this.states },
+      });
+    },
+    saveProvision() {
+      this.storeProvision();
+      this.$store.dispatch("addNewProvisionToList");
+      this.$router.push({
+        name: "config-provision-list",
+      });
     },
     selectListItemsHandler(payload) {
       this.ui.items = [...payload];
@@ -193,7 +221,13 @@ export default {
 </script>
 
 <style>
-.config-states {
-  border-left: 1px solid #ddd;
+.card-state {
+  position: relative;
+}
+
+.btn-edit {
+  position: absolute;
+  top: -15px;
+  right: -15px;
 }
 </style>

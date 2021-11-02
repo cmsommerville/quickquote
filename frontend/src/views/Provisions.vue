@@ -5,8 +5,8 @@
         <component
           v-for="provision in plan_config.provisions"
           :key="provision.name"
-          :is="provision.component"
-          v-bind="{ ...provision }"
+          :is="provision.ui.component"
+          v-bind="{ label: provision.label, ...provision.ui }"
           :name="provision.name"
           v-model="selections[provision.name]"
         />

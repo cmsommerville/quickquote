@@ -42,26 +42,33 @@
     {
       "name": "occ_class",
       "label": "Occupational Class",
-      "component": "v-select",
-      "items": [
-        {
-          "value": "24hr",
-          "text": "24 Hour"
-        },
-        {
-          "value": "nonocc",
-          "text": "Non-Occupational"
-        }
-      ],
+      "states": "inherit",
+      "ui": {
+        "component": "v-select",
+        "items": [
+          {
+            "value": "24hr",
+            "text": "24 Hour"
+          },
+          {
+            "value": "nonocc",
+            "text": "Non-Occupational"
+          }
+        ]
+      },
       "factor": {
         "default_factor_value": 1,
         "variability": [
           {
-            "provision_value": "24hr",
+            "rules": {
+              "provision_value": { "comparison": "eq", "value": "24hr" }
+            },
             "factor_value": 1.25
           },
           {
-            "provision_value": "nonocc",
+            "rules": {
+              "provision_value": { "comparison": "eq", "value": "nonocc" }
+            },
             "factor_value": 1
           }
         ]
@@ -70,26 +77,33 @@
     {
       "name": "ac_factor1",
       "label": "Accident Factor 1",
-      "component": "v-select",
-      "items": [
-        {
-          "value": 30,
-          "text": 30
-        },
-        {
-          "value": 365,
-          "text": 365
-        }
-      ],
+      "states": "inherit",
+      "ui": {
+        "component": "v-select",
+        "items": [
+          {
+            "value": 30,
+            "text": 30
+          },
+          {
+            "value": 365,
+            "text": 365
+          }
+        ]
+      },
       "factor": {
         "default_factor_value": 1,
         "variability": [
           {
-            "provision_value": 365,
+            "rules": {
+              "provision_value": { "comparison": "eq", "value": 365 }
+            },
             "factor_value": 1.5
           },
           {
-            "provision_value": 30,
+            "rules": {
+              "provision_value": { "comparison": "eq", "value": 30 }
+            },
             "factor_value": 0.95
           }
         ]
@@ -98,31 +112,40 @@
     {
       "name": "group_size",
       "label": "Group Size",
-      "component": "v-text-field",
-      "type": "number",
+      "states": "inherit",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "factor": {
         "default_factor_value": 1,
         "variability": [
           {
             "factor_value": 0.96,
-            "provision_value": {
-              "comparison": "lt",
-              "value": 500
+            "rules": {
+              "provision_value": {
+                "comparison": "lt",
+                "value": 500
+              }
             }
           },
           {
             "factor_value": 0.91,
-            "provision_value": {
-              "comparison": "range",
-              "lower": 500,
-              "upper": 999
+            "rules": {
+              "provision_value": {
+                "comparison": "range",
+                "lower": 500,
+                "upper": 999
+              }
             }
           },
           {
             "factor_value": 0.85,
-            "provision_value": {
-              "comparison": "ge",
-              "value": 1000
+            "rules": {
+              "provision_value": {
+                "comparison": "ge",
+                "value": 1000
+              }
             }
           }
         ]
