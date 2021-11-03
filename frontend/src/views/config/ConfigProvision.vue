@@ -197,13 +197,14 @@ export default {
   },
   methods: {
     storeProvision() {
-      this.$store.commit("SET_NEW_PROVISION_CONFIG", this.outputProvision);
+      this.$store.commit("SET_NEW_PROVISION", this.outputProvision);
     },
     configureStates() {
       this.storeProvision();
       this.$router.push({
         name: "config-provision-states",
-        params: { code: this.name, input: this.states },
+        params: { id: this.$route.params.id, input: this.states },
+        query: { code: this.name },
       });
     },
     saveProvision() {

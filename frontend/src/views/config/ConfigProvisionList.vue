@@ -74,22 +74,19 @@ export default {
       provisions: null,
     };
   },
-  async mounted() {
-    const productUUID = "615ba44644247be1d00ab650"; //"6129a7640fb263f14aaa2d5e";
-    if (this.$store.getters.isConfigEmpty) {
-      await this.$store.dispatch("initializeBaseProductConfig", productUUID);
-    }
+  mounted() {
     this.provisions = [...this.$store.getters.getProvisionConfigList];
   },
   methods: {
     editProvision(code) {
       this.$store.commit(
-        "SET_NEW_PROVISION_CONFIG",
+        "SET_NEW_PROVISION",
         this.provisions.find((item) => item.name === code)
       );
       this.$router.push({
         name: "config-provision",
         query: { code: code },
+        params: { id: this.$route.params.id },
       });
     },
   },

@@ -1,3 +1,4 @@
+import ConfigProductList from "../../views/config/ConfigProductList";
 import ConfigFactor from "../../views/config/ConfigFactor.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
@@ -5,17 +6,22 @@ import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue"
 
 export default [
   {
-    path: "/config/provisions",
+    path: "/config/products",
+    name: "config-product-list",
+    component: ConfigProductList,
+  },
+  {
+    path: "/config/:productId/provisions",
     name: "config-provision-list",
     component: ConfigProvisionList,
   },
   {
-    path: "/config/provision",
+    path: "/config/:productId/provision",
     name: "config-provision",
     component: ConfigProvision,
   },
   {
-    path: "/config/provision/states",
+    path: "/config/:id/provision/states",
     name: "config-provision-states",
     component: ConfigProvisionStates,
   },
