@@ -1,4 +1,5 @@
 import ConfigProductList from "../../views/config/ConfigProductList";
+import ConfigProduct from "../../views/config/ConfigProduct";
 import ConfigFactor from "../../views/config/ConfigFactor.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
@@ -9,6 +10,11 @@ export default [
     path: "/config/products",
     name: "config-product-list",
     component: ConfigProductList,
+  },
+  {
+    path: "/config/product/:productId",
+    name: "config-product",
+    component: ConfigProduct,
   },
   {
     path: "/config/:productId/provisions",

@@ -67,7 +67,7 @@ export const config = {
     isConfigEmpty(state) {
       return Object.keys(state.config).length === 0;
     },
-    getBaseProductConfig(state) {
+    getConfig(state) {
       return state.config;
     },
     getProvisionConfigList(state) {

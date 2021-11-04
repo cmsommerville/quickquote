@@ -56,9 +56,8 @@ export default {
     async editProduct() {
       await this.$store.dispatch("initializeConfig", this.selectedProduct._id);
       this.$router.push({
-        name: "config-provision-list",
+        name: "config-product",
         params: { productId: this.selectedProduct._id },
-        key: this.$route.fullPath,
       });
     },
   },
