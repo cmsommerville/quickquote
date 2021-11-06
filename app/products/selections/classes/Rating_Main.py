@@ -92,7 +92,8 @@ class Rating_Main:
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
                 rate_table=rate,
-                provisions=self.provisions
+                provisions=self.provisions,
+                policy=self.policy
             ).calculate()
 
             benefit_age_rate = Rating_BenefitAgeRates(
