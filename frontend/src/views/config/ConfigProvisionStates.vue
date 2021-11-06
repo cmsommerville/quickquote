@@ -91,6 +91,12 @@ import { STATES } from "../../data/lookups.js";
 
 export default {
   name: "ConfigProvisionStates",
+  props: {
+    productId: {
+      type: String,
+      required: false,
+    },
+  },
   data() {
     return {
       inherit: false,
@@ -121,6 +127,13 @@ export default {
     },
   },
   methods: {
+    routeToProvision() {
+      this.$router.push({
+        name: "config-provision",
+        query: { code: this.config.name },
+        params: { productId: this.productId },
+      });
+    },
     addStateInput() {
       this.states = [
         ...this.states,
@@ -133,11 +146,8 @@ export default {
       ];
     },
     submitProvisionStates() {
-      this.$store.commit("SET_NEW_PROVISION_CONFIG", this.outputProvision);
-      this.$router.push({
-        name: "config-provision",
-        query: { code: this.config.name },
-      });
+      this.$store.commit("SET_NEW_PROVISION", this.outputProvision);
+      this.routeToProvision();
     },
     overrideInheritedApplicability() {
       this.inherit = false;

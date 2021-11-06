@@ -83,11 +83,18 @@
 </template>
 
 <script>
+import { OPERATORS } from "../../data/lookups.js";
 import FactorConfigModal from "../../components/FactorConfigModal.vue";
 
 export default {
   name: "ConfigFactor",
   components: { FactorConfigModal },
+  props: {
+    productId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       factor_code: null,
@@ -99,9 +106,7 @@ export default {
   async mounted() {
     const code = this.$route.query.code;
     if (code) {
-      const prov = this.$store.getters.getProvisionConfig.find(
-        (item) => item.name === code
-      );
+      const prov = this.$store.getters.getProvisionConfig;
       this.factor_code = prov.name;
       this.factor_name = prov.label;
       if (prov.factor) {
@@ -120,24 +125,22 @@ export default {
     },
   },
   methods: {
+    routeToProvision() {
+      this.$router.push({
+        name: "config-provision",
+        query: { code: this.factor_code },
+        params: { productId: this.productId },
+      });
+    },
     addConditionToRuleArray(payload) {
       this.rules = [...this.rules, payload];
     },
     saveFactorHandler() {
-      this.$store.commit("SET_FACTOR_CONFIG", this.output);
-      this.$router.push({ name: "config-provision-list" });
+      this.$store.commit("SET_PROVISION_FACTORS", this.output);
+      this.routeToProvision();
     },
     ruleDisplayHandler(rule) {
-      const operators = {
-        eq: "=",
-        lt: "<",
-        le: "<=",
-        gt: ">",
-        ge: ">=",
-        ne: "!=",
-        range: "between",
-        nrange: "not between",
-      };
+      const operators = { ...OPERATORS };
       if (["range", "nrange"].includes(rule.comparison)) {
         return `${rule.label} ${operators[rule.comparison]} ${rule.value} and ${
           rule.upper

@@ -83,7 +83,7 @@
               <app-dashboard-card
                 title="Factors"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureStates"
+                @click:configure="configureFactors"
               >
                 {{
                   config && config.factor
@@ -116,6 +116,12 @@ import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
   name: "ConfigProvision",
+  props: {
+    productId: {
+      type: String,
+      required: false,
+    },
+  },
   components: { AppModalListForm, AppDashboardCard },
   async mounted() {
     this.loaded = false;
@@ -196,23 +202,41 @@ export default {
     },
   },
   methods: {
+    routeToProvisionList() {
+      this.$router.push({
+        name: "config-provision-list",
+        params: { productId: this.productId },
+      });
+    },
+    routeToProvisionFactors() {
+      this.$router.push({
+        name: "config-provision-factors",
+        params: { productId: this.productId },
+        query: { code: this.name },
+      });
+    },
+    routeToProvisionStates() {
+      this.$router.push({
+        name: "config-provision-states",
+        params: { productId: this.productId },
+        query: { code: this.name },
+      });
+    },
     storeProvision() {
       this.$store.commit("SET_NEW_PROVISION", this.outputProvision);
     },
     configureStates() {
       this.storeProvision();
-      this.$router.push({
-        name: "config-provision-states",
-        params: { id: this.$route.params.id, input: this.states },
-        query: { code: this.name },
-      });
+      this.routeToProvisionStates();
+    },
+    configureFactors() {
+      this.storeProvision();
+      this.routeToProvisionFactors();
     },
     saveProvision() {
       this.storeProvision();
       this.$store.dispatch("addNewProvisionToList");
-      this.$router.push({
-        name: "config-provision-list",
-      });
+      this.routeToProvisionList();
     },
     selectListItemsHandler(payload) {
       this.ui.items = [...payload];

@@ -6,7 +6,7 @@
           <div class="card-content">
             <v-card-title>{{ prov.label }}</v-card-title>
             <v-card-subtitle
-              >Component Type: {{ prov.component }}</v-card-subtitle
+              >Component Type: {{ prov.ui.component }}</v-card-subtitle
             >
           </div>
           <div class="card-edit-buttons ma-2">
@@ -63,12 +63,24 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-fab-transition>
+    <v-divider></v-divider>
+    <div class="call-to-action d-flex justify-center align-center mt-4">
+      <v-btn color="primary" class="mx-4" @click="saveProvisions">
+        Save Changes
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "ConfigProvisionList",
+  props: {
+    productId: {
+      type: String,
+      required: false,
+    },
+  },
   data() {
     return {
       provisions: null,
@@ -78,6 +90,13 @@ export default {
     this.provisions = [...this.$store.getters.getProvisionConfigList];
   },
   methods: {
+    saveProvisions() {
+      this.$store.commit("APPEND_ALL_PROVISIONS");
+      this.$router.push({
+        name: "config-product",
+        params: { productId: this.productId },
+      });
+    },
     editProvision(code) {
       this.$store.commit(
         "SET_NEW_PROVISION",

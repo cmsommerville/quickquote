@@ -6,3 +6,14 @@ export const STATES = [
   { code: "NC", label: "North Carolina" },
   { code: "SC", label: "South Carolina" },
 ];
+
+export const OPERATORS = {
+  eq: "=",
+  lt: "<",
+  le: "<=",
+  gt: ">",
+  ge: ">=",
+  ne: "!=",
+  range: "between",
+  nrange: "not between",
+};

@@ -14,6 +14,12 @@ export const config = {
       state.config = {};
     },
 
+    APPEND_ALL_PROVISIONS(state) {
+      state.config = {
+        ...state.config,
+        provisions: [...state.provisions],
+      };
+    },
     SET_PROVISIONS(state, payload) {
       state.provisions = [...payload];
     },
@@ -43,12 +49,10 @@ export const config = {
       };
     },
     SET_PROVISION_FACTORS(state, payload) {
-      state.new_provision = [
-        {
-          ...state.new_provision,
-          factor: { ...payload },
-        },
-      ];
+      state.new_provision = {
+        ...state.new_provision,
+        factor: { ...payload },
+      };
     },
   },
   actions: {

@@ -8,7 +8,7 @@
         </v-col>
         <v-col></v-col>
         <v-col sm="4">
-          <v-text-field v-model="name" filled outlined label="Product Code" />
+          <v-text-field v-model="code" filled outlined label="Product Code" />
         </v-col>
         <v-col></v-col>
       </v-row>
@@ -99,19 +99,31 @@ export default {
     this.loaded = false;
     const config = await this.$store.getters.getConfig;
     this.config = { ...config };
+    this.label = config.text;
+    this.code = config.name;
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
       config: null,
+      label: null,
+      code: null,
     };
   },
   computed: {},
   methods: {
+    routeToProvisionList() {
+      this.$router.push({
+        name: "config-provision-list",
+        params: {
+          productId: this.config._id,
+        },
+      });
+    },
     saveProduct() {},
     configureProvisions() {
-      console.log("Configure provisions!");
+      this.routeToProvisionList();
     },
     configureBenefits() {
       console.log("Configure benefits");

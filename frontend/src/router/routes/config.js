@@ -1,9 +1,9 @@
 import ConfigProductList from "../../views/config/ConfigProductList";
 import ConfigProduct from "../../views/config/ConfigProduct";
-import ConfigFactor from "../../views/config/ConfigFactor.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
 import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue";
+import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vue";
 
 export default [
   {
@@ -17,23 +17,27 @@ export default [
     component: ConfigProduct,
   },
   {
-    path: "/config/:productId/provisions",
+    path: "/config/product/:productId/provisions",
     name: "config-provision-list",
     component: ConfigProvisionList,
+    props: true,
   },
   {
-    path: "/config/:productId/provision",
+    path: "/config/product/:productId/provision",
     name: "config-provision",
     component: ConfigProvision,
+    props: true,
   },
   {
-    path: "/config/:id/provision/states",
+    path: "/config/product/:productId/provision/states",
     name: "config-provision-states",
     component: ConfigProvisionStates,
+    props: true,
   },
   {
-    path: "/config/factor",
-    name: "config-factor",
-    component: ConfigFactor,
+    path: "/config/product/:productId/provision/factors",
+    name: "config-provision-factors",
+    component: ConfigProvisionFactors,
+    props: true,
   },
 ];
