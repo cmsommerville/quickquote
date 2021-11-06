@@ -171,8 +171,8 @@
         "step": 25,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": [
+      "states": "inherit",
+      "factors": [
         {
           "name": "hospitalization_days",
           "type": "benefit",
@@ -198,8 +198,8 @@
         "step": 25,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": [
+      "states": "inherit",
+      "factors": [
         {
           "name": "hospitalization_days",
           "type": "benefit",
@@ -225,8 +225,8 @@
         "step": 25,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": [
+      "states": [{ "code": "NC", "value": "prohibited" }],
+      "factors": [
         {
           "name": "hospitalization_days",
           "type": "benefit",
@@ -252,8 +252,8 @@
         "step": 50,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": []
+      "states": "inherit",
+      "factors": []
     },
     {
       "name": "hosp_conf",

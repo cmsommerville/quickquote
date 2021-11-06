@@ -1,12 +1,12 @@
 <template>
-  <div class="content" v-if="provisions">
-    <v-row v-for="prov in provisions" :key="prov.name">
+  <div class="content" v-if="benefits">
+    <v-row v-for="bnft in benefits" :key="bnft.name">
       <v-col cols="12" xs="12">
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
-            <v-card-title>{{ prov.label }}</v-card-title>
+            <v-card-title>{{ bnft.text }}</v-card-title>
             <v-card-subtitle
-              >Component Type: {{ prov.ui.component }}</v-card-subtitle
+              >Component Type: {{ bnft.ui.component }}</v-card-subtitle
             >
           </div>
           <div class="card-edit-buttons ma-2">
@@ -19,11 +19,11 @@
                   class="mr-2"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editProvision(prov.name)"
+                  @click="editBenefit(bnft.name)"
                   ><v-icon color="primary">mdi-pencil</v-icon></v-btn
                 >
               </template>
-              <span>Edit Provision</span>
+              <span>Edit Benefit</span>
             </v-tooltip>
           </div>
         </v-card>
@@ -37,14 +37,14 @@
         bottom
         fab
         right
-        :to="{ name: 'config-provision' }"
+        @click="routeToBenefit('new')"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveProvisions">
+      <v-btn color="primary" class="mx-4" @click="saveBenefits">
         Save Changes
       </v-btn>
     </div>
@@ -53,7 +53,7 @@
 
 <script>
 export default {
-  name: "ConfigProvisionList",
+  name: "ConfigBenefitList",
   props: {
     productId: {
       type: String,
@@ -62,30 +62,36 @@ export default {
   },
   data() {
     return {
-      provisions: null,
+      benefits: null,
     };
   },
   mounted() {
-    this.provisions = [...this.$store.getters.getProvisionConfigList];
+    this.benefits = [...this.$store.getters.getBenefitConfigList];
   },
   methods: {
-    saveProvisions() {
-      this.$store.commit("APPEND_ALL_PROVISIONS");
+    routeToProduct() {
       this.$router.push({
         name: "config-product",
         params: { productId: this.productId },
       });
     },
-    editProvision(code) {
-      this.$store.commit(
-        "SET_NEW_PROVISION",
-        this.provisions.find((item) => item.name === code)
-      );
+    routeToBenefit(code) {
       this.$router.push({
-        name: "config-provision",
-        query: { code: code },
+        name: "config-benefit",
+        query: { code },
         params: { productId: this.productId },
       });
+    },
+    saveBenefits() {
+      this.$store.commit("APPEND_ALL_BENEFITS");
+      this.routeToProduct();
+    },
+    editBenefit(code) {
+      this.$store.commit(
+        "SET_NEW_BENEFIT",
+        this.benefits.find((item) => item.name === code)
+      );
+      this.routeToBenefit(code);
     },
   },
 };

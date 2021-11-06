@@ -4,7 +4,9 @@ export const config = {
   state: () => ({
     config: {},
     provisions: [],
+    benefits: [],
     new_provision: {},
+    new_benefit: {},
   }),
   mutations: {
     SET_CONFIG(state, payload) {
@@ -54,6 +56,28 @@ export const config = {
         factor: { ...payload },
       };
     },
+
+    SET_BENEFITS(state, payload) {
+      state.benefits = [...payload];
+    },
+    RESET_BENEFITS(state) {
+      state.benefits = [];
+    },
+
+    SET_NEW_BENEFIT(state, payload) {
+      state.new_benefit = { ...payload };
+    },
+    APPEND_NEW_BENEFIT(state) {
+      state.benefits = [
+        ...state.benefits.filter(
+          (item) => item.name !== state.new_benefit.name
+        ),
+        { ...state.new_benefit },
+      ];
+    },
+    RESET_NEW_BENEFIT(state) {
+      state.new_benefit = {};
+    },
   },
   actions: {
     async initializeConfig({ commit }, productId) {
@@ -61,6 +85,7 @@ export const config = {
       commit("RESET_CONFIG");
       commit("SET_CONFIG", { ...res.data[0] });
       commit("SET_PROVISIONS", [...res.data[0].provisions]);
+      commit("SET_BENEFITS", [...res.data[0].benefits]);
     },
     addNewProvisionToList({ commit }) {
       commit("APPEND_NEW_PROVISION");
@@ -79,6 +104,9 @@ export const config = {
     },
     getProvisionConfig(state) {
       return state.new_provision;
+    },
+    getBenefitConfigList(state) {
+      return state.benefits;
     },
   },
 };

@@ -9,6 +9,7 @@ from ..schemas import PlanSchema, BenefitSchema, ProvisionSchema, \
     AgeBandsSchema, BenefitRateSchema, PremiumByPlanRateSchema, \
     PlanRateSchema
 
+from app.data.policy import policy
 
 # PRODUCT_CODE = os.getenv("PRODUCT_CODE")
 # PRODUCT_VARIATION_CODE = os.getenv("PRODUCT_VARIATION_CODE")
@@ -53,7 +54,8 @@ class RatingCalculatorResource(Resource):
             age_bands=age_bands,
             benefits=benefits,
             product_code=plan.product_code,
-            product_variation_code=plan.product_variation_code
+            product_variation_code=plan.product_variation_code,
+            policy=policy
         )
         plan_rates = rater.calculate()
 

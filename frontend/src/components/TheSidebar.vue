@@ -49,6 +49,11 @@ export default {
         { title: "Home", icon: "mdi-view-dashboard", to: "Home" },
         { title: "New Quote", icon: "mdi-text-box-plus", to: "rater" },
         {
+          title: "Product Factory",
+          icon: "mdi-factory",
+          to: "config-product-list",
+        },
+        {
           title: "Create Tables",
           icon: "mdi-table-large",
           to: "create-tables",

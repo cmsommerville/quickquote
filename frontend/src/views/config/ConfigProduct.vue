@@ -121,12 +121,20 @@ export default {
         },
       });
     },
+    routeToBenefitList() {
+      this.$router.push({
+        name: "config-benefit-list",
+        params: {
+          productId: this.config._id,
+        },
+      });
+    },
     saveProduct() {},
     configureProvisions() {
       this.routeToProvisionList();
     },
     configureBenefits() {
-      console.log("Configure benefits");
+      this.routeToBenefitList();
     },
     configureStates() {
       console.log("Configure states!");
