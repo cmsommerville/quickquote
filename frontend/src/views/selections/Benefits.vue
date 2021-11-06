@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import axios from "../services/axios.js";
+import axios from "../../services/axios.js";
 
-import CoverageSelectionsExpansionPanel from "../components/CoverageSelectionsExpansionPanel.vue";
-import SelectionSidepane from "../components/SelectionSidepane.vue";
+import CoverageSelectionsExpansionPanel from "../../components/CoverageSelectionsExpansionPanel.vue";
+import SelectionSidepane from "../../components/SelectionSidepane.vue";
 // import SelectionsModal from "../components/SelectionsModal.vue";
 
 export default {

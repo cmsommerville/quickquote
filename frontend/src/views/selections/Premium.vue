@@ -20,7 +20,7 @@
 
 <script>
 const _ = require("lodash");
-import axios from "../services/axios.js";
+import axios from "../../services/axios.js";
 
 export default {
   name: "Premium",

@@ -63,8 +63,8 @@
 </template>
 
 <script>
-import axios from "../services/axios.js";
-import TileListGroup from "../components/TileListGroup.vue";
+import axios from "../../services/axios.js";
+import TileListGroup from "../../components/TileListGroup.vue";
 
 export default {
   name: "Plan",

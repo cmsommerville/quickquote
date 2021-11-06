@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from "../services/axios.js";
+import axios from "../../services/axios.js";
 import { VTextField, VSelect, VSwitch } from "vuetify/lib";
 
 export default {

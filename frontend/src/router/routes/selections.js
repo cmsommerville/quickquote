@@ -1,10 +1,10 @@
-import RaterEntry from "../../views/RaterEntry.vue";
-import Group from "../../views/Group.vue";
-import Plan from "../../views/Plan.vue";
-import Provisions from "../../views/Provisions.vue";
-import Benefits from "../../views/Benefits.vue";
-import AgeBands from "../../views/AgeBands.vue";
-import Premium from "../../views/Premium.vue";
+import RaterEntry from "../../views/selections/RaterEntry.vue";
+import Group from "../../views/selections/Group.vue";
+import Plan from "../../views/selections/Plan.vue";
+import Provisions from "../../views/selections/Provisions.vue";
+import Benefits from "../../views/selections/Benefits.vue";
+import AgeBands from "../../views/selections/AgeBands.vue";
+import Premium from "../../views/selections/Premium.vue";
 
 export default [
   {
