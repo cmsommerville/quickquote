@@ -91,6 +91,10 @@ export const config = {
       commit("APPEND_NEW_PROVISION");
       commit("RESET_NEW_PROVISION");
     },
+    addNewBenefitToList({ commit }) {
+      commit("APPEND_NEW_BENEFIT");
+      commit("RESET_NEW_BENEFIT");
+    },
   },
   getters: {
     isConfigEmpty(state) {
@@ -107,6 +111,9 @@ export const config = {
     },
     getBenefitConfigList(state) {
       return state.benefits;
+    },
+    getBenefitConfig(state) {
+      return state.new_benefit;
     },
   },
 };

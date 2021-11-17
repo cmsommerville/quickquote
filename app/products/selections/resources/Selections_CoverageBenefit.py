@@ -68,6 +68,8 @@ class CoverageBenefitSelections(Resource):
 
             benefit = benefit_schema.load(
                 {k: v for k, v in item.items() if k in benefit_keys})
+
+            benefit.validate()
             coverage_dict[coverage_code].benefits.append(benefit)
             benefits_list.append(benefit)
 

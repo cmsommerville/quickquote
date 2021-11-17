@@ -111,6 +111,7 @@
 </template>
 
 <script>
+import { COMPONENT_TYPES, INPUT_TYPES } from "../../data/lookups.js";
 import AppModalListForm from "../../components/AppModalListForm.vue";
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
@@ -155,20 +156,8 @@ export default {
         { label: "South Carolina", code: "SC", value: "permitted" },
       ],
 
-      componentTypes: [
-        { code: "v-text-field", label: "Input" },
-        { code: "v-select", label: "Select" },
-        { code: "v-checkbox", label: "Checkbox" },
-        { code: "v-radio", label: "Radio" },
-        { code: "v-switch", label: "Switch" },
-      ],
-      inputTypes: [
-        { code: "text", label: "Text" },
-        { code: "number", label: "Number" },
-        { code: "date", label: "Date" },
-        { code: "email", label: "Email" },
-        { code: "password", label: "Password" },
-      ],
+      componentTypes: [...COMPONENT_TYPES],
+      inputTypes: [...INPUT_TYPES],
     };
   },
   computed: {

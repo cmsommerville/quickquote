@@ -72,6 +72,7 @@ export default {
   data() {
     return {
       loaded: false,
+      error: null,
       existingQuote: false,
       data: null,
       all_config: null,
@@ -124,16 +125,16 @@ export default {
       return {
         ...this.selections,
         product_code: this.selected_config.name,
-        rating_state: this.selections.rating_state.state,
+        rating_state: this.selections.rating_state.code,
         plan_config_id: this.selected_config._id,
       };
     },
     select_states() {
       if (this.selected_config) {
-        return this.selected_config.statesApproved.map((stateObj) => {
+        return this.selected_config.states.map((stateObj) => {
           return {
             value: stateObj,
-            text: stateObj.state,
+            text: stateObj.code,
           };
         });
       }
@@ -149,8 +150,8 @@ export default {
       const selections = {};
       for (const key in inputSelections) {
         if (key === "rating_state") {
-          selections[key] = data.plan_config[0].statesApproved.find(
-            (item) => item.state === data.plan.rating_state
+          selections[key] = data.plan_config[0].states.find(
+            (item) => item.code === data.plan.rating_state
           );
         } else {
           selections[key] = data.plan[key] || null;
@@ -167,13 +168,15 @@ export default {
           params: { plan_config_id: this.selected_config._id },
         }
       );
-      this.$router.push({
-        name: "benefits",
-        query: {
-          plan_id: res.data.plan_id,
-          plan_config_id: this.selected_config._id,
-        },
-      });
+      if (res.status === 201) {
+        this.$router.push({
+          name: "benefits",
+          query: {
+            plan_id: res.data.plan_id,
+            plan_config_id: this.selected_config._id,
+          },
+        });
+      }
     },
     onReset() {
       console.log("Reset");

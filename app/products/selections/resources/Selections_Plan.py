@@ -5,6 +5,8 @@ from flask_restful import Resource
 from ..models.PlanModel import PlanModel
 from ..schemas.PlanSchema import PlanSchema
 
+from app.data.policy import policy
+
 plan_schema = PlanSchema()
 
 
@@ -63,13 +65,23 @@ class PlanSelections(Resource):
         plan = plan_schema.load(data)
         config = requests.get(
             f"{request.url_root}config/plan/{plan_config_id}").json()
+        policy_selection = [
+            pol for pol in policy if pol['name'] == plan.product_code][0]
+
+        try:
+            planIsValid = plan.validate(
+                policy=policy_selection, config=config[0])
+        except Exception as e:
+            print(str(e))
+            return {"error": str(e)}, 400
 
         try:
             plan.save_to_db()
             plan_id = plan.plan_id
             session[plan_id] = {
                 "plan": plan_schema.dump(plan),
-                "plan_config": config
+                "plan_config": config,
+                "policy": policy
             }
         except Exception as e:
             print(e)

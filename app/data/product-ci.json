@@ -30,16 +30,18 @@
       "age_banded": true
     }
   ],
-  "statesApproved": [
+  "states": [
     {
       "uuid": "5e522d81-da4b-433f-b6d7-1e0d42357610",
-      "state": "SC",
-      "effectiveDate": "2020-01-01"
+      "code": "SC",
+      "effectiveDate": "2020-01-01",
+      "expiryDate": "9999-12-31"
     },
     {
       "uuid": "6d94501b-934d-49e6-b6da-0cb490ddf610",
-      "state": "NC",
-      "effectiveDate": "2021-07-01"
+      "code": "NC",
+      "effectiveDate": "2021-07-01",
+      "expiryDate": "9999-12-31"
     }
   ],
   "coverages": [
@@ -70,34 +72,37 @@
       "uuid": "1c120bfc-55f6-4b8b-964a-1ab745dccbbb",
       "name": "prex",
       "label": "Pre-Existing Condition Limitation",
-      "component": "v-select",
-      "items": [
-        {
-          "uuid": "b0a691c4-4d04-4439-99db-8062a3869b1f",
-          "value": "none",
-          "text": "No Pre-Ex"
-        },
-        {
-          "uuid": "369d1e81-5868-45fa-b95b-af43e85b7822",
-          "value": "3/12",
-          "text": "3/12"
-        },
-        {
-          "uuid": "a33a1956-f7cd-4864-95e0-df03b9377e4c",
-          "value": "6/6",
-          "text": "6/6"
-        },
-        {
-          "uuid": "59354c51-1b77-49e0-9f70-139b5411990f",
-          "value": "6/12",
-          "text": "6/12"
-        },
-        {
-          "uuid": "d9240561-dbff-4a4c-b711-b517c027cc14",
-          "value": "12/12",
-          "text": "12/12"
-        }
-      ],
+      "states": "inherit",
+      "ui": {
+        "component": "v-select",
+        "items": [
+          {
+            "uuid": "b0a691c4-4d04-4439-99db-8062a3869b1f",
+            "value": "none",
+            "text": "No Pre-Ex"
+          },
+          {
+            "uuid": "369d1e81-5868-45fa-b95b-af43e85b7822",
+            "value": "3/12",
+            "text": "3/12"
+          },
+          {
+            "uuid": "a33a1956-f7cd-4864-95e0-df03b9377e4c",
+            "value": "6/6",
+            "text": "6/6"
+          },
+          {
+            "uuid": "59354c51-1b77-49e0-9f70-139b5411990f",
+            "value": "6/12",
+            "text": "6/12"
+          },
+          {
+            "uuid": "d9240561-dbff-4a4c-b711-b517c027cc14",
+            "value": "12/12",
+            "text": "12/12"
+          }
+        ]
+      },
       "factor": {
         "uuid": "4e4e679e-67e2-45b2-80b7-9b982a84b31a",
         "default_factor_value": 1,
@@ -134,7 +139,8 @@
       "uuid": "48df59de-068a-4983-a48a-880815c2cd2e",
       "name": "reductionAt70",
       "label": "50% Reduction at Age 70",
-      "component": "v-switch",
+      "states": "inherit",
+      "ui": { "component": "v-switch" },
       "factor": {
         "uuid": "2c8f70e6-95ec-4ecb-928f-a4dd57af3e32",
         "default_factor_value": 1,
@@ -167,8 +173,8 @@
       "uuid": "afe1485a-a02a-4de4-846a-d204e130f4eb",
       "name": "group_size",
       "label": "Group Size",
-      "component": "v-text-field",
-      "type": "number",
+      "states": "inherit",
+      "ui": { "component": "v-text-field", "type": "number" },
       "factor": {
         "uuid": "83f6d3c4-cd58-465b-b173-04289ed539e9",
         "default_factor_value": 1,
@@ -213,6 +219,7 @@
       "type": "face_amount",
       "coverage_code": "base",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "c06410c4-4cb9-44d2-8dcf-74860ee7280f",
         "default": 100,
@@ -220,20 +227,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "29eaa9c1-f684-4999-96eb-c75df2a5bc52",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "c8c3e67c-eb2a-425e-80ff-ed052c8285e9",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "0ad4a980-03e1-40ae-b528-4d20951ad7f0",
@@ -242,6 +236,7 @@
       "type": "face_amount",
       "coverage_code": "base",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "ui": {
         "uuid": "9eb2867e-9bd1-4276-8937-00884643dd59",
         "widget": "switch",
@@ -258,20 +253,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "86c439ec-c5f2-4583-aa50-a405589869e6",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "f1e0319e-32df-408e-833f-3bca408d42a1",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "d5232528-3bb6-4a25-8e48-3d84e863c520",
@@ -280,6 +262,7 @@
       "type": "face_amount",
       "coverage_code": "progressive_disease",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "3ea99652-2b9d-4c37-a64f-4744453a8293",
         "default": 100,
@@ -287,20 +270,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "9f1b2633-a378-4bac-8ff7-cbe795d21cf4",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "9c4eef19-7c4c-4dcd-a8c6-1de3414583b1",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "f22ab53f-673a-4545-9058-dc0f52775dcd",
@@ -309,6 +279,7 @@
       "type": "face_amount",
       "coverage_code": "progressive_disease",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "3e2ffbba-9385-4fa6-9b04-9d216badf6f6",
         "default": 100,
@@ -316,20 +287,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "98cbb655-0f4e-4864-aa1b-83cf20e9d146",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "689fde92-56fb-467a-b43e-78847da5164f",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "4019d487-5931-49dc-aae7-4deefb70df33",
@@ -338,6 +296,7 @@
       "type": "face_amount",
       "coverage_code": "base",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "16c22cf0-80c0-4ba6-8291-b44f17dfb414",
         "default": 100,
@@ -345,20 +304,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "ef8785cb-7165-4868-a981-316ba9a10cab",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "aeec81ce-a52d-4d1e-ae9e-cc25fcc3b0a5",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "50678c3c-e8cd-4469-adad-39f73eb918dc",
@@ -367,6 +313,7 @@
       "type": "face_amount",
       "coverage_code": "base",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "4fbd810f-9541-4941-85c5-8116d7ddf1b7",
         "default": 100,
@@ -374,20 +321,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "3d1e9ca7-54ea-405d-8a83-852806775172",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "8e341e4f-0bfa-49e4-b111-0b4cc5924364",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "b06d0980-81f0-4f6d-84f5-2ac664712031",
@@ -396,6 +330,7 @@
       "type": "face_amount",
       "coverage_code": "base",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "bdb97f7b-5f1a-4c4e-a91e-5d611f16482d",
         "default": 100,
@@ -403,20 +338,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "131dc0dc-9b77-43a3-ba6d-14631ab4157f",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "df4b8c21-0f84-47e4-b82f-6b7243260022",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "70679ccd-5fff-4cba-a193-213f7e2969f8",
@@ -425,6 +347,7 @@
       "type": "face_amount",
       "coverage_code": "optional_benefits",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "da190aad-f032-4410-bcd7-69a2bd7437a4",
         "default": 100,
@@ -432,20 +355,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "b98ac42c-88a5-4f5d-a617-4ace397aadb0",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "5f7f139b-9950-4b15-ab88-233d2e671280",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     },
     {
       "uuid": "6884324a-e65f-46d0-99a8-e62246b0c002",
@@ -454,6 +364,7 @@
       "type": "face_amount",
       "coverage_code": "optional_benefits",
       "plan_rate_code": "apu",
+      "states": "inherit",
       "amounts": {
         "uuid": "ba378e98-b98c-4aa6-bd81-1ce966c01064",
         "default": 100,
@@ -461,20 +372,7 @@
         "max": 100,
         "step": 6.25,
         "unit": "percent"
-      },
-      "variations": {
-        "uuid": "c1ca60d1-b701-48be-b5f3-b6bd3b9512b8",
-        "statesProhibited": [],
-        "statesRequired": []
-      },
-      "factorApplicability": [
-        {
-          "uuid": "c3b445ea-ea39-4225-95b9-a2c88331cbc8",
-          "name": "prex",
-          "type": "product",
-          "applicability": "prohibited"
-        }
-      ]
+      }
     }
   ]
 }

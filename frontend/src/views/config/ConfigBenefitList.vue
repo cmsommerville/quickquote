@@ -37,7 +37,7 @@
         bottom
         fab
         right
-        @click="routeToBenefit('new')"
+        @click="routeToBenefit(null)"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -76,11 +76,18 @@ export default {
       });
     },
     routeToBenefit(code) {
-      this.$router.push({
-        name: "config-benefit",
-        query: { code },
-        params: { productId: this.productId },
-      });
+      if (code) {
+        this.$router.push({
+          name: "config-benefit",
+          query: { code },
+          params: { productId: this.productId },
+        });
+      } else {
+        this.$router.push({
+          name: "config-benefit",
+          params: { productId: this.productId },
+        });
+      }
     },
     saveBenefits() {
       this.$store.commit("APPEND_ALL_BENEFITS");

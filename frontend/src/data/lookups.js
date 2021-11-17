@@ -17,3 +17,19 @@ export const OPERATORS = {
   range: "between",
   nrange: "not between",
 };
+
+export const COMPONENT_TYPES = [
+  { code: "v-text-field", label: "Input" },
+  { code: "v-select", label: "Select" },
+  { code: "v-checkbox", label: "Checkbox" },
+  { code: "v-radio", label: "Radio" },
+  { code: "v-switch", label: "Switch" },
+];
+
+export const INPUT_TYPES = [
+  { code: "text", label: "Text" },
+  { code: "number", label: "Number" },
+  { code: "date", label: "Date" },
+  { code: "email", label: "Email" },
+  { code: "password", label: "Password" },
+];

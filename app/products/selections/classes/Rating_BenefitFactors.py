@@ -2,9 +2,6 @@ from typing import List, Union, Tuple
 from decimal import Decimal
 from ..models import BenefitFactorModel, PlanModel, BenefitModel, RateTableModel, ProvisionModel
 
-from app.shared.exceptions import PolicyValidationError, StateValidationError
-from app.shared.util import validateStates
-
 
 class Rating_BenefitFactorList:
 
@@ -13,8 +10,7 @@ class Rating_BenefitFactorList:
                  plan: PlanModel,
                  benefit: BenefitModel,
                  rate_table: RateTableModel,
-                 provisions: List[ProvisionModel],
-                 policy: dict
+                 provisions: List[ProvisionModel]
                  ):
 
         self.config = config
@@ -23,37 +19,8 @@ class Rating_BenefitFactorList:
         self.rate_table = rate_table
         self.provisions = provisions
         self.benefit_factors = []
-        self.policy = policy
-
-        self._policy_provisions = self._inherit_state_handler(
-            policy['provisions'], policy['states'])
-        self._policy_benefits = self._inherit_state_handler(
-            policy['benefits'], policy['states'])
 
         self.factor_data = self._factor_config_formatter()
-
-    def _inherit_state_handler(self, policy_list: list, policy_states: list) -> dict:
-        """
-        Reformat the benefits/provisions of a policy into a dictionary of: 
-            - Key: object pairs
-        Replaces `states: inherit` with the policy's state availability
-        """
-        return {
-            item['name']: {
-                **item,
-                "states": policy_states}
-            if item['states'] == 'inherit' else item for item in policy_list
-        }
-
-    def _validate(self, name):
-        provision_policy = self._policy_provisions.get(name)
-        benefit_policy = self._policy_provisions.get(name)
-
-        validateStates(self.plan.rating_state,
-                       self.plan.effective_date, provision_policy)
-        validateStates(self.plan.rating_state,
-                       self.plan.effective_date, benefit_policy)
-        return True
 
     def _factor_config_formatter(self) -> dict:
         """
@@ -80,13 +47,6 @@ class Rating_BenefitFactorList:
         """
 
         for name, data in self.factor_data.items():
-
-            try:
-                # validate the state/effective date
-                self._validate(name)
-            except StateValidationError:
-                # if state validation error, skip factor
-                continue
 
             # this instantiates a benefit factor object
             factor_calc = Rating_BenefitFactor(

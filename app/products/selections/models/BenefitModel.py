@@ -2,6 +2,8 @@ from app.extensions import db
 from app.shared import VersionedTable
 import datetime
 
+from ..utils.helpers import stateValidator
+
 
 class BenefitModel(db.Model, VersionedTable):
     __tablename__ = "benefits"
@@ -37,6 +39,20 @@ class BenefitModel(db.Model, VersionedTable):
     @classmethod
     def find_benefits(cls, plan_id):
         return cls.query.filter(cls.plan_id == plan_id).all()
+
+    def validate(self, policy: dict, config: dict) -> bool:
+        """
+        Validate the plan
+        """
+        configIsValid = stateValidator(self.plan.rating_state,
+                                       self.plan.plan_effective_date,
+                                       config['states'])
+
+        policyIsValid = stateValidator(self.rating_state,
+                                       self.plan_effective_date,
+                                       policy['states'])
+
+        return configIsValid and policyIsValid
 
     def save_to_db(self):
         try:

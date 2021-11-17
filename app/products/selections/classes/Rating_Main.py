@@ -4,7 +4,6 @@ from decimal import Decimal
 from functools import reduce
 from collections import defaultdict
 
-from app.shared.util import validateStates
 
 from ..models import PlanModel, BenefitModel, AgeBandsModel, RateTableModel, \
     BenefitRateModel, BenefitFactorModel, ProvisionModel, BenefitAgeRateModel, \
@@ -92,8 +91,7 @@ class Rating_Main:
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
                 rate_table=rate,
-                provisions=self.provisions,
-                policy=self.policy
+                provisions=self.provisions
             ).calculate()
 
             benefit_age_rate = Rating_BenefitAgeRates(
@@ -165,13 +163,6 @@ class Rating_Main:
             self.plan_rates.append(plan_rate)
 
     def calculate(self) -> None:
-        # check state availability
-        # if the method successfully passes this step, then
-        # states = inherit will pass also
-        validateStates(self.plan.rating_state,
-                       self.plan.effective_date,
-                       self.policy['states'])
-
         # calculate benefit age rates and benefit factors
         self.calcBenefitAgeRates()
         # calculate benefit rates

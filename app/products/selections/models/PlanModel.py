@@ -8,6 +8,8 @@ from .CoverageModel import CoverageModel
 from .BenefitModel import BenefitModel
 from .AgeBandsModel import AgeBandsModel
 
+from ..utils.helpers import stateValidator
+
 
 class PlanModel(db.Model, VersionedTable):
     __tablename__ = "plans"
@@ -47,6 +49,20 @@ class PlanModel(db.Model, VersionedTable):
     @classmethod
     def search_by_id(cls, id):
         return cls.query.filter(cast(cls.plan_id, db.String).contains(str(id))).limit(10).all()
+
+    def validate(self, policy: dict, config: dict) -> bool:
+        """
+        Validate the plan
+        """
+        configIsValid = stateValidator(self.rating_state,
+                                       self.plan_effective_date,
+                                       config['states'])
+
+        policyIsValid = stateValidator(self.rating_state,
+                                       self.plan_effective_date,
+                                       policy['states'])
+
+        return configIsValid and policyIsValid
 
     def save_to_db(self):
         try:

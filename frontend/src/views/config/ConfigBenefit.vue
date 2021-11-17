@@ -58,6 +58,28 @@
           <v-row>
             <v-col sm="12">
               <app-dashboard-card
+                title="Amounts"
+                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+              >
+                Setup Benefit Amounts!
+              </app-dashboard-card>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col sm="12">
+              <app-dashboard-card
+                title="Duration"
+                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+              >
+                Vary by duration!
+              </app-dashboard-card>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col sm="12">
+              <app-dashboard-card
                 title="States"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
                 @click:configure="configureStates"
@@ -78,13 +100,8 @@
               <app-dashboard-card
                 title="Factors"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureRateTables"
               >
-                {{
-                  config && config.factor
-                    ? `${config.factor.variability.length} factor variations`
-                    : "Setup Rate Tables!"
-                }}
+                {{ `${factors.length} factor variations` }}
               </app-dashboard-card>
             </v-col>
           </v-row>
@@ -96,7 +113,7 @@
       <v-btn
         color="primary"
         class="mx-4"
-        @click="saveProvision"
+        @click="saveBenefit"
         :disabled="!formIsValid"
       >
         Save
@@ -106,11 +123,12 @@
 </template>
 
 <script>
+import { COMPONENT_TYPES, INPUT_TYPES } from "../../data/lookups.js";
 import AppModalListForm from "../../components/AppModalListForm.vue";
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
-  name: "ConfigProvision",
+  name: "ConfigBenefit",
   props: {
     productId: {
       type: String,
@@ -122,25 +140,27 @@ export default {
     this.loaded = false;
     const code = this.$route.query.code;
     if (code) {
-      const prov = await this.$store.getters.getProvisionConfig;
-      // if (prov) {
-      this.config = { ...prov };
-      this.label = prov.label;
-      this.name = prov.name;
-      this.ui = { ...prov.ui };
-      this.states = prov.states ? prov.states : this.states;
-      // }
+      const bnft = await this.$store.getters.getBenefitConfig;
+
+      this.config = { ...bnft };
+      this.label = bnft.label ? bnft.label : null;
+      this.name = bnft.name ? bnft.name : null;
+      this.ui = bnft.ui ? { ...bnft.ui } : {};
+      this.amounts = bnft.amounts ? { ...bnft.amounts } : {};
+      this.factors = bnft.factors ? [...bnft.factors] : [];
+      this.states = bnft.states ? bnft.states : this.states;
     }
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
-      modal: false,
-      config: null,
+      config: {},
       label: null,
       name: null,
       ui: {},
+      amounts: {},
+      factors: [],
       states: [
         { label: "Alabama", code: "AL", value: "permitted" },
         { label: "Alaska", code: "AK", value: "mandatory" },
@@ -149,89 +169,47 @@ export default {
         { label: "North Carolina", code: "NC", value: "permitted" },
         { label: "South Carolina", code: "SC", value: "permitted" },
       ],
-
-      componentTypes: [
-        { code: "v-text-field", label: "Input" },
-        { code: "v-select", label: "Select" },
-        { code: "v-checkbox", label: "Checkbox" },
-        { code: "v-radio", label: "Radio" },
-        { code: "v-switch", label: "Switch" },
-      ],
-      inputTypes: [
-        { code: "text", label: "Text" },
-        { code: "number", label: "Number" },
-        { code: "date", label: "Date" },
-        { code: "email", label: "Email" },
-        { code: "password", label: "Password" },
-      ],
+      componentTypes: [...COMPONENT_TYPES],
+      inputTypes: [...INPUT_TYPES],
     };
   },
   computed: {
     formIsValid() {
       return !!this.label && !!this.name;
     },
-    stateAvailabilityList() {
-      return {
-        permitted: {
-          color: "primary",
-          states: this.states.filter((state) => state.value === "permitted"),
-        },
-        mandatory: {
-          color: "teal",
-          states: this.states.filter((state) => state.value === "mandatory"),
-        },
-        prohibited: {
-          color: "red",
-          states: this.states.filter((state) => state.value === "prohibited"),
-        },
-      };
-    },
-    outputProvision() {
+    outputBenefit() {
       return {
         ...this.config,
         label: this.label,
         name: this.name,
         ui: { ...this.ui },
-        states: this.states,
       };
     },
   },
   methods: {
-    routeToProvisionList() {
+    routeToBenefitList() {
       this.$router.push({
-        name: "config-provision-list",
+        name: "config-benefit-list",
         params: { productId: this.productId },
       });
     },
-    routeToProvisionFactors() {
+    routeToBenefitStates() {
       this.$router.push({
-        name: "config-provision-factors",
+        name: "config-benefit-states",
         params: { productId: this.productId },
-        query: { code: this.name },
       });
     },
-    routeToProvisionStates() {
-      this.$router.push({
-        name: "config-provision-states",
-        params: { productId: this.productId },
-        query: { code: this.name },
-      });
+    storeBenefit() {
+      this.$store.commit("SET_NEW_BENEFIT", this.outputBenefit);
     },
-    storeProvision() {
-      this.$store.commit("SET_NEW_PROVISION", this.outputProvision);
+    saveBenefit() {
+      this.storeBenefit();
+      this.$store.dispatch("addNewBenefitToList");
+      this.routeToBenefitList();
     },
     configureStates() {
-      this.storeProvision();
-      this.routeToProvisionStates();
-    },
-    configureFactors() {
-      this.storeProvision();
-      this.routeToProvisionFactors();
-    },
-    saveProvision() {
-      this.storeProvision();
-      this.$store.dispatch("addNewProvisionToList");
-      this.routeToProvisionList();
+      this.storeBenefit();
+      this.routeToBenefitStates();
     },
     selectListItemsHandler(payload) {
       this.ui.items = [...payload];

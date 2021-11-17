@@ -47,6 +47,9 @@ class RatingCalculatorResource(Resource):
         provisions = provision_list_schema.load(session_data['provisions'])
         benefits = benefit_list_schema.load(session_data['benefits'])
 
+        applicable_policy = [
+            p for p in policy if p['name'] == plan.product_code][0]
+
         rater = Rating_Main(
             plan=plan,
             config=plan_config,
@@ -55,7 +58,7 @@ class RatingCalculatorResource(Resource):
             benefits=benefits,
             product_code=plan.product_code,
             product_variation_code=plan.product_variation_code,
-            policy=policy
+            policy=applicable_policy
         )
         plan_rates = rater.calculate()
 
