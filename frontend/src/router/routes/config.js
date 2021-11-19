@@ -7,6 +7,8 @@ import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vu
 import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
 import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
 import ConfigBenefitStates from "../../views/config/ConfigBenefitStates.vue";
+import ConfigBenefitAmounts from "../../views/config/ConfigBenefitAmounts.vue";
+import ConfigBenefitFactors from "../../views/config/ConfigBenefitFactors.vue";
 
 export default [
   {
@@ -60,6 +62,18 @@ export default [
     path: "/config/product/:productId/benefit/states",
     name: "config-benefit-states",
     component: ConfigBenefitStates,
+    props: true,
+  },
+  {
+    path: "/config/product/:productId/benefit/amounts",
+    name: "config-benefit-amounts",
+    component: ConfigBenefitAmounts,
+    props: true,
+  },
+  {
+    path: "/config/product/:productId/benefit/factors",
+    name: "config-benefit-factors",
+    component: ConfigBenefitFactors,
     props: true,
   },
 ];

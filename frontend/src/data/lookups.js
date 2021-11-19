@@ -7,6 +7,17 @@ export const STATES = [
   { code: "SC", label: "South Carolina" },
 ];
 
+export const BENEFIT_UNITS = [
+  {
+    value: "dollar",
+    text: "$",
+  },
+  {
+    value: "percent",
+    text: "%",
+  },
+];
+
 export const OPERATORS = {
   eq: "=",
   lt: "<",

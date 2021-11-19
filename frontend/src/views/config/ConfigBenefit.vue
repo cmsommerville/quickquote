@@ -11,7 +11,7 @@
               label="Benefit Name"
             />
 
-            <v-text-field v-model="name" filled outlined label="Benefit Code" />
+            <v-text-field v-model="code" filled outlined label="Benefit Code" />
 
             <v-row>
               <v-col :sm="ui.component === 'v-select' ? 9 : 12">
@@ -60,6 +60,7 @@
               <app-dashboard-card
                 title="Amounts"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+                @click:configure="configureBenefit('config-benefit-amounts')"
               >
                 Setup Benefit Amounts!
               </app-dashboard-card>
@@ -100,6 +101,7 @@
               <app-dashboard-card
                 title="Factors"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+                @click:configure="configureBenefit('config-benefit-factors')"
               >
                 {{ `${factors.length} factor variations` }}
               </app-dashboard-card>
@@ -138,18 +140,16 @@ export default {
   components: { AppModalListForm, AppDashboardCard },
   async mounted() {
     this.loaded = false;
-    const code = this.$route.query.code;
-    if (code) {
-      const bnft = await this.$store.getters.getBenefitConfig;
+    const bnft = await this.$store.getters.getBenefitConfig;
 
-      this.config = { ...bnft };
-      this.label = bnft.label ? bnft.label : null;
-      this.name = bnft.name ? bnft.name : null;
-      this.ui = bnft.ui ? { ...bnft.ui } : {};
-      this.amounts = bnft.amounts ? { ...bnft.amounts } : {};
-      this.factors = bnft.factors ? [...bnft.factors] : [];
-      this.states = bnft.states ? bnft.states : this.states;
-    }
+    this.config = { ...bnft };
+    this.label = bnft.label ?? null;
+    this.code = bnft.code ?? null;
+    this.ui = bnft.ui ? { ...bnft.ui } : {};
+    this.amounts = bnft.amounts ? { ...bnft.amounts } : {};
+    this.factors = bnft.factors ? [...bnft.factors] : [];
+    this.states = bnft.states ?? this.states;
+
     this.loaded = true;
   },
   data() {
@@ -157,7 +157,7 @@ export default {
       loaded: false,
       config: {},
       label: null,
-      name: null,
+      code: null,
       ui: {},
       amounts: {},
       factors: [],
@@ -175,18 +175,24 @@ export default {
   },
   computed: {
     formIsValid() {
-      return !!this.label && !!this.name;
+      return !!this.label && !!this.code;
     },
     outputBenefit() {
       return {
         ...this.config,
         label: this.label,
-        name: this.name,
+        code: this.code,
         ui: { ...this.ui },
       };
     },
   },
   methods: {
+    routeToBenefitRoute(name) {
+      this.$router.push({
+        name: name,
+        params: { productId: this.productId },
+      });
+    },
     routeToBenefitList() {
       this.$router.push({
         name: "config-benefit-list",
@@ -196,6 +202,12 @@ export default {
     routeToBenefitStates() {
       this.$router.push({
         name: "config-benefit-states",
+        params: { productId: this.productId },
+      });
+    },
+    routeToBenefitAmounts() {
+      this.$router.push({
+        name: "config-benefit-amounts",
         params: { productId: this.productId },
       });
     },
@@ -210,6 +222,10 @@ export default {
     configureStates() {
       this.storeBenefit();
       this.routeToBenefitStates();
+    },
+    configureBenefit(route) {
+      this.storeBenefit();
+      this.routeToBenefitRoute(route);
     },
     selectListItemsHandler(payload) {
       this.ui.items = [...payload];

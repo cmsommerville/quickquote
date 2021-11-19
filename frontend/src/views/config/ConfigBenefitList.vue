@@ -1,10 +1,10 @@
 <template>
   <div class="content" v-if="benefits">
-    <v-row v-for="bnft in benefits" :key="bnft.name">
+    <v-row v-for="bnft in benefits" :key="bnft.code">
       <v-col cols="12" xs="12">
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
-            <v-card-title>{{ bnft.text }}</v-card-title>
+            <v-card-title>{{ bnft.label }}</v-card-title>
             <v-card-subtitle
               >Component Type: {{ bnft.ui.component }}</v-card-subtitle
             >
@@ -19,7 +19,7 @@
                   class="mr-2"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editBenefit(bnft.name)"
+                  @click="editBenefit(bnft.code)"
                   ><v-icon color="primary">mdi-pencil</v-icon></v-btn
                 >
               </template>
@@ -96,7 +96,7 @@ export default {
     editBenefit(code) {
       this.$store.commit(
         "SET_NEW_BENEFIT",
-        this.benefits.find((item) => item.name === code)
+        this.benefits.find((item) => item.code === code)
       );
       this.routeToBenefit(code);
     },

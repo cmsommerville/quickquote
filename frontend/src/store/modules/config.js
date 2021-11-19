@@ -35,7 +35,7 @@ export const config = {
     APPEND_NEW_PROVISION(state) {
       state.provisions = [
         ...state.provisions.filter(
-          (item) => item.name !== state.new_provision.name
+          (item) => item.code !== state.new_provision.code
         ),
         { ...state.new_provision },
       ];
@@ -70,7 +70,7 @@ export const config = {
     APPEND_NEW_BENEFIT(state) {
       state.benefits = [
         ...state.benefits.filter(
-          (item) => item.name !== state.new_benefit.name
+          (item) => item.code !== state.new_benefit.code
         ),
         { ...state.new_benefit },
       ];

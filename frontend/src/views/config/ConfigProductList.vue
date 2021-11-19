@@ -5,7 +5,7 @@
         <v-row>
           <v-col
             v-for="product in products"
-            :key="product.name"
+            :key="product.code"
             cols="12"
             md="3"
           >
@@ -15,9 +15,10 @@
                 :dark="active"
                 height="200"
                 @click="toggle"
+                @dblclick="editProduct"
               >
                 <v-card-title class="tile-product-title">
-                  {{ product.name === "accident" ? "AC" : "CI" }}
+                  {{ product.code === "accident" ? "AC" : "CI" }}
                 </v-card-title>
               </v-card>
             </v-item>

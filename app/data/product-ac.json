@@ -1,9 +1,9 @@
 {
-  "name": "accident",
-  "text": "Accident",
+  "code": "accident",
+  "label": "Accident",
   "variations": [
     {
-      "text": "Base",
+      "label": "Base",
       "value": "base",
       "default": true
     }
@@ -20,27 +20,27 @@
   ],
   "coverages": [
     {
-      "name": "frac_disl",
-      "text": "Fractures and Dislocations",
+      "code": "frac_disl",
+      "label": "Fractures and Dislocations",
       "default": true,
       "display": "main"
     },
     {
-      "name": "hospitalization",
-      "text": "Hospitalizations",
+      "code": "hospitalization",
+      "label": "Hospitalizations",
       "display": "main",
       "default": false
     },
     {
-      "name": "life_changing_events",
-      "text": "Life Changing Events",
+      "code": "life_changing_events",
+      "label": "Life Changing Events",
       "display": "main",
       "default": false
     }
   ],
   "provisions": [
     {
-      "name": "occ_class",
+      "code": "occ_class",
       "label": "Occupational Class",
       "states": "inherit",
       "ui": {
@@ -48,11 +48,11 @@
         "items": [
           {
             "value": "24hr",
-            "text": "24 Hour"
+            "label": "24 Hour"
           },
           {
             "value": "nonocc",
-            "text": "Non-Occupational"
+            "label": "Non-Occupational"
           }
         ]
       },
@@ -75,7 +75,7 @@
       }
     },
     {
-      "name": "ac_factor1",
+      "code": "ac_factor1",
       "label": "Accident Factor 1",
       "states": "inherit",
       "ui": {
@@ -83,11 +83,11 @@
         "items": [
           {
             "value": 30,
-            "text": 30
+            "label": 30
           },
           {
             "value": 365,
-            "text": 365
+            "label": 365
           }
         ]
       },
@@ -110,7 +110,7 @@
       }
     },
     {
-      "name": "group_size",
+      "code": "group_size",
       "label": "Group Size",
       "states": "inherit",
       "ui": {
@@ -154,8 +154,8 @@
   ],
   "benefits": [
     {
-      "name": "frac_skull",
-      "text": "Skull Fracture",
+      "code": "frac_skull",
+      "label": "Skull Fracture",
       "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
@@ -174,15 +174,15 @@
       "states": "inherit",
       "factors": [
         {
-          "name": "hospitalization_days",
+          "code": "hospitalization_days",
           "type": "benefit",
           "applicability": "prohibited"
         }
       ]
     },
     {
-      "name": "frac_ankle",
-      "text": "Ankle Fracture",
+      "code": "frac_ankle",
+      "label": "Ankle Fracture",
       "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
@@ -201,15 +201,15 @@
       "states": "inherit",
       "factors": [
         {
-          "name": "hospitalization_days",
+          "code": "hospitalization_days",
           "type": "benefit",
           "applicability": "prohibited"
         }
       ]
     },
     {
-      "name": "frac_wrist",
-      "text": "Wrist Fracture",
+      "code": "frac_wrist",
+      "label": "Wrist Fracture",
       "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
@@ -228,15 +228,15 @@
       "states": [{ "code": "NC", "value": "prohibited" }],
       "factors": [
         {
-          "name": "hospitalization_days",
+          "code": "hospitalization_days",
           "type": "benefit",
           "applicability": "prohibited"
         }
       ]
     },
     {
-      "name": "hosp_adm",
-      "text": "Hospital Admission",
+      "code": "hosp_adm",
+      "label": "Hospital Admission",
       "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
@@ -256,8 +256,8 @@
       "factors": []
     },
     {
-      "name": "hosp_conf",
-      "text": "Hospital Confinement",
+      "code": "hosp_conf",
+      "label": "Hospital Confinement",
       "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
@@ -276,20 +276,20 @@
       "duration": {
         "default": 30,
         "component": "v-select",
-        "name": "hosp_confinement_days",
+        "code": "hosp_confinement_days",
         "outlined": true,
         "label": "Confinement Days",
         "items": [
-          { "value": 30, "text": 30, "factor": 1 },
-          { "value": 365, "text": 365, "factor": 1.47 }
+          { "value": 30, "label": 30, "factor": 1 },
+          { "value": 365, "label": 365, "factor": 1.47 }
         ]
       },
       "variations": { "statesProhibited": [], "statesRequired": [] },
       "factorApplicability": []
     },
     {
-      "name": "icu_conf",
-      "text": "ICU Confinement",
+      "code": "icu_conf",
+      "label": "ICU Confinement",
       "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
@@ -309,19 +309,19 @@
         "default": 10,
         "component": "v-select",
         "outlined": true,
-        "name": "icu_confinement_days",
+        "code": "icu_confinement_days",
         "label": "ICU Days",
         "items": [
-          { "value": 10, "text": 10, "factor": 1 },
-          { "value": 30, "text": 30, "factor": 1.2 }
+          { "value": 10, "label": 10, "factor": 1 },
+          { "value": 30, "label": 30, "factor": 1.2 }
         ]
       },
       "variations": { "statesProhibited": [], "statesRequired": [] },
       "factorApplicability": []
     },
     {
-      "name": "quad",
-      "text": "Quadriplegia",
+      "code": "quad",
+      "label": "Quadriplegia",
       "type": "indemnity",
       "coverage_code": "life_changing_events",
       "plan_rate_code": "base",
@@ -341,8 +341,8 @@
       "factorApplicability": []
     },
     {
-      "name": "para",
-      "text": "Paralysis",
+      "code": "para",
+      "label": "Paralysis",
       "type": "indemnity",
       "coverage_code": "life_changing_events",
       "plan_rate_code": "base",

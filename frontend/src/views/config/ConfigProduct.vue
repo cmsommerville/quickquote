@@ -99,8 +99,8 @@ export default {
     this.loaded = false;
     const config = await this.$store.getters.getConfig;
     this.config = { ...config };
-    this.label = config.text;
-    this.code = config.name;
+    this.label = config.label;
+    this.code = config.code;
     this.loaded = true;
   },
   data() {
