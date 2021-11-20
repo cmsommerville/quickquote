@@ -72,6 +72,7 @@
               <app-dashboard-card
                 title="Duration"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+                @click:configure="configureBenefit('config-benefit-durations')"
               >
                 Vary by duration!
               </app-dashboard-card>
@@ -83,7 +84,7 @@
               <app-dashboard-card
                 title="States"
                 img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureStates"
+                @click:configure="configureBenefit('config-benefit-states')"
               >
                 {{
                   states === "inherit"
@@ -199,18 +200,6 @@ export default {
         params: { productId: this.productId },
       });
     },
-    routeToBenefitStates() {
-      this.$router.push({
-        name: "config-benefit-states",
-        params: { productId: this.productId },
-      });
-    },
-    routeToBenefitAmounts() {
-      this.$router.push({
-        name: "config-benefit-amounts",
-        params: { productId: this.productId },
-      });
-    },
     storeBenefit() {
       this.$store.commit("SET_NEW_BENEFIT", this.outputBenefit);
     },
@@ -218,10 +207,6 @@ export default {
       this.storeBenefit();
       this.$store.dispatch("addNewBenefitToList");
       this.routeToBenefitList();
-    },
-    configureStates() {
-      this.storeBenefit();
-      this.routeToBenefitStates();
     },
     configureBenefit(route) {
       this.storeBenefit();

@@ -9,6 +9,7 @@ import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
 import ConfigBenefitStates from "../../views/config/ConfigBenefitStates.vue";
 import ConfigBenefitAmounts from "../../views/config/ConfigBenefitAmounts.vue";
 import ConfigBenefitFactors from "../../views/config/ConfigBenefitFactors.vue";
+import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurations.vue";
 
 export default [
   {
@@ -74,6 +75,12 @@ export default [
     path: "/config/product/:productId/benefit/factors",
     name: "config-benefit-factors",
     component: ConfigBenefitFactors,
+    props: true,
+  },
+  {
+    path: "/config/product/:productId/benefit/durations",
+    name: "config-benefit-durations",
+    component: ConfigBenefitDurations,
     props: true,
   },
 ];
