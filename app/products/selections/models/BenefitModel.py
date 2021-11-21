@@ -25,6 +25,8 @@ class BenefitModel(db.Model, VersionedTable):
 
     plan = db.relationship("PlanModel", back_populates="benefits")
     coverage = db.relationship("CoverageModel", back_populates="benefits")
+    durations = db.relationship("BenefitDurationModel", back_populates="benefit",
+                                primaryjoin="and_(BenefitModel.benefit_id == BenefitDurationModel.benefit_id, BenefitDurationModel.active_record_indicator == 'Y')")
     benefit_rates = db.relationship(
         "BenefitRateModel", back_populates="benefit",
         primaryjoin="and_(BenefitModel.benefit_id == BenefitRateModel.benefit_id, BenefitRateModel.active_record_indicator == 'Y')")

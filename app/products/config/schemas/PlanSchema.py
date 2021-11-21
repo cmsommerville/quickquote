@@ -10,6 +10,7 @@ from .PlanVariationSchema import Config_PlanVariationSchema
 
 
 class Config_PlanSchema(Schema):
+    _id = fields.String(dump_only=False)
     code = fields.String(required=True)
     label = fields.String(required=True)
     uuid = fields.UUID(default=uuid.uuid4())

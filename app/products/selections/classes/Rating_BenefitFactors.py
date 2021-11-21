@@ -28,7 +28,7 @@ class Rating_BenefitFactorList:
         Configuration under the `config` key.
         Selections under the `selection` key. 
         """
-        config = {fctr['name']: fctr for fctr in self.config}
+        config = {fctr['code']: fctr for fctr in self.config}
         try:
             output = {
                 prov.provision_code: {

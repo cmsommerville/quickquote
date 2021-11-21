@@ -4,8 +4,9 @@
       <v-form class="form" @submit="onSubmit">
         <coverage-selections-expansion-panel
           v-for="coverage in coverages"
-          :key="coverage.name"
+          :key="coverage.label"
           :coverage="coverage"
+          :label="coverage.label"
           @selections-change="selectionChangeHandler"
         />
 
@@ -18,10 +19,6 @@
         </div>
       </v-form>
     </div>
-
-    <selection-sidepane :selections="selectedBenefits"
-      >Selections</selection-sidepane
-    >
   </div>
 </template>
 
@@ -29,93 +26,69 @@
 import axios from "../../services/axios.js";
 
 import CoverageSelectionsExpansionPanel from "../../components/CoverageSelectionsExpansionPanel.vue";
-import SelectionSidepane from "../../components/SelectionSidepane.vue";
-// import SelectionsModal from "../components/SelectionsModal.vue";
 
 export default {
   name: "Benefits",
   components: {
     CoverageSelectionsExpansionPanel,
-    SelectionSidepane,
-    // SelectionsModal,
   },
   data() {
     return {
       loaded: false,
       plan_config_id: null,
       plan_id: null,
-      plan_config: null,
+      plan_config: {},
+      coverages: [],
       plan: {},
       selections: {},
     };
   },
   computed: {
-    selectedBenefits() {
-      const selected_benefits = [];
-      for (const bnft in this.selections) {
-        if (+this.selections[bnft].selectedValue > 0) {
-          selected_benefits.push(this.selections[bnft]);
-        }
-      }
-      return selected_benefits;
-    },
-    coverages() {
-      let covg_index;
-      const coverages = [...this.plan_config.coverages];
-      this.plan_config.benefits.map((bnft) => {
-        covg_index = coverages.findIndex(
-          (covg) => covg.name === bnft.coverage_code
-        );
-        if (coverages[covg_index].benefits) {
-          coverages[covg_index].benefits = [
-            ...coverages[covg_index].benefits,
-            {
-              ...bnft,
-            },
-          ];
-        } else {
-          coverages[covg_index].benefits = [
-            {
-              ...bnft,
-            },
-          ];
-        }
-      });
-
-      return coverages;
-    },
     selectionFormatter() {
       const selections = [];
 
       for (const key in this.selections) {
-        selections.push({
+        const sel = {
           plan_id: this.plan_id,
           coverage_code: this.selections[key].coverage_code,
           plan_rate_code: this.selections[key].plan_rate_code,
-          benefit_code: this.selections[key].name,
+          benefit_code: this.selections[key].code,
           benefit_uuid: this.selections[key].uuid,
           benefit_value: this.selections[key].selectedValue,
-        });
+        };
+        if (this.selections[key].durations) {
+          sel["durations"] = this.selections[key].durations.map((dur) => {
+            return {
+              plan_id: this.plan_id,
+              duration_code: dur.code,
+              duration_type: typeof dur.selectedValue,
+              duration_value: dur.selectedValue,
+            };
+          });
+        }
+        selections.push(sel);
       }
       return selections;
     },
   },
   async mounted() {
+    this.loaded = false;
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
     const res = await axios.get("/selections/benefits", {
       params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
     });
-    this.plan_config = { ...res.data.plan_config[0] };
+    this.coverages = [...res.data.coverages];
+    this.plan_config = { ...res.data.plan_config };
     this.plan = { ...res.data.plan };
     this.loaded = true;
   },
   methods: {
     selectionChangeHandler(selections) {
       const selections_obj = {};
-
+      console.log(selections);
       for (let sel of selections) {
-        selections_obj[sel.name] = sel;
+        selections_obj[sel.code] = sel;
       }
       this.selections = { ...this.selections, ...selections_obj };
     },

@@ -91,21 +91,19 @@ export default {
     const res = await axios.get("/selections/age-bands", {
       params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
     });
-    this.plan_config = { ...res.data.plan_config[0] };
+    this.plan_config = { ...res.data.plan_config };
     this.plan = { ...res.data.plan };
 
     // if plan variation is not age banded, then send default age bands
     // then redirect to the next stage
     const variation = this.plan_config.variations.find(
-      (variation) => variation.value === this.plan.product_variation_code
+      (variation) => variation.code === this.plan.product_variation_code
     );
-    if (!variation.age_bands) {
+    if (!variation.is_age_rated) {
       await this.saveAgeBands();
     }
 
-    this.age_bands =
-      variation.age_bands[this.plan.rating_state] ||
-      variation.age_bands.default;
+    this.age_bands = [...res.data.age_bands];
     this.loaded = true;
   },
   computed: {},

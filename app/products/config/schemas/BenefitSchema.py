@@ -37,6 +37,7 @@ class Config_BenefitDurationItemsSchema(Schema):
 class Config_BenefitDurationSchema(Schema):
     code = fields.String(required=True)
     label = fields.String(required=True)
+    default = fields.String(required=True)
     component = fields.String(
         required=True, validate=validate.OneOf(constants.UI_COMPONENTS))
     items = fields.List(fields.Nested(

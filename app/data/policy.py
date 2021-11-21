@@ -1,14 +1,7 @@
 policy = [
     {
         "code": "critical_illness",
-        "variations": [
-            {
-                "code": "issue_age",
-            },
-            {
-                "code": "attained_age"
-            }
-        ],
+        "variations": ["issue_age", "attained_age"],
         "states": [
             {
                 "code": "SC",
@@ -21,132 +14,10 @@ policy = [
                 "expiryDate": "9999-12-31"
             }
         ],
-        "coverages": [
-            {
-                "code": "base"
-            },
-            {
-                "code": "progressive_disease"
-            },
-            {
-                "code": "optional_benefits"
-            }
-        ],
-        "provisions": [
-            {
-                "code": "prex",
-                "states": "inherit"
-            },
-            {
-                "code": "reductionAt70",
-                "states": "inherit"
-            },
-            {
-                "code": "group_size",
-                "states": "inherit"
-            }
-        ],
-        "benefits": [
-            {
-                "code": "heart_attack",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "cancer",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "ms",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "als",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "stroke",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "renal_failure",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "transplant",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "parkinsons",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            },
-            {
-                "code": "alzheimers",
-                "states": "inherit",
-                "amounts": {
-                    "default": 100,
-                    "min": 0,
-                    "max": 100,
-                    "step": 6.25,
-                    "unit": "percent"
-                }
-            }
-        ]
+        "coverages": ["base", "progressive_disease", "optional_benefits"],
+        "provisions": ["prex", "reductionAt70", "group_size"],
+        "benefits": ["heart_attack", "cancer", "ms", "als", "stroke",
+                     "renal_failure", "transplant", "parkinsons", "alzheimers"]
     },
     {
         "code": "accident",

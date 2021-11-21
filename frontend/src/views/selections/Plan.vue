@@ -14,7 +14,7 @@
           rounded
           background-color="lightest"
           disabled
-          v-model="selected_config.label"
+          v-model="selected_config.product_code"
           label="Product"
           class="my-3"
         ></v-text-field>
@@ -36,10 +36,10 @@
           outlined
           rounded
           background-color="lightest"
-          :items="select_states"
+          :items="selected_config ? selected_config.states : []"
           v-model="selections.rating_state"
           label="Rating State"
-          item-text="label"
+          item-text="code"
           item-value="code"
           class="my-3"
         >
@@ -78,7 +78,6 @@ export default {
       loaded: false,
       error: null,
       existingQuote: false,
-      data: null,
       all_config: null,
       selected_config: null,
       selections: {
@@ -90,13 +89,14 @@ export default {
       rules: {
         effective_date: (v) => {
           if (this.selections.rating_state) {
-            const dt = new Date(v);
-            const min_eff_dt = new Date(
-              this.selections.rating_state.effectiveDate
+            const state_config = this.selected_config.states.find(
+              (item) => item.code === this.selections.rating_state
             );
+            const dt = new Date(v);
+            const min_eff_dt = new Date(state_config.effectiveDate);
             return (
               dt >= min_eff_dt ||
-              `Must be greater than ${this.selections.rating_state.effectiveDate}`
+              `Must be greater than ${state_config.effectiveDate}`
             );
           }
           return "Please enter an effective date";
@@ -106,20 +106,19 @@ export default {
     };
   },
   async mounted() {
-    this.plan_config_id = this.$route.query.plan_config_id;
-    this.plan_id = +this.$route.query.plan_id;
+    const plan_config_id = this.$route.query.plan_config_id;
+    const plan_id = +this.$route.query.plan_id;
     const res = await axios.get("/selections/plan", {
-      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
+      params: { plan_config_id, plan_id },
     });
-    this.data = { ...res.data };
     this.all_config = [...res.data.plan_config];
-    if (this.plan_id) {
+
+    const selections = { ...res.data.plan };
+    if (selections.plan_id) {
       this.selected_config = res.data.plan_config[0];
       this.existingQuote = true;
-    }
-    if (this.plan_id) {
       this.selections = {
-        ...this.loadSelectionsHandler(this.selections, res.data),
+        ...selections,
       };
     }
     this.loaded = true;
@@ -128,41 +127,16 @@ export default {
     selections_formatted() {
       return {
         ...this.selections,
-        product_code: this.selected_config.code,
-        rating_state: this.selections.rating_state.code,
         plan_config_id: this.selected_config._id,
       };
-    },
-    select_states() {
-      if (this.selected_config) {
-        return this.selected_config.states.map((stateObj) => {
-          return {
-            value: stateObj,
-            label: stateObj.state,
-          };
-        });
-      }
-      return [];
     },
   },
   methods: {
     tileSelectionHandler(selection) {
       this.selected_config = selection;
+      this.selections.product_code = selection.code;
     },
 
-    loadSelectionsHandler(inputSelections, data) {
-      const selections = {};
-      for (const key in inputSelections) {
-        if (key === "rating_state") {
-          selections[key] = data.plan_config[0].states.find(
-            (item) => item.code === data.plan.rating_state
-          );
-        } else {
-          selections[key] = data.plan[key] || null;
-        }
-      }
-      return selections;
-    },
     async onSubmit(event) {
       event.preventDefault();
       const res = await axios.post(

@@ -8,13 +8,14 @@ from ..schemas import Config_PlanSchema
 
 
 plan_schema = Config_PlanSchema()
+plan_list_schema = Config_PlanSchema(many=True)
 
 
 class PlanConfig(Resource):
 
     def get(self, id):
         res = mongo.db.products.find_one({'_id': ObjectId(id)})
-        product = projectMongoResults(res)
+        product = plan_schema.dump(res)
         return product, 200
 
     def put(self, id):
@@ -33,12 +34,12 @@ class PlanConfigList(Resource):
     @classmethod
     def get(cls):
         res = mongo.db.products.find()
-        products = projectMongoResults(res)
+        products = plan_list_schema.dump(res)
         return products, 200
 
     @classmethod
     def post(cls):
         req = request.get_json()
-        data = generateUUID(req)
+        data = plan_list_schema.load(req)
         mongo.db.products.insert_many(data)
-        return req, 201
+        return plan_list_schema.dump(data), 201

@@ -8,7 +8,7 @@
           :is="provision.ui.component"
           v-bind="{ label: provision.label, ...provision.ui }"
           :name="provision.name"
-          v-model="selections[provision.name]"
+          v-model="provision.selectedValue"
         />
 
         <div class="d-flex justify-center my-3">
@@ -40,53 +40,34 @@ export default {
       plan_config_id: null,
       plan_id: null,
       plan_config: null,
-      selections: {
-        // prex: null,
-        // reductionAt70: false,
-      },
+      provisions: null,
       show: true,
     };
   },
   computed: {
-    provisions() {
-      return this.plan_config.provisions;
-    },
-    provisions_object() {
-      return this.provisions.reduce(
-        (obj, item) => Object.assign(obj, { [item.name]: item }),
-        {}
-      );
-    },
-    selectionHandler() {
-      return this.provisions
-        .filter((prov) => Object.keys(this.selections).includes(prov.name))
-        .map((item) => {
-          return {
-            plan_id: this.plan_id,
-            provision_code: item.name,
-            provision_value: String(this.selections[item.name]),
-            provision_data_type: typeof this.selections[item.name],
-          };
-        });
+    selectionFormatter() {
+      return this.provisions.map((item) => {
+        return {
+          plan_id: this.plan_id,
+          provision_code: item.code,
+          provision_value: String(item.selectedValue),
+          provision_data_type: typeof item.selectedValue,
+        };
+      });
     },
   },
   async mounted() {
     this.plan_config_id = this.$route.query.plan_config_id;
     const res = await axios.get(`/config/plan/${this.plan_config_id}`);
     this.plan_id = +this.$route.query.plan_id;
-    this.plan_config = { ...res.data[0] };
-    this.selections = [...res.data[0].provisions].reduce(
-      (acc, curr) => ((acc[curr.name] = null), acc),
-      {}
-    );
+    this.plan_config = { ...res.data };
+    this.provisions = [...res.data.provisions];
     this.loaded = true;
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      await axios.post("/selections/provisions", this.selectionHandler, {
-        withCredentials: true,
-      });
+      await axios.post("/selections/provisions", this.selectionFormatter);
       this.$router.push({
         name: "premium",
         query: { plan_id: this.plan_id },

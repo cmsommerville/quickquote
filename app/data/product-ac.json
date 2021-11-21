@@ -296,6 +296,7 @@
           "component": "v-select",
           "code": "hosp_confinement_days",
           "label": "Confinement Days",
+          "default": "30",
           "items": [
             { "value": "30", "label": "30", "factor": 1 },
             { "value": "365", "label": "365", "factor": 1.47 }
@@ -325,6 +326,7 @@
           "component": "v-select",
           "code": "icu_confinement_days",
           "label": "ICU Days",
+          "default": "10",
           "items": [
             { "value": "10", "label": "10", "factor": 1 },
             { "value": "30", "label": "30", "factor": 1.2 }

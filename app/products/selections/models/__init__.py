@@ -9,3 +9,4 @@ from .BenefitRateModel import BenefitRateModel
 from .AgeBandsModel import AgeBandsModel
 from .RateTableModel import RateTableModel
 from .BenefitAgeRateModel import BenefitAgeRateModel
+from .BenefitDurationModel import BenefitDurationModel

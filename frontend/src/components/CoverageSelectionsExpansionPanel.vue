@@ -1,11 +1,7 @@
 <template>
   <div class="content-coverage">
     <div class="d-flex justify-space-between">
-      <v-switch
-        v-model="selected"
-        :label="coverage.text"
-        @change="toggleCoverage"
-      >
+      <v-switch v-model="selected" :label="label" @change="toggleCoverage">
       </v-switch>
       <v-btn color="accent" fab dark small outlined @click="hidden = !hidden">
         <v-icon>mdi-arrow-down</v-icon>
@@ -14,14 +10,14 @@
     <div class="content-benefits ml-6 mb-6" v-if="!hidden">
       <v-row v-for="benefit in benefits" :key="benefit.name">
         <v-col cols="12" sm="6">
-          <v-subheader>{{ benefit.text }}</v-subheader>
+          <v-subheader>{{ benefit.label }}</v-subheader>
         </v-col>
         <v-col cols="12" sm="3">
           <component
             :is="benefit.ui.component"
             v-bind="{ ...benefit.ui }"
-            :name="benefit.name"
-            :label="benefit.text"
+            :name="benefit.code"
+            :label="benefit.label"
             v-model="benefit.selectedValue"
             :prefix="benefit.amounts.unit === 'dollar' ? '$' : ''"
             :suffix="benefit.amounts.unit === 'percent' ? '%' : ''"
@@ -32,14 +28,21 @@
             background-color="lightest"
           />
         </v-col>
-        <v-col v-if="!!benefit.duration" cols="12" sm="3">
+        <v-col
+          v-for="duration in benefit.durations"
+          :key="duration.code"
+          cols="12"
+          sm="3"
+        >
           <component
-            :is="benefit.duration.component"
-            v-bind="{ ...benefit.duration }"
-            :name="benefit.duration.name"
-            :label="benefit.duration.label"
-            v-model="benefit.selectedDuration"
+            :is="duration.component"
+            v-bind="{ ...duration }"
+            :name="duration.code"
+            :label="duration.label"
+            v-model="duration.selectedDuration"
             @change="setValue"
+            item-text="label"
+            item-value="value"
             outlined
             dense
             rounded
@@ -66,6 +69,10 @@ export default {
       type: Object,
       required: true,
     },
+    label: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -80,7 +87,14 @@ export default {
       return {
         ...bnft,
         selectedValue: bnft.amounts.default,
-        selectedDuration: bnft.duration ? bnft.duration.default : 0,
+        durations: bnft.durations
+          ? bnft.durations.map((dur) => {
+              return {
+                ...dur,
+                selectedDuration: dur.selectedDuration ?? dur.default,
+              };
+            })
+          : 0,
       };
     });
     this.toggleCoverage();

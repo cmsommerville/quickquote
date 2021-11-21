@@ -4,8 +4,9 @@ from flask_restful import Resource
 
 from ..models.PlanModel import PlanModel
 from ..schemas.PlanSchema import PlanSchema
+from ...config import Config_PlanSchema
 
-from app.data.policy import policy
+# from app.data.policy import policy
 
 plan_schema = PlanSchema()
 
@@ -19,7 +20,6 @@ class PlanSelections(Resource):
 
         # if a new plan request
         if plan_id is None:
-            print("no plan id")
             # get plan config
             if plan_config_id:
                 config = requests.get(
@@ -32,6 +32,7 @@ class PlanSelections(Resource):
 
             config = requests.get(
                 f"{request.url_root}config/plans").json()
+
             return {
                 "plan": {},
                 "plan_config": config
@@ -65,12 +66,13 @@ class PlanSelections(Resource):
         plan = plan_schema.load(data)
         config = requests.get(
             f"{request.url_root}config/plan/{plan_config_id}").json()
-        policy_selection = [
-            pol for pol in policy if pol['name'] == plan.product_code][0]
+        # policy_selection = [
+        #     pol for pol in policy if pol['name'] == plan.product_code][0]
 
         try:
-            planIsValid = plan.validate(
-                policy=policy_selection, config=config[0])
+            # planIsValid = plan.validate(
+            #     policy=policy_selection, config=config[0])
+            pass
         except Exception as e:
             print(str(e))
             return {"error": str(e)}, 400
@@ -81,7 +83,7 @@ class PlanSelections(Resource):
             session[plan_id] = {
                 "plan": plan_schema.dump(plan),
                 "plan_config": config,
-                "policy": policy
+                "policy": {}
             }
         except Exception as e:
             print(e)
