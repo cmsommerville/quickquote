@@ -1,5 +1,5 @@
 import decimal
-from typing_extensions import Required
+import uuid
 from marshmallow import Schema, fields, validate, ValidationError
 from ..data import constants
 
@@ -21,4 +21,5 @@ class Config_CoverageUISchema(Schema):
 class Config_CoverageSchema(Schema):
     code = fields.String(required=True)
     label = fields.String(required=True)
+    uuid = fields.UUID(default=uuid.uuid4())
     ui = fields.Nested(Config_CoverageUISchema, required=True)

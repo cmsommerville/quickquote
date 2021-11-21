@@ -4,38 +4,51 @@
   "variations": [
     {
       "label": "Base",
-      "value": "base",
-      "default": true
+      "code": "base",
+      "default": true,
+      "is_age_rated": false,
+      "is_tobacco_rated": false,
+      "is_family_code_rated": true
     }
   ],
   "states": [
     {
-      "state": "SC",
-      "effectiveDate": "2020-01-01"
+      "code": "SC",
+      "effectiveDate": "2020-01-01 00:00:00",
+      "expiryDate": "9999-12-31 00:00:00",
+      "value": "permitted"
     },
     {
-      "state": "NC",
-      "effectiveDate": "2021-07-01"
+      "code": "NC",
+      "effectiveDate": "2021-07-01 00:00:00",
+      "expiryDate": "9999-12-31 00:00:00",
+      "value": "permitted"
     }
   ],
   "coverages": [
     {
       "code": "frac_disl",
       "label": "Fractures and Dislocations",
-      "default": true,
-      "display": "main"
+      "ui": {
+        "section": "main",
+        "default": true
+      }
     },
     {
       "code": "hospitalization",
       "label": "Hospitalizations",
-      "display": "main",
-      "default": false
+      "ui": {
+        "section": "main",
+        "default": false
+      }
     },
     {
       "code": "life_changing_events",
       "label": "Life Changing Events",
-      "display": "main",
-      "default": false
+      "ui": {
+        "section": "main",
+        "default": false
+      }
     }
   ],
   "provisions": [
@@ -48,11 +61,11 @@
         "items": [
           {
             "value": "24hr",
-            "label": "24 Hour"
+            "text": "24 Hour"
           },
           {
             "value": "nonocc",
-            "label": "Non-Occupational"
+            "text": "Non-Occupational"
           }
         ]
       },
@@ -60,15 +73,23 @@
         "default_factor_value": 1,
         "variability": [
           {
-            "rules": {
-              "provision_value": { "comparison": "eq", "value": "24hr" }
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "24hr"
+              }
+            ],
             "factor_value": 1.25
           },
           {
-            "rules": {
-              "provision_value": { "comparison": "eq", "value": "nonocc" }
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "nonocc"
+              }
+            ],
             "factor_value": 1
           }
         ]
@@ -82,12 +103,12 @@
         "component": "v-select",
         "items": [
           {
-            "value": 30,
-            "label": 30
+            "value": "30",
+            "text": "30"
           },
           {
-            "value": 365,
-            "label": 365
+            "value": "365",
+            "text": "365"
           }
         ]
       },
@@ -95,15 +116,23 @@
         "default_factor_value": 1,
         "variability": [
           {
-            "rules": {
-              "provision_value": { "comparison": "eq", "value": 365 }
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": 365
+              }
+            ],
             "factor_value": 1.5
           },
           {
-            "rules": {
-              "provision_value": { "comparison": "eq", "value": 30 }
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": 30
+              }
+            ],
             "factor_value": 0.95
           }
         ]
@@ -122,31 +151,34 @@
         "variability": [
           {
             "factor_value": 0.96,
-            "rules": {
-              "provision_value": {
+            "rules": [
+              {
+                "field": "provision_value",
                 "comparison": "lt",
                 "value": 500
               }
-            }
+            ]
           },
           {
             "factor_value": 0.91,
-            "rules": {
-              "provision_value": {
+            "rules": [
+              {
+                "field": "provision_value",
                 "comparison": "range",
                 "lower": 500,
                 "upper": 999
               }
-            }
+            ]
           },
           {
             "factor_value": 0.85,
-            "rules": {
-              "provision_value": {
+            "rules": [
+              {
+                "field": "provision_value",
                 "comparison": "ge",
                 "value": 1000
               }
-            }
+            ]
           }
         ]
       }
@@ -156,13 +188,11 @@
     {
       "code": "frac_skull",
       "label": "Skull Fracture",
-      "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 2000,
@@ -175,21 +205,18 @@
       "factors": [
         {
           "code": "hospitalization_days",
-          "type": "benefit",
-          "applicability": "prohibited"
+          "applicability": true
         }
       ]
     },
     {
       "code": "frac_ankle",
       "label": "Ankle Fracture",
-      "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 400,
@@ -202,21 +229,18 @@
       "factors": [
         {
           "code": "hospitalization_days",
-          "type": "benefit",
-          "applicability": "prohibited"
+          "applicability": true
         }
       ]
     },
     {
       "code": "frac_wrist",
       "label": "Wrist Fracture",
-      "type": "indemnity",
       "coverage_code": "frac_disl",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 300,
@@ -229,21 +253,18 @@
       "factors": [
         {
           "code": "hospitalization_days",
-          "type": "benefit",
-          "applicability": "prohibited"
+          "applicability": true
         }
       ]
     },
     {
       "code": "hosp_adm",
       "label": "Hospital Admission",
-      "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 1000,
@@ -252,19 +273,16 @@
         "step": 50,
         "unit": "dollar"
       },
-      "states": "inherit",
-      "factors": []
+      "states": "inherit"
     },
     {
       "code": "hosp_conf",
       "label": "Hospital Confinement",
-      "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 200,
@@ -273,30 +291,27 @@
         "step": 50,
         "unit": "dollar"
       },
-      "duration": {
-        "default": 30,
-        "component": "v-select",
-        "code": "hosp_confinement_days",
-        "outlined": true,
-        "label": "Confinement Days",
-        "items": [
-          { "value": 30, "label": 30, "factor": 1 },
-          { "value": 365, "label": 365, "factor": 1.47 }
-        ]
-      },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": []
+      "durations": [
+        {
+          "component": "v-select",
+          "code": "hosp_confinement_days",
+          "label": "Confinement Days",
+          "items": [
+            { "value": "30", "label": "30", "factor": 1 },
+            { "value": "365", "label": "365", "factor": 1.47 }
+          ]
+        }
+      ],
+      "states": "inherit"
     },
     {
       "code": "icu_conf",
       "label": "ICU Confinement",
-      "type": "indemnity",
       "coverage_code": "hospitalization",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 100,
@@ -305,30 +320,27 @@
         "step": 25,
         "unit": "dollar"
       },
-      "duration": {
-        "default": 10,
-        "component": "v-select",
-        "outlined": true,
-        "code": "icu_confinement_days",
-        "label": "ICU Days",
-        "items": [
-          { "value": 10, "label": 10, "factor": 1 },
-          { "value": 30, "label": 30, "factor": 1.2 }
-        ]
-      },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": []
+      "durations": [
+        {
+          "component": "v-select",
+          "code": "icu_confinement_days",
+          "label": "ICU Days",
+          "items": [
+            { "value": "10", "label": "10", "factor": 1 },
+            { "value": "30", "label": "30", "factor": 1.2 }
+          ]
+        }
+      ],
+      "states": "inherit"
     },
     {
       "code": "quad",
       "label": "Quadriplegia",
-      "type": "indemnity",
       "coverage_code": "life_changing_events",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 5000,
@@ -337,19 +349,16 @@
         "step": 2500,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": []
+      "states": "inherit"
     },
     {
       "code": "para",
       "label": "Paralysis",
-      "type": "indemnity",
       "coverage_code": "life_changing_events",
       "plan_rate_code": "base",
       "ui": {
         "component": "v-text-field",
-        "type": "number",
-        "outlined": true
+        "type": "number"
       },
       "amounts": {
         "default": 2500,
@@ -358,8 +367,7 @@
         "step": 500,
         "unit": "dollar"
       },
-      "variations": { "statesProhibited": [], "statesRequired": [] },
-      "factorApplicability": []
+      "states": "inherit"
     }
   ]
 }

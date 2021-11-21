@@ -4,6 +4,10 @@ from bson.objectid import ObjectId
 
 from app.extensions import mongo
 from app.shared import projectMongoResults, generateUUID
+from ..schemas import Config_PlanSchema
+
+
+plan_schema = Config_PlanSchema()
 
 
 class PlanConfig(Resource):
@@ -14,9 +18,10 @@ class PlanConfig(Resource):
         return product, 200
 
     def put(self, id):
-        req = generateUUID([request.get_json()])[0]
-        mongo.db.products.replace_one({'_id': ObjectId(id)}, req)
-        return req, 201
+        req = request.get_json()
+        data = plan_schema.load(req)
+        mongo.db.products.replace_one({'_id': ObjectId(id)}, data)
+        return plan_schema.dump(data), 201
 
     def delete(self, id):
         mongo.db.products.delete_one({'_id': ObjectId(id)})

@@ -1,5 +1,4 @@
 import decimal
-from typing_extensions import Required
 from marshmallow import Schema, fields, validate, ValidationError
 
 from ..data import constants

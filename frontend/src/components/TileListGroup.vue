@@ -2,7 +2,7 @@
   <v-item-group v-model="selected_config" @change="changeHandler">
     <v-container>
       <v-row>
-        <v-col v-for="product in config" :key="product.name" cols="12" md="6">
+        <v-col v-for="product in config" :key="product.code" cols="12" md="6">
           <v-item v-slot="{ active, toggle }" :value="product">
             <v-card
               :color="active ? 'accent' : 'secondary'"
@@ -15,7 +15,7 @@
                   active ? 'white--text' : ''
                 }`"
               >
-                {{ product.text }}
+                {{ product.label }}
               </div>
             </v-card>
           </v-item>

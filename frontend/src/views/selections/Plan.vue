@@ -14,7 +14,7 @@
           rounded
           background-color="lightest"
           disabled
-          v-model="selected_config.text"
+          v-model="selected_config.label"
           label="Product"
           class="my-3"
         ></v-text-field>
@@ -26,6 +26,8 @@
           :disabled="!selected_config"
           :items="selected_config ? selected_config.variations : []"
           v-model="selections.product_variation_code"
+          item-text="label"
+          item-value="code"
           label="Product Variation"
           class="my-3"
         ></v-select>
@@ -37,6 +39,8 @@
           :items="select_states"
           v-model="selections.rating_state"
           label="Rating State"
+          item-text="label"
+          item-value="code"
           class="my-3"
         >
         </v-select>
@@ -124,7 +128,7 @@ export default {
     selections_formatted() {
       return {
         ...this.selections,
-        product_code: this.selected_config.name,
+        product_code: this.selected_config.code,
         rating_state: this.selections.rating_state.code,
         plan_config_id: this.selected_config._id,
       };
@@ -134,7 +138,7 @@ export default {
         return this.selected_config.states.map((stateObj) => {
           return {
             value: stateObj,
-            text: stateObj.code,
+            label: stateObj.state,
           };
         });
       }

@@ -22,14 +22,19 @@ class PlanModel(db.Model, VersionedTable):
     plan_effective_date = db.Column(db.Date, nullable=False)
     plan_status = db.Column(db.String(50), default="Quoted")
     plan_config_id = db.Column(db.String(36), nullable=False)
+    plan_name = db.Column(db.String(100))
+    is_template_indicator = db.Column(db.String(1), default="N")
+    cloned_plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
 
     row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
     active_record_indicator = db.Column(db.String(1), default='Y')
+    created_by = db.Column(db.String(50), default="cmsommerville")
 
     created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    cloned_plan = db.relationship("PlanModel", remote_side=[plan_id])
     coverages = db.relationship("CoverageModel", back_populates="plan",
                                 primaryjoin="and_(PlanModel.plan_id == CoverageModel.plan_id, CoverageModel.active_record_indicator == 'Y')")
     benefits = db.relationship("BenefitModel", back_populates="plan",

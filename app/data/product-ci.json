@@ -1,76 +1,115 @@
 {
   "uuid": "937e9667-f0f0-4769-badf-432bee9269ca",
-  "name": "critical_illness",
-  "text": "Critical Illness",
+  "code": "critical_illness",
+  "label": "Critical Illness",
   "variations": [
     {
-      "text": "Issue Age",
-      "value": "issue_age",
+      "label": "Issue Age",
+      "code": "issue_age",
       "default": true,
-      "age_bands": {
-        "default": [
-          { "lower_age": 18, "upper_age": 29 },
-          { "lower_age": 30, "upper_age": 39 },
-          { "lower_age": 40, "upper_age": 49 },
-          { "lower_age": 50, "upper_age": 59 },
-          { "lower_age": 60, "upper_age": 69 }
-        ],
-        "SC": [
-          { "lower_age": 18, "upper_age": 29 },
-          { "lower_age": 30, "upper_age": 39 },
-          { "lower_age": 40, "upper_age": 49 },
-          { "lower_age": 50, "upper_age": 59 },
-          { "lower_age": 60, "upper_age": 64 }
-        ]
-      }
+      "is_age_rated": true,
+      "is_tobacco_rated": true,
+      "is_family_code_rated": true,
+      "min_issue_age": 18,
+      "max_issue_age": 99,
+      "age_bands": [
+        {
+          "state": "default",
+          "age_bands": [
+            { "lower_age": 18, "upper_age": 29 },
+            { "lower_age": 30, "upper_age": 39 },
+            { "lower_age": 40, "upper_age": 49 },
+            { "lower_age": 50, "upper_age": 59 },
+            { "lower_age": 60, "upper_age": 69 }
+          ]
+        },
+        {
+          "state": "SC",
+          "age_bands": [
+            { "lower_age": 18, "upper_age": 29 },
+            { "lower_age": 30, "upper_age": 39 },
+            { "lower_age": 40, "upper_age": 49 },
+            { "lower_age": 50, "upper_age": 59 },
+            { "lower_age": 60, "upper_age": 64 }
+          ]
+        }
+      ]
     },
     {
-      "text": "Attained Age",
-      "value": "attained_age",
-      "age_banded": true
+      "label": "Attained Age",
+      "code": "attained_age",
+      "default": true,
+      "is_age_rated": true,
+      "is_tobacco_rated": true,
+      "is_family_code_rated": true,
+      "min_issue_age": 18,
+      "max_issue_age": 99,
+      "age_bands": [
+        {
+          "state": "default",
+          "age_bands": [
+            { "lower_age": 18, "upper_age": 24 },
+            { "lower_age": 25, "upper_age": 29 },
+            { "lower_age": 30, "upper_age": 34 },
+            { "lower_age": 35, "upper_age": 39 },
+            { "lower_age": 40, "upper_age": 44 },
+            { "lower_age": 45, "upper_age": 49 },
+            { "lower_age": 50, "upper_age": 54 },
+            { "lower_age": 55, "upper_age": 59 },
+            { "lower_age": 60, "upper_age": 64 },
+            { "lower_age": 65, "upper_age": 99 }
+          ]
+        }
+      ]
     }
   ],
   "states": [
     {
-      "uuid": "5e522d81-da4b-433f-b6d7-1e0d42357610",
       "code": "SC",
-      "effectiveDate": "2020-01-01",
-      "expiryDate": "9999-12-31"
+      "effectiveDate": "2020-01-01 00:00:00",
+      "expiryDate": "9999-12-31 00:00:00",
+      "value": "permitted"
     },
     {
-      "uuid": "6d94501b-934d-49e6-b6da-0cb490ddf610",
       "code": "NC",
-      "effectiveDate": "2021-07-01",
-      "expiryDate": "9999-12-31"
+      "effectiveDate": "2021-07-01 00:00:00",
+      "expiryDate": "9999-12-31 00:00:00",
+      "value": "permitted"
     }
   ],
   "coverages": [
     {
       "uuid": "7494db6e-aabc-4edb-b110-75264207408c",
-      "name": "base",
-      "text": "Base Critical Illness",
-      "default": true,
-      "display": "main"
+      "code": "base",
+      "label": "Base Critical Illness",
+      "ui": {
+        "section": "main",
+        "default": true
+      }
     },
     {
       "uuid": "eb5b7069-0f8b-4155-8a6b-d3fc344c7d28",
-      "name": "progressive_disease",
-      "text": "Progressive Disease Rider",
-      "display": "main",
-      "default": false
+      "code": "progressive_disease",
+      "label": "Progressive Disease Rider",
+      "ui": {
+        "section": "main",
+        "default": false
+      }
     },
     {
       "uuid": "f899c652-0a77-4b4f-aa56-6f13cfa481ea",
-      "name": "optional_benefits",
-      "text": "Optional Benefits",
-      "display": "main",
-      "default": false
+      "code": "optional_benefits",
+      "label": "Optional Benefits",
+      "ui": {
+        "section": "main",
+        "default": false
+      }
     }
   ],
   "provisions": [
     {
       "uuid": "1c120bfc-55f6-4b8b-964a-1ab745dccbbb",
-      "name": "prex",
+      "code": "prex",
       "label": "Pre-Existing Condition Limitation",
       "states": "inherit",
       "ui": {
@@ -108,28 +147,58 @@
         "default_factor_value": 1,
         "variability": [
           {
-            "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
-            "provision_value": "none",
+            "rules": [
+              {
+                "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "none"
+              }
+            ],
             "factor_value": 0.86
           },
           {
-            "uuid": "a16cb68e-554c-4d15-bc56-1d6f8fd17920",
-            "provision_value": "3/12",
+            "rules": [
+              {
+                "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "3/12"
+              }
+            ],
             "factor_value": 0.88
           },
           {
-            "uuid": "b2781d33-8fda-4e1a-b56a-4d491761e7df",
-            "provision_value": "6/6",
+            "rules": [
+              {
+                "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "6/6"
+              }
+            ],
             "factor_value": 0.92
           },
           {
-            "uuid": "325e9725-bbac-4a4e-8fea-c86180ce3fba",
-            "provision_value": "6/12",
+            "rules": [
+              {
+                "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "6/12"
+              }
+            ],
             "factor_value": 0.96
           },
           {
-            "uuid": "93d50b6c-62f0-4a52-86cf-d5a007c43452",
-            "provision_value": "12/12",
+            "rules": [
+              {
+                "uuid": "fe34cbfa-34c9-41f6-bb1a-68eb217cf92d",
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": "12/12"
+              }
+            ],
             "factor_value": 1
           }
         ]
@@ -137,7 +206,7 @@
     },
     {
       "uuid": "48df59de-068a-4983-a48a-880815c2cd2e",
-      "name": "reductionAt70",
+      "code": "reductionAt70",
       "label": "50% Reduction at Age 70",
       "states": "inherit",
       "ui": { "component": "v-switch" },
@@ -146,24 +215,34 @@
         "default_factor_value": 1,
         "variability": [
           {
-            "uuid": "7bb80882-f788-440c-a33e-03108d6db494",
-            "provision_value": true,
-            "age": {
-              "uuid": "dabb6593-71ad-48db-a86b-a39da08010cf",
-              "comparison": "range",
-              "lower": 50,
-              "upper": 59
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": true
+              },
+              {
+                "field": "age",
+                "comparison": "range",
+                "lower": 50,
+                "upper": 59
+              }
+            ],
             "factor_value": 0.92
           },
           {
-            "uuid": "dc93c64b-c1c6-486d-a645-6bef0758ac4f",
-            "provision_value": true,
-            "age": {
-              "uuid": "21649940-237e-46b9-80af-a9f2f54773ea",
-              "comparison": "ge",
-              "value": 60
-            },
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "eq",
+                "value": true
+              },
+              {
+                "field": "age",
+                "comparison": "ge",
+                "value": 60
+              }
+            ],
             "factor_value": 0.8
           }
         ]
@@ -171,7 +250,7 @@
     },
     {
       "uuid": "afe1485a-a02a-4de4-846a-d204e130f4eb",
-      "name": "group_size",
+      "code": "group_size",
       "label": "Group Size",
       "states": "inherit",
       "ui": { "component": "v-text-field", "type": "number" },
@@ -180,32 +259,35 @@
         "default_factor_value": 1,
         "variability": [
           {
-            "uuid": "162d350f-5212-4b3d-b29d-3b4c8a3958e5",
-            "factor_value": 0.96,
-            "provision_value": {
-              "uuid": "f79159f1-a4cb-4999-859f-e869b506293c",
-              "comparison": "lt",
-              "value": 500
-            }
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "lt",
+                "value": 500
+              }
+            ],
+            "factor_value": 0.96
           },
           {
-            "uuid": "0bf98444-67d0-4db0-af46-d071f9527a88",
-            "factor_value": 0.91,
-            "provision_value": {
-              "uuid": "ba4dd30b-0fad-4b36-812a-a96c79834875",
-              "comparison": "range",
-              "lower": 500,
-              "upper": 999
-            }
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "range",
+                "lower": 500,
+                "upper": 999
+              }
+            ],
+            "factor_value": 0.91
           },
           {
-            "uuid": "2c642c39-4647-4c7f-9263-6daa7f0cf063",
-            "factor_value": 0.85,
-            "provision_value": {
-              "uuid": "2eb6e6cc-443f-4c97-b666-aca94c92855f",
-              "comparison": "ge",
-              "value": 1000
-            }
+            "rules": [
+              {
+                "field": "provision_value",
+                "comparison": "ge",
+                "value": 1000
+              }
+            ],
+            "factor_value": 0.85
           }
         ]
       }
@@ -214,14 +296,16 @@
   "benefits": [
     {
       "uuid": "52b4aa5f-e342-4476-bbcc-f63b58bf18ca",
-      "name": "heart_attack",
-      "text": "Heart Attack",
-      "type": "face_amount",
+      "code": "heart_attack",
+      "label": "Heart Attack",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "base",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "c06410c4-4cb9-44d2-8dcf-74860ee7280f",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -231,23 +315,16 @@
     },
     {
       "uuid": "0ad4a980-03e1-40ae-b528-4d20951ad7f0",
-      "name": "cancer",
-      "text": "Cancer",
-      "type": "face_amount",
+      "code": "cancer",
+      "label": "Cancer",
       "coverage_code": "base",
       "plan_rate_code": "apu",
       "states": "inherit",
       "ui": {
-        "uuid": "9eb2867e-9bd1-4276-8937-00884643dd59",
-        "widget": "switch",
-        "attrs": {
-          "uuid": "ba6a29e7-c3eb-48c2-ae2d-c762daef5129",
-          "false-value": 0,
-          "true-value": 100
-        }
+        "component": "v-text-field",
+        "type": "number"
       },
       "amounts": {
-        "uuid": "93f4df52-ff04-4ca6-baf8-0b05f73f5c50",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -257,14 +334,16 @@
     },
     {
       "uuid": "d5232528-3bb6-4a25-8e48-3d84e863c520",
-      "name": "ms",
-      "text": "Multiple Sclerosis",
-      "type": "face_amount",
+      "code": "ms",
+      "label": "Multiple Sclerosis",
       "coverage_code": "progressive_disease",
       "plan_rate_code": "apu",
       "states": "inherit",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "amounts": {
-        "uuid": "3ea99652-2b9d-4c37-a64f-4744453a8293",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -274,14 +353,16 @@
     },
     {
       "uuid": "f22ab53f-673a-4545-9058-dc0f52775dcd",
-      "name": "als",
-      "text": "ALS",
-      "type": "face_amount",
+      "code": "als",
+      "label": "ALS",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "progressive_disease",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "3e2ffbba-9385-4fa6-9b04-9d216badf6f6",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -291,14 +372,16 @@
     },
     {
       "uuid": "4019d487-5931-49dc-aae7-4deefb70df33",
-      "name": "stroke",
-      "text": "Stroke",
-      "type": "face_amount",
+      "code": "stroke",
+      "label": "Stroke",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "base",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "16c22cf0-80c0-4ba6-8291-b44f17dfb414",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -308,14 +391,16 @@
     },
     {
       "uuid": "50678c3c-e8cd-4469-adad-39f73eb918dc",
-      "name": "renal_failure",
-      "text": "Renal Failure",
-      "type": "face_amount",
+      "code": "renal_failure",
+      "label": "Renal Failure",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "base",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "4fbd810f-9541-4941-85c5-8116d7ddf1b7",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -325,14 +410,16 @@
     },
     {
       "uuid": "b06d0980-81f0-4f6d-84f5-2ac664712031",
-      "name": "transplant",
-      "text": "Major Organ Transplant",
-      "type": "face_amount",
+      "code": "transplant",
+      "label": "Major Organ Transplant",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "base",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "bdb97f7b-5f1a-4c4e-a91e-5d611f16482d",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -342,14 +429,16 @@
     },
     {
       "uuid": "70679ccd-5fff-4cba-a193-213f7e2969f8",
-      "name": "parkinsons",
-      "text": "Parkinson's Disease",
-      "type": "face_amount",
+      "code": "parkinsons",
+      "label": "Parkinson's Disease",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "optional_benefits",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "da190aad-f032-4410-bcd7-69a2bd7437a4",
         "default": 100,
         "min": 0,
         "max": 100,
@@ -359,14 +448,16 @@
     },
     {
       "uuid": "6884324a-e65f-46d0-99a8-e62246b0c002",
-      "name": "alzheimers",
-      "text": "Alzheimer's Disease",
-      "type": "face_amount",
+      "code": "alzheimers",
+      "label": "Alzheimer's Disease",
+      "ui": {
+        "component": "v-text-field",
+        "type": "number"
+      },
       "coverage_code": "optional_benefits",
       "plan_rate_code": "apu",
       "states": "inherit",
       "amounts": {
-        "uuid": "ba378e98-b98c-4aa6-bd81-1ce966c01064",
         "default": 100,
         "min": 0,
         "max": 100,
