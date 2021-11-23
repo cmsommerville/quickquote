@@ -14,7 +14,7 @@
           rounded
           background-color="lightest"
           disabled
-          v-model="selected_config.product_code"
+          v-model="selections.product_code"
           label="Product"
           class="my-3"
         ></v-text-field>
@@ -111,14 +111,15 @@ export default {
     const res = await axios.get("/selections/plan", {
       params: { plan_config_id, plan_id },
     });
-    this.all_config = [...res.data.plan_config];
 
-    const selections = { ...res.data.plan };
-    if (selections.plan_id) {
-      this.selected_config = res.data.plan_config[0];
+    console.log(res.data);
+    if (!res.data.plan) {
+      this.all_config = [...res.data.plan_config];
+    } else {
+      this.selected_config = res.data.plan_config;
       this.existingQuote = true;
       this.selections = {
-        ...selections,
+        ...res.data.plan,
       };
     }
     this.loaded = true;

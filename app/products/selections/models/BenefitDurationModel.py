@@ -9,9 +9,10 @@ class BenefitDurationModel(db.Model, VersionedTable):
     benefit_duration_id = db.Column(db.Integer, primary_key=True)
     benefit_id = db.Column(db.Integer, db.ForeignKey('benefits.benefit_id'))
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
-    duration_code = db.Column(db.String(20), nullable=False)
-    duration_type = db.Column(db.String(20), nullable=False)
-    duration_value = db.Column(db.Numeric(12, 4), nullable=False)
+    duration_code = db.Column(db.String(50), nullable=False)
+    duration_data_type = db.Column(db.String(20), nullable=False)
+    duration_value = db.Column(db.String(100), nullable=False)
+    duration_factor = db.Column(db.Numeric(12, 7), nullable=False)
 
     row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
     row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')

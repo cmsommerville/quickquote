@@ -1,5 +1,5 @@
 import uuid
-from marshmallow import Schema, fields, validate, ValidationError
+from marshmallow import Schema, fields, validate, ValidationError, pre_load
 
 from ..data import constants
 from .StateSchema import Config_StateSchema
@@ -10,7 +10,7 @@ from .PlanVariationSchema import Config_PlanVariationSchema
 
 
 class Config_PlanSchema(Schema):
-    _id = fields.String(dump_only=False)
+    _id = fields.String(dump_only=True)
     code = fields.String(required=True)
     label = fields.String(required=True)
     uuid = fields.UUID(default=uuid.uuid4())
@@ -23,3 +23,9 @@ class Config_PlanSchema(Schema):
     provisions = fields.List(fields.Nested(
         Config_ProvisionSchema), required=True)
     benefits = fields.List(fields.Nested(Config_BenefitSchema))
+
+    @pre_load
+    def pre_load(self, data, *args, **kwargs):
+        if data.get('_id'):
+            data.pop('_id', data)
+        return data

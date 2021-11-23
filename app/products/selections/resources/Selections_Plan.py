@@ -26,7 +26,6 @@ class PlanSelections(Resource):
                     f"{request.url_root}config/plan/{plan_config_id}").json()
 
                 return {
-                    "plan": {},
                     "plan_config": config
                 }
 
@@ -34,7 +33,6 @@ class PlanSelections(Resource):
                 f"{request.url_root}config/plans").json()
 
             return {
-                "plan": {},
                 "plan_config": config
             }
 

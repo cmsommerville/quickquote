@@ -13,6 +13,8 @@ plan_schema = PlanSchema()
 def getAgeBands(config, variation_code, rating_state):
     variation = [var for var in config['variations']
                  if var['code'] == variation_code][0]
+    if not variation['is_age_rated']:
+        return None
     try:
         return [band for band in variation['age_bands'] if band['state'] == rating_state][0]['age_bands']
     except:

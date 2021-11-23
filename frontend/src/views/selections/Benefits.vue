@@ -61,8 +61,13 @@ export default {
             return {
               plan_id: this.plan_id,
               duration_code: dur.code,
-              duration_type: typeof dur.selectedValue,
-              duration_value: dur.selectedValue,
+              duration_data_type:
+                dur.selectedDuration &&
+                (typeof dur.selectedDuration.value ?? null),
+              duration_value:
+                dur.selectedDuration && (dur.selectedDuration.value ?? null),
+              duration_factor:
+                dur.selectedDuration && (dur.selectedDuration.factor ?? null),
             };
           });
         }

@@ -85,20 +85,22 @@ export default {
     };
   },
   async mounted() {
+    this.loaded = false;
     this.plan_config_id = this.$route.query.plan_config_id;
     this.plan_id = +this.$route.query.plan_id;
 
     const res = await axios.get("/selections/age-bands", {
       params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
     });
+
     this.plan_config = { ...res.data.plan_config };
     this.plan = { ...res.data.plan };
-
     // if plan variation is not age banded, then send default age bands
     // then redirect to the next stage
     const variation = this.plan_config.variations.find(
       (variation) => variation.code === this.plan.product_variation_code
     );
+
     if (!variation.is_age_rated) {
       await this.saveAgeBands();
     }
@@ -109,22 +111,16 @@ export default {
   computed: {},
   methods: {
     async saveAgeBands() {
-      await axios.post(
-        "/selections/age-bands",
-        {
-          age_bands: this.age_bands.map((ab) => {
-            return {
-              lower_age: ab.lower_age,
-              upper_age: ab.upper_age,
-            };
-          }),
-          plan_id: this.plan_id,
-          plan_config_id: this.plan_config_id,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("/selections/age-bands", {
+        age_bands: this.age_bands.map((ab) => {
+          return {
+            lower_age: ab.lower_age,
+            upper_age: ab.upper_age,
+          };
+        }),
+        plan_id: this.plan_id,
+        plan_config_id: this.plan_config_id,
+      });
       this.$router.push({
         name: "provisions",
         query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },

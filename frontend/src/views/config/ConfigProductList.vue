@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     async editProduct() {
-      await this.$store.dispatch("initializeConfig", this.selectedProduct._id);
+      await this.$store.dispatch("initializeConfig", this.selectedProduct);
       this.$router.push({
         name: "config-product",
         params: { productId: this.selectedProduct._id },

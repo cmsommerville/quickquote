@@ -85,6 +85,20 @@
     <div class="call-to-action d-flex justify-center align-center mt-4">
       <v-btn color="primary" class="mx-4" @click="saveProduct"> Save </v-btn>
     </div>
+
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+      class="text-uppercase font-weight-black"
+    >
+      {{ snackbar_message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="secondary" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -105,6 +119,8 @@ export default {
   },
   data() {
     return {
+      snackbar: false,
+      snackbar_message: null,
       loaded: false,
       config: null,
       label: null,
@@ -129,7 +145,11 @@ export default {
         },
       });
     },
-    saveProduct() {},
+    saveProduct() {
+      this.$store.dispatch("saveConfigToDB");
+      this.snackbar_message = "Saved to DB";
+      this.snackbar = true;
+    },
     configureProvisions() {
       this.routeToProvisionList();
     },

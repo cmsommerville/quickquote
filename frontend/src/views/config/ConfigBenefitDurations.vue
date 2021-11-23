@@ -18,45 +18,31 @@
               outlined
               label="Duration Code"
             />
-
-            <v-row>
-              <v-col :sm="ui.component === 'v-select' ? 9 : 12">
-                <v-select
-                  v-model="ui.component"
-                  filled
-                  outlined
-                  label="Component Type"
-                  :items="componentTypes"
-                  item-text="label"
-                  item-value="code"
-                />
-              </v-col>
-              <v-col v-if="ui.component === 'v-select'" sm="3">
-                <app-modal-list-form
-                  v-if="ui.component === 'v-select'"
-                  title="Select Options"
-                  :schema="[
-                    { code: 'text', label: 'Label' },
-                    { code: 'value', label: 'Value' },
-                    { code: 'factor', label: 'Factor' },
-                  ]"
-                  @submit:list-data="selectListItemsHandler"
-                  class="ma-2"
-                >
-                  <v-icon>mdi-pencil-outline</v-icon>
-                </app-modal-list-form>
-              </v-col>
-            </v-row>
-
+            <div class="d-flex justify-center">
+              <app-modal-list-form
+                v-if="component === 'v-select'"
+                title="Select Options"
+                :schema="[
+                  { code: 'label', label: 'Label' },
+                  { code: 'value', label: 'Value' },
+                  { code: 'factor', label: 'Factor' },
+                ]"
+                :inputData="items"
+                @submit:list-data="selectListItemsHandler"
+              >
+                Add Durations
+              </app-modal-list-form>
+            </div>
             <v-select
-              v-if="ui.component === 'v-text-field'"
-              v-model="ui.type"
+              v-model="defaultValue"
+              :disabled="items.length === 0"
+              :items="items"
+              item-text="label"
+              item-value="value"
+              class="mt-6"
               filled
               outlined
-              label="Input Type"
-              :items="inputTypes"
-              item-text="label"
-              item-value="code"
+              label="Duration Default"
             />
           </v-form>
         </v-col>
@@ -97,7 +83,9 @@ export default {
       loaded: false,
       label: null,
       code: null,
-      ui: null,
+      defaultValue: null,
+      items: null,
+      component: "v-select",
       componentTypes: [...COMPONENT_TYPES],
       inputTypes: [...INPUT_TYPES],
     };
@@ -105,17 +93,18 @@ export default {
   async mounted() {
     this.loaded = false;
     const bnft = this.$store.getters.getBenefitConfig;
-    this.label = (bnft.durations && bnft.durations.label) ?? null;
-    this.code = (bnft.durations && bnft.durations.code) ?? null;
-    this.ui =
-      bnft.durations && bnft.durations.ui
-        ? { ...bnft.durations.ui }
-        : { component: null };
+    const dur = bnft.durations[0];
+    if (dur) {
+      this.label = dur.label ?? null;
+      this.code = dur.code ?? null;
+      this.default = dur.default ?? null;
+      this.items = [...dur.items] ?? [];
+    }
     this.loaded = true;
   },
   methods: {
     selectListItemsHandler(payload) {
-      this.ui.items = [...payload];
+      this.items = [...payload];
     },
     routeToBenefit(route) {
       if (this.$route.query.code) {
@@ -134,11 +123,15 @@ export default {
     saveHandler() {
       this.$store.commit("SET_NEW_BENEFIT", {
         ...this.$store.getters.getBenefitConfig,
-        duration: {
-          code: this.code,
-          label: this.label,
-          ui: { ...this.ui },
-        },
+        durations: [
+          {
+            code: this.code,
+            label: this.label,
+            default: this.defaultValue,
+            items: this.items,
+            component: this.component,
+          },
+        ],
       });
       this.routeToBenefit("config-benefit");
     },

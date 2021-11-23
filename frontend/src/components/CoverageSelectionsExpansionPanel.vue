@@ -43,6 +43,7 @@
             @change="setValue"
             item-text="label"
             item-value="value"
+            return-object
             outlined
             dense
             rounded
@@ -103,6 +104,12 @@ export default {
     toggleCoverage() {
       this.benefits.map((bnft) => {
         bnft.selectedValue = this.selected ? bnft.amounts.default : 0;
+        if (bnft.durations) {
+          for (const dur of bnft.durations) {
+            const def = dur.items.find((item) => item.value === dur.default);
+            dur.selectedDuration = this.selected ? def : null;
+          }
+        }
       });
       this.setValue();
     },

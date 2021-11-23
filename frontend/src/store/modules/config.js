@@ -57,6 +57,12 @@ export const config = {
       };
     },
 
+    APPEND_ALL_BENEFITS(state) {
+      state.config = {
+        ...state.config,
+        benefits: [...state.benefits],
+      };
+    },
     SET_BENEFITS(state, payload) {
       state.benefits = [...payload];
     },
@@ -80,12 +86,14 @@ export const config = {
     },
   },
   actions: {
-    async initializeConfig({ commit }, productId) {
-      const res = await axios.get(`/config/plan/${productId}`);
+    initializeConfig({ commit }, config) {
       commit("RESET_CONFIG");
-      commit("SET_CONFIG", { ...res.data[0] });
-      commit("SET_PROVISIONS", [...res.data[0].provisions]);
-      commit("SET_BENEFITS", [...res.data[0].benefits]);
+      commit("SET_CONFIG", { ...config });
+      commit("SET_PROVISIONS", [...config.provisions]);
+      commit("SET_BENEFITS", [...config.benefits]);
+    },
+    async saveConfigToDB({ state }) {
+      axios.put(`/config/plan/${state.config._id}`, state.config);
     },
     addNewProvisionToList({ commit }) {
       commit("APPEND_NEW_PROVISION");

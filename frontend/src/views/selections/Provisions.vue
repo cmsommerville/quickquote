@@ -57,6 +57,7 @@ export default {
     },
   },
   async mounted() {
+    this.loaded = false;
     this.plan_config_id = this.$route.query.plan_config_id;
     const res = await axios.get(`/config/plan/${this.plan_config_id}`);
     this.plan_id = +this.$route.query.plan_id;

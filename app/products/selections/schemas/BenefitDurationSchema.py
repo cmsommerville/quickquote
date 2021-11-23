@@ -1,18 +1,15 @@
 import decimal
 from marshmallow import post_dump
-from marshmallow_sqlalchemy.fields import Nested
 from app.extensions import ma
-from ..models.BenefitModel import BenefitModel
-from .BenefitDurationSchema import BenefitDurationSchema
+from ..models.BenefitDurationModel import BenefitDurationModel
 
 
-class BenefitSchema(ma.SQLAlchemyAutoSchema):
+class BenefitDurationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = BenefitModel
+        model = BenefitDurationModel
         load_instance = True
+        include_relationships = True
         include_fk = True
-
-    durations = Nested(BenefitDurationSchema, many=True)
 
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):
