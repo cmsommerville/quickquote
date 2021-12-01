@@ -39,12 +39,13 @@ def create_app(config):
     db.event.listen(db.session, "before_flush", expire_old_records)
 
     from .products.admin import CreateTables, SessionData
-    from .products.config import PlanConfig, PlanConfigList
+    from .products.config import PlanConfig, PlanConfigList, Resource_PlanConfig
     from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList, BenefitResource, PlanSearch
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
 
+    api.add_resource(Resource_PlanConfig, '/test/plan/<id>')
     api.add_resource(PlanConfigList, '/config/plans')
     api.add_resource(PlanConfig, '/config/plan/<id>')
     api.add_resource(RateTableList, '/config/rate-table')

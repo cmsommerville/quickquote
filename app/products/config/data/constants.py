@@ -12,8 +12,15 @@ STATE_CODES = [
     "AK", "AL", "AZ", "AR", "CA", "NC", "SC"
 ]
 
-STATE_APPLICABILITY_VALUES = [
+APPLICABILITY_VALUES = [
     "prohibited", "mandatory", "permitted"
+]
+
+QUOTING_ACCESS_LEVELS = [
+    {"level": 100, "code": "hidden"},
+    {"level": 200, "code": "disabled"},
+    {"level": 300, "code": "underwritten"},
+    {"level": 400, "code": "permitted"}
 ]
 
 OPERATOR_CODES = [

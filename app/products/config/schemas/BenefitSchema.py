@@ -7,25 +7,13 @@ from .StateSchema import Config_StateListOrInheritSchema
 from .UISchema import UI_Component
 
 
-class Config_BenefitRangeAmountsSchema(Schema):
+class Config_BenefitAmountsSchema(Schema):
     default = fields.Float(required=True)
     min = fields.Float(required=True)
     max = fields.Float(required=True)
     step = fields.Float(required=True)
     unit = fields.String(
         required=True, validate=validate.OneOf(['dollar', 'percent']))
-
-    # "duration": {
-    #     "default": 30,
-    #     "component": "v-select",
-    #     "code": "hosp_confinement_days",
-    #     "outlined": true,
-    #     "label": "Confinement Days",
-    #     "items": [
-    #         {"value": 30, "label": 30, "factor": 1},
-    #         {"value": 365, "label": 365, "factor": 1.47}
-    #     ]
-    # },
 
 
 class Config_BenefitDurationItemsSchema(Schema):
@@ -56,7 +44,7 @@ class Config_BenefitSchema(Schema):
     ui = UI_Component(required=True)
     coverage_code = fields.String(required=True)
     plan_rate_code = fields.String(required=True)
-    amounts = fields.Nested(Config_BenefitRangeAmountsSchema, required=True)
+    amounts = fields.Nested(Config_BenefitAmountsSchema, required=True)
     durations = fields.List(fields.Nested(
         Config_BenefitDurationSchema), required=False)
     states = Config_StateListOrInheritSchema(required=False)

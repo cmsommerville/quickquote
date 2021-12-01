@@ -7,7 +7,7 @@ class Config_StateSchema(Schema):
     code = fields.String(
         required=True, validate=validate.OneOf(constants.STATE_CODES))
     value = fields.String(required=True, validate=validate.OneOf(
-        constants.STATE_APPLICABILITY_VALUES))
+        constants.APPLICABILITY_VALUES))
     effectiveDate = fields.DateTime(required=False)
     expiryDate = fields.DateTime(required=False)
 
