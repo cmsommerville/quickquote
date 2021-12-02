@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES
 from .Config_States import REF_STATE, Model_RefStates
@@ -24,8 +24,11 @@ class Model_RefProduct(BaseModel):
         return cls.query.filter(cls.product_code == code).first()
 
 
-class Model_ConfigPlan(BaseVersionedModel):
+class Model_ConfigPlan(BaseModel):
     __tablename__ = CONFIG_PLAN
+    __table_args__ = {
+        "info": {"nk": ["product_code"]}
+    }
 
     plan_id = db.Column(db.Integer, primary_key=True)
     product_code = db.Column(
@@ -35,23 +38,11 @@ class Model_ConfigPlan(BaseVersionedModel):
 
     product = db.relationship("Model_RefProduct")
     plan_variations = db.relationship(
-        "Model_ConfigPlanVariations", back_populates="plan",
-        primaryjoin="""and_(
-            Model_ConfigPlan.plan_id == Model_ConfigPlanVariations.plan_id,
-            Model_ConfigPlanVariations.active_record_indicator == 'Y'
-        )""")
+        "Model_ConfigPlanVariations", back_populates="plan")
     coverages = db.relationship(
-        "Model_ConfigCoverage", back_populates="plan",
-        primaryjoin="""and_(
-            Model_ConfigPlan.plan_id == Model_ConfigCoverage.plan_id,
-            Model_ConfigCoverage.active_record_indicator == 'Y'
-        )""")
+        "Model_ConfigCoverage", back_populates="plan")
     provisions = db.relationship(
-        "Model_ConfigProvision", back_populates="plan",
-        primaryjoin="""and_(
-            Model_ConfigPlan.plan_id == Model_ConfigProvision.plan_id,
-            Model_ConfigProvision.active_record_indicator == 'Y'
-        )""")
+        "Model_ConfigProvision", back_populates="plan")
 
     def __repr__(self):
         return f"<Plan Id: {self.plan_id}>"
@@ -65,7 +56,7 @@ class Model_ConfigPlan(BaseVersionedModel):
         return cls.query.filter(cls.plan_id == id)
 
 
-class Model_ConfigPlanStateAvailability(BaseVersionedModel):
+class Model_ConfigPlanStateAvailability(BaseModel):
     __tablename__ = CONFIG_PLAN_STATE_AVAILABILITY
 
     plan_state_availability_id = db.Column(db.Integer, primary_key=True)

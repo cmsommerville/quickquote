@@ -21,6 +21,7 @@ pytest = "*"
 ariadne = "*"
 typing = "*"
 requests = "*"
+pyodbc = "*"
 
 [dev-packages]
 

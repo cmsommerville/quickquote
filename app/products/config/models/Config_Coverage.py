@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import between
 from sqlalchemy.orm import aliased
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES, COVERAGE_SECTION_DEFAULT
 from .Config_States import Model_RefStates
@@ -28,7 +28,7 @@ class Model_RefCoverage(BaseModel):
         return cls.query.filter(cls.coverage_code == code).first()
 
 
-class Model_ConfigCoverage(BaseVersionedModel):
+class Model_ConfigCoverage(BaseModel):
     __tablename__ = CONFIG_COVERAGE
 
     coverage_id = db.Column(db.Integer, primary_key=True)
@@ -42,16 +42,8 @@ class Model_ConfigCoverage(BaseVersionedModel):
     plan = db.relationship(
         "Model_ConfigPlan", back_populates="coverages")
     coverage = db.relationship("Model_RefCoverage")
-    states = db.relationship("Model_ConfigCoverageStateAvailability", back_populates="coverage",
-                             primaryjoin="""and_(
-                                 Model_ConfigCoverage.coverage_id == Model_ConfigCoverageStateAvailability.coverage_id,
-                                 Model_ConfigCoverageStateAvailability.active_record_indicator == 'Y'
-                                )""")
-    benefits = db.relationship("Model_ConfigBenefit", back_populates="coverage",
-                               primaryjoin="""and_(
-                                 Model_ConfigCoverage.coverage_id == Model_ConfigBenefit.coverage_id,
-                                 Model_ConfigBenefit.active_record_indicator == 'Y'
-                                )""")
+    states = db.relationship("Model_ConfigCoverageStateAvailability", back_populates="coverage")
+    benefits = db.relationship("Model_ConfigBenefit", back_populates="coverage")
 
     def __repr__(self):
         return f"<Coverage Id: {self.coverage_id}>"
@@ -86,7 +78,7 @@ class Model_ConfigCoverage(BaseVersionedModel):
         return qry_coverage.all()
 
 
-class Model_ConfigCoverageStateAvailability(BaseVersionedModel):
+class Model_ConfigCoverageStateAvailability(BaseModel):
     __tablename__ = CONFIG_COVERAGE_STATE_AVAILABILITY
 
     coverage_state_availability_id = db.Column(db.Integer, primary_key=True)

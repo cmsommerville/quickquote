@@ -1,8 +1,9 @@
 from app.extensions import db
+from app.shared import BaseModel
 import datetime
 
 
-class RateTableModel(db.Model):
+class RateTableModel(BaseModel):
     __tablename__ = "rate_table"
 
     rate_table_id = db.Column(db.Integer, primary_key=True)
@@ -14,9 +15,6 @@ class RateTableModel(db.Model):
     benefit_code = db.Column(db.String(20), nullable=False)
     annual_rate_per_unit = db.Column(db.Numeric(12, 5))
     unit_value = db.Column(db.Numeric(12, 5))
-
-    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     __table_args__ = (db.UniqueConstraint(
         'product_code', 'product_variation_code', 'benefit_code',
@@ -43,14 +41,3 @@ class RateTableModel(db.Model):
             cls.product_code == product_code,
             cls.product_variation_code == product_variation_code,
             cls.benefit_code.in_(benefit_codes)).all()
-
-    @classmethod
-    def save_all_to_db(cls, rates):
-        try:
-            for rate in rates:
-                db.session.add(rate)
-        except:
-            db.session.rollback()
-            raise
-        else:
-            db.session.commit()

@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import between
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES
 
@@ -29,7 +29,7 @@ class Model_RefProvision(BaseModel):
         return cls.query.filter(cls.provision_code == code).first()
 
 
-class Model_ConfigProvision(BaseVersionedModel):
+class Model_ConfigProvision(BaseModel):
     __tablename__ = CONFIG_PROVISION
 
     provision_id = db.Column(db.Integer, primary_key=True)
@@ -44,18 +44,9 @@ class Model_ConfigProvision(BaseVersionedModel):
         "Model_ConfigPlan", back_populates="provisions")
     provision = db.relationship("Model_RefProvision")
     states = db.relationship(
-        "Model_ConfigProvisionStateAvailability", back_populates="provision",
-        primaryjoin="""and_(
-            Model_ConfigProvision.provision_id == Model_ConfigProvisionStateAvailability.provision_id,
-            Model_ConfigProvisionStateAvailability.active_record_indicator == 'Y'
-        )""", lazy="joined")
-
+        "Model_ConfigProvisionStateAvailability", back_populates="provision")
     factors = db.relationship(
-        "Model_ConfigFactor", back_populates="provision",
-        primaryjoin="""and_(
-            Model_ConfigProvision.provision_id == Model_ConfigFactor.provision_id,
-            Model_ConfigFactor.active_record_indicator == 'Y'
-        )""", lazy="joined")
+        "Model_ConfigFactor", back_populates="provision")
 
     def __repr__(self):
         return f"<Provision Id: {self.provision_id}>"
@@ -65,7 +56,7 @@ class Model_ConfigProvision(BaseVersionedModel):
         return cls.query.filter(cls.provision_id == id).first()
 
 
-class Model_ConfigProvisionStateAvailability(BaseVersionedModel):
+class Model_ConfigProvisionStateAvailability(BaseModel):
     __tablename__ = CONFIG_PROVISION_STATE_AVAILABILITY
 
     provision_state_availability_id = db.Column(db.Integer, primary_key=True)
@@ -133,13 +124,13 @@ class Model_RefTextFieldTypes(BaseModel):
         return cls.query.filter(cls.type_code == type).first()
 
 
-class Model_ConfigProvisionUIComponent(BaseVersionedModel):
+class Model_ConfigProvisionUIComponent(BaseModel):
     __tablename__ = CONFIG_PROVISION_UI_COMPONENT
 
     ui_component_id = db.Column(db.Integer, primary_key=True)
     component_type = db.Column(
-        db.String(2), db.ForeignKey(f"{REF_COMPONENT_TYPES}.component_type"))
-    label = db.Column(db.String)
+        db.String(50), db.ForeignKey(f"{REF_COMPONENT_TYPES}.component_type"))
+    ui_label = db.Column(db.String)
 
     __mapper_args__ = {
         'polymorphic_identity': 'base_component',
@@ -197,7 +188,7 @@ class Model_ConfigProvisionUIComponent_SelectField(Model_ConfigProvisionUICompon
     }
 
 
-class Model_ConfigProvisionUIComponent_SelectItemField(BaseVersionedModel):
+class Model_ConfigProvisionUIComponent_SelectItemField(BaseModel):
     __tablename__ = f"{CONFIG_PROVISION_UI_COMPONENT}__select_items"
 
     ui_component_item_id = db.Column(db.Integer, primary_key=True)

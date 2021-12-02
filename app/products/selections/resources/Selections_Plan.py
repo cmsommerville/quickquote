@@ -4,7 +4,6 @@ from flask_restful import Resource
 
 from ..models.PlanModel import PlanModel
 from ..schemas.PlanSchema import PlanSchema
-from ...config import Config_PlanSchema
 
 # from app.data.policy import policy
 

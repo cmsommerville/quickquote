@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import between
 from sqlalchemy.ext.hybrid import hybrid_method
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES, FACTOR_DECIMAL_PRECISION
 from .Config_States import Model_RefStates
@@ -77,7 +77,7 @@ class Model_RefBenefitDurationItems(BaseModel):
         return cls.query.filter(cls.item_code == code).first()
 
 
-class Model_ConfigBenefit(BaseVersionedModel):
+class Model_ConfigBenefit(BaseModel):
     __tablename__ = CONFIG_BENEFIT
 
     benefit_id = db.Column(db.Integer, primary_key=True)
@@ -96,11 +96,7 @@ class Model_ConfigBenefit(BaseVersionedModel):
     coverage = db.relationship(
         "Model_ConfigCoverage", back_populates="benefits")
     benefit = db.relationship("Model_RefBenefit")
-    states = db.relationship("Model_ConfigBenefitStateAvailability", back_populates="benefit",
-                             primaryjoin="""and_(
-                                 Model_ConfigBenefit.benefit_id == Model_ConfigBenefitStateAvailability.benefit_id,
-                                 Model_ConfigBenefitStateAvailability.active_record_indicator == 'Y'
-                                )""")
+    states = db.relationship("Model_ConfigBenefitStateAvailability", back_populates="benefit")
 
     @hybrid_method
     def check_valid_state(
@@ -121,7 +117,7 @@ class Model_ConfigBenefit(BaseVersionedModel):
         return cls.query.filter(cls.benefit_id == id).first()
 
 
-class Model_ConfigBenefitStateAvailability(BaseVersionedModel):
+class Model_ConfigBenefitStateAvailability(BaseModel):
     __tablename__ = CONFIG_BENEFIT_STATE_AVAILABILITY
 
     benefit_state_availability_id = db.Column(db.Integer, primary_key=True)
@@ -139,11 +135,7 @@ class Model_ConfigBenefitStateAvailability(BaseVersionedModel):
 
     benefit = db.relationship("Model_ConfigBenefit", back_populates="states")
     durations = db.relationship(
-        "Model_ConfigBenefitDuration", back_populates="benefit", lazy="joined",
-        primaryjoin="""and_(
-            Model_ConfigBenefitStateAvailability.benefit_state_availability_id == Model_ConfigBenefitDuration.benefit_state_availability_id,
-            Model_ConfigBenefitDuration.active_record_indicator == 'Y'
-        )""")
+        "Model_ConfigBenefitDuration", back_populates="benefit", lazy="joined")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id} - State: {self.state_code}>"
@@ -186,23 +178,19 @@ class Model_ConfigBenefitStateAvailability(BaseVersionedModel):
         return qry.all()
 
 
-class Model_ConfigBenefitDuration(BaseVersionedModel):
+class Model_ConfigBenefitDuration(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION
 
     benefit_duration_id = db.Column(db.Integer, primary_key=True)
     benefit_state_availability_id = db.Column(db.Integer, db.ForeignKey(
         f"{CONFIG_BENEFIT_STATE_AVAILABILITY}.benefit_state_availability_id"))
     benefit_duration_code = db.Column(
-        db.String(2), db.ForeignKey(f"{REF_BENEFIT_DURATION}.duration_code"))
+        db.String(30), db.ForeignKey(f"{REF_BENEFIT_DURATION}.duration_code"))
 
     benefit = db.relationship("Model_ConfigBenefitStateAvailability",
                               back_populates="durations")
     duration_items = db.relationship(
-        "Model_ConfigBenefitDurationItems", back_populates="duration", lazy="joined",
-        primaryjoin="""and_(
-            Model_ConfigBenefitDuration.benefit_duration_id == Model_ConfigBenefitDurationItems.benefit_duration_id,
-            Model_ConfigBenefitDurationItems.active_record_indicator == 'Y'
-        )""")
+        "Model_ConfigBenefitDurationItems", back_populates="duration", lazy="joined")
 
     def __repr__(self):
         return f"<Benefit Duration Id: {self.benefit_duration_id}>"
@@ -212,24 +200,20 @@ class Model_ConfigBenefitDuration(BaseVersionedModel):
         return cls.query.filter(cls.benefit_duration_id == id).first()
 
 
-class Model_ConfigBenefitDurationItems(BaseVersionedModel):
+class Model_ConfigBenefitDurationItems(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION_ITEMS
 
     benefit_duration_item_id = db.Column(db.Integer, primary_key=True)
     benefit_duration_id = db.Column(db.Integer, db.ForeignKey(
         f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"), nullable=False)
     item_code = db.Column(
-        db.String(2), db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
+        db.String(30), db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
     benefit_duration_factor = db.Column(
         db.Numeric(FACTOR_DECIMAL_PRECISION), nullable=False)
 
     duration = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="duration_items")
-    states = db.relationship("Model_ConfigBenefitDurationItemStateAvailability", back_populates="duration_item",
-                             primaryjoin="""and_(
-                                 Model_ConfigBenefitDurationItems.benefit_duration_item_id == Model_ConfigBenefitDurationItemStateAvailability.benefit_duration_item_id,
-                                 Model_ConfigBenefitDurationItemStateAvailability.active_record_indicator == 'Y'
-                                )""")
+    states = db.relationship("Model_ConfigBenefitDurationItemStateAvailability", back_populates="duration_item")
 
     def __repr__(self):
         return f"<Benefit Duration Item Id: {self.benefit_duration_item_id}>"
@@ -239,7 +223,7 @@ class Model_ConfigBenefitDurationItems(BaseVersionedModel):
         return cls.query.filter(cls.benefit_duration_item_id == id).first()
 
 
-class Model_ConfigBenefitDurationItemStateAvailability(BaseVersionedModel):
+class Model_ConfigBenefitDurationItemStateAvailability(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY
 
     benefit_duration_item_state_availability_id = db.Column(

@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import between
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES
 from .Config_States import REF_STATE, Model_RefStates
@@ -44,7 +44,7 @@ class Model_RefRatingAlgorithm(BaseModel):
         return cls.query.filter(cls.rating_algorithm_code == code).first()
 
 
-class Model_ConfigPlanVariations(BaseVersionedModel):
+class Model_ConfigPlanVariations(BaseModel):
     __tablename__ = CONFIG_PLAN_VARIATIONS
 
     plan_variation_id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +64,7 @@ class Model_ConfigPlanVariations(BaseVersionedModel):
     max_issue_age = db.Column(db.Integer)
 
     plan_variation = db.relationship("Model_RefPlanVariations")
+    rating_algorithm = db.relationship("Model_RefRatingAlgorithm")
     plan = db.relationship(
         "Model_ConfigPlan", back_populates="plan_variations")
     age_band_sets = db.relationship(
@@ -77,7 +78,7 @@ class Model_ConfigPlanVariations(BaseVersionedModel):
         return cls.query.filter(cls.plan_variation_id == id).first()
 
 
-class Model_ConfigAgeBandsSet(BaseVersionedModel):
+class Model_ConfigAgeBandsSet(BaseModel):
     __tablename__ = CONFIG_AGE_BANDS_SET
 
     age_band_set_id = db.Column(db.Integer, primary_key=True)
@@ -110,7 +111,7 @@ class Model_ConfigAgeBandsSet(BaseVersionedModel):
         return cls.query.filter(cls.age_band_set_id == id).first()
 
 
-class Model_ConfigAgeBands(BaseVersionedModel):
+class Model_ConfigAgeBands(BaseModel):
     __tablename__ = CONFIG_AGE_BANDS
 
     age_band_id = db.Column(db.Integer, primary_key=True)

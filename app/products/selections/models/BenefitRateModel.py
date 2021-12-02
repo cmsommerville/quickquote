@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.shared import VersionedTable
+from app.shared import BaseModel
 import datetime
 from sqlalchemy import func
 
@@ -7,25 +7,18 @@ from .RateTableModel import RateTableModel
 from .AgeBandsModel import AgeBandsModel
 
 
-class BenefitRateModel(db.Model):
-    __tablename__ = "benefit_rates"
+class BenefitRateModel(BaseModel):
+    __tablename__ = "selections_benefit_rates"
 
     benefit_rate_id = db.Column(db.Integer, primary_key=True)
-    benefit_id = db.Column(db.Integer, db.ForeignKey('benefits.benefit_id'))
-    plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'))
+    benefit_id = db.Column(db.Integer, db.ForeignKey('selections_benefits.benefit_id'))
+    plan_id = db.Column(db.Integer, db.ForeignKey('selections_plans.plan_id'))
     plan_rate_id = db.Column(
-        db.Integer, db.ForeignKey('plan_rates.plan_rate_id'))
-    age_band_id = db.Column(db.Integer, db.ForeignKey('age_bands.age_band_id'))
+        db.Integer, db.ForeignKey('selections_plan_rates.plan_rate_id'))
+    age_band_id = db.Column(db.Integer, db.ForeignKey('selections_age_bands.age_band_id'))
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
     benefit_rate_premium = db.Column(db.Numeric(12, 5))
-
-    row_eff_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    row_exp_dts = db.Column(db.DateTime, default='9999-12-31 00:00:00.000')
-    active_record_indicator = db.Column(db.String(1), default='Y')
-
-    created_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_dts = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     plan = db.relationship("PlanModel")
     benefit = db.relationship("BenefitModel", back_populates="benefit_rates")
@@ -33,8 +26,7 @@ class BenefitRateModel(db.Model):
     plan_rate = db.relationship(
         "PlanRateModel", back_populates="benefit_rates")
     benefit_age_rates = db.relationship(
-        "BenefitAgeRateModel", back_populates="benefit_rate",
-        primaryjoin="and_(BenefitRateModel.benefit_rate_id == BenefitAgeRateModel.benefit_rate_id, BenefitAgeRateModel.active_record_indicator == 'Y')")
+        "BenefitAgeRateModel", back_populates="benefit_rate")
 
     def __repr__(self):
         return f"<Benefit Rate Id: {self.benefit_rate_id}>"
@@ -62,27 +54,6 @@ class BenefitRateModel(db.Model):
                 cls.plan_id, cls.benefit_id, cls.age_band_id,
                 cls.smoker_status, cls.family_code)
         return qry.all()
-
-    def save_to_db(self):
-        try:
-            db.session.add(self)
-        except:
-            db.session.rollback()
-            raise
-        else:
-            db.session.commit()
-
-    @classmethod
-    def save_all_to_db(cls, benefit_rates):
-        try:
-            for benefit_rate in benefit_rates:
-                db.session.add(benefit_rate)
-            # db.session.bulk_save_objects(benefit_rates)
-        except:
-            db.session.rollback()
-            raise
-        else:
-            db.session.commit()
 
     @classmethod
     def delete_by_benefit_id(cls, benefit_id, commit=False):

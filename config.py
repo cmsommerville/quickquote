@@ -1,7 +1,17 @@
 import os
+import urllib
 from dotenv import load_dotenv
 
 load_dotenv()
+
+SQL_SERVER_CONNECTION_STRING = "Server={SERVER};Database={DB};UID={UID};PWD={PWD};"
+SQL_SERVER_CONNECTION_STRING = "Driver={ODBC Driver 17 for SQL Server};" + SQL_SERVER_CONNECTION_STRING.format(**{
+    "SERVER": os.getenv('DEV_DATABASE_SERVER'), 
+    "DB": os.getenv('DEV_DATABASE_DB'), 
+    "UID": os.getenv('DEV_DATABASE_UID'),
+    "PWD": os.getenv('DEV_DATABASE_PWD')
+})
+params = urllib.parse.quote_plus(SQL_SERVER_CONNECTION_STRING)
 
 
 class BaseConfig():
@@ -12,7 +22,7 @@ class BaseConfig():
 
 class DevConfig(BaseConfig):
     MONGO_URI = os.getenv("DEV_MONGO_URI")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DEV_SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = "mssql+pyodbc:///?odbc_connect=%s" % params
     SESSION_TYPE = os.getenv("SESSION_TYPE")
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"

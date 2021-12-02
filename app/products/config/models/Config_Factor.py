@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import between
 from app.extensions import db
-from app.shared import BaseVersionedModel, BaseModel
+from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES, FACTOR_DECIMAL_PRECISION
 
@@ -29,7 +29,7 @@ class Model_RefInterpolationRule(BaseModel):
         return cls.query.filter(cls.interpolation_rule_code == code).first()
 
 
-class Model_ConfigFactor(BaseVersionedModel):
+class Model_ConfigFactor(BaseModel):
     __tablename__ = CONFIG_FACTOR
 
     factor_id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +59,7 @@ class Model_ConfigFactor(BaseVersionedModel):
 class Model_RefComparisonOperator(BaseModel):
     __tablename__ = REF_COMPARISON_OPERATOR
 
-    comparison_operator_code = db.Column(db.String(30), primary_key=True)
+    comparison_operator_code = db.Column(db.String(10), primary_key=True)
     comparison_operator_label = db.Column(db.String(100))
     comparison_operator_symbol = db.Column(db.String(100))
 
@@ -71,7 +71,7 @@ class Model_RefComparisonOperator(BaseModel):
         return cls.query.filter(cls.comparison_operator_code == code).first()
 
 
-class Model_ConfigFactorRule(BaseVersionedModel):
+class Model_ConfigFactorRule(BaseModel):
     __tablename__ = CONFIG_FACTOR_RULE
 
     factor_rule_id = db.Column(db.Integer, primary_key=True)
@@ -92,7 +92,7 @@ class Model_ConfigFactorRule(BaseVersionedModel):
         return cls.query.filter(cls.factor_rule_id == id).first()
 
 
-class Model_ConfigBenefitFactorApplicability(BaseVersionedModel):
+class Model_ConfigBenefitFactorApplicability(BaseModel):
     __tablename__ = CONFIG_BENEFIT_FACTOR_APPLICABILITY
 
     benefit_id = db.Column(db.ForeignKey(

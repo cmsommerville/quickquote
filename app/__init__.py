@@ -8,7 +8,6 @@ from ariadne import load_schema_from_path, make_executable_schema, graphql_sync,
 from ariadne.constants import PLAYGROUND_HTML
 
 from app.extensions import db, mongo, ma, sess
-from app.shared import expire_old_records
 from app.graphql.queries import listProducts_resolver
 
 load_dotenv()
@@ -33,21 +32,18 @@ def create_app(config):
     mongo.init_app(app)
     app.config["SESSION_SQLALCHEMY"] = db
 
-    sess.init_app(app)
+    # sess.init_app(app)
     api = Api(app)
 
-    db.event.listen(db.session, "before_flush", expire_old_records)
-
     from .products.admin import CreateTables, SessionData
-    from .products.config import PlanConfig, PlanConfigList, Resource_PlanConfig
+    from .products.config import Resource_PlanConfig, Resource_PlanVariationConfig
     from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList, BenefitResource, PlanSearch
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
 
-    api.add_resource(Resource_PlanConfig, '/test/plan/<id>')
-    api.add_resource(PlanConfigList, '/config/plans')
-    api.add_resource(PlanConfig, '/config/plan/<id>')
+    api.add_resource(Resource_PlanConfig, '/config/plan')
+    api.add_resource(Resource_PlanVariationConfig, '/config/plan-variations')
     api.add_resource(RateTableList, '/config/rate-table')
 
     api.add_resource(PlanSelections, '/selections/plan')
