@@ -1,7 +1,5 @@
-import datetime
-from sqlalchemy import between
 from app.extensions import db
-from app.shared import BaseModel, BaseModel
+from app.shared import BaseModel
 
 from .constants import TBL_NAMES, FACTOR_DECIMAL_PRECISION
 
@@ -31,10 +29,12 @@ class Model_RefInterpolationRule(BaseModel):
 
 class Model_ConfigFactor(BaseModel):
     __tablename__ = CONFIG_FACTOR
+    __table_args__ = (
+        db.UniqueConstraint('provision_id'),
+    )
 
     factor_id = db.Column(db.Integer, primary_key=True)
-    provision_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_PROVISION}.provision_id"), nullable=False)
+    provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"), nullable=False)
     factor_value = db.Column(db.Numeric(
         FACTOR_DECIMAL_PRECISION), nullable=False)
     factor_priority = db.Column(db.Integer, nullable=False)
@@ -73,10 +73,13 @@ class Model_RefComparisonOperator(BaseModel):
 
 class Model_ConfigFactorRule(BaseModel):
     __tablename__ = CONFIG_FACTOR_RULE
+    __table_args__ = (
+        db.UniqueConstraint('factor_id', 'factor_rule_priority'),
+    )
 
     factor_rule_id = db.Column(db.Integer, primary_key=True)
-    factor_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_FACTOR}.factor_id"))
+    factor_id = db.Column(db.ForeignKey(f"{CONFIG_FACTOR}.factor_id"), nullable=False)
+    factor_rule_priority=db.Column(db.Integer, nullable=False)
     class_name = db.Column(db.String(100), nullable=False)
     field_name = db.Column(db.String(100), nullable=False)
     comparison_operator_code = db.Column(db.String(10), db.ForeignKey(

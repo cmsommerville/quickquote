@@ -1,2 +1,2 @@
-from .Config_Plan import *
-from .Config_PlanVariations import *
+from .Config_Product import *
+from .Config_ProductVariations import *

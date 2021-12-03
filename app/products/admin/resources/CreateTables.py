@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from app.extensions import db
 
-from ..handlers.versioning_handlers import alter_versioned_table, drop_history_table, toggle_system_versioning
+from ..handlers.versioning_handlers import alter_versioned_table, drop_history_table
 
 class CreateTables(Resource):
 

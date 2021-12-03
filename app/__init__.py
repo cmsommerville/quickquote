@@ -36,14 +36,14 @@ def create_app(config):
     api = Api(app)
 
     from .products.admin import CreateTables, SessionData
-    from .products.config import Resource_PlanConfig, Resource_PlanVariationConfig
+    from .products.config import Resource_ProductConfig, Resource_ProductVariationConfig
     from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList, BenefitResource, PlanSearch
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
 
-    api.add_resource(Resource_PlanConfig, '/config/plan')
-    api.add_resource(Resource_PlanVariationConfig, '/config/plan-variations')
+    api.add_resource(Resource_ProductConfig, '/config/product')
+    api.add_resource(Resource_ProductVariationConfig, '/config/product-variations')
     api.add_resource(RateTableList, '/config/rate-table')
 
     api.add_resource(PlanSelections, '/selections/plan')

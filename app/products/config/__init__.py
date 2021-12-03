@@ -1,3 +1,3 @@
-from .resources.Config_Plan import Resource_PlanConfig
-from .resources.Config_PlanVariations import Resource_PlanVariationConfig
-from .schemas import Schema_ConfigPlan
+from .resources.Config_Product import Resource_ProductConfig
+from .resources.Config_ProductVariations import Resource_ProductVariationConfig
+from .schemas import Schema_ConfigProduct

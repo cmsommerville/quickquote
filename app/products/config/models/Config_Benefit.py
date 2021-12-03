@@ -1,11 +1,8 @@
 import datetime
-from sqlalchemy import between
-from sqlalchemy.ext.hybrid import hybrid_method
 from app.extensions import db
-from app.shared import BaseModel, BaseModel
+from app.shared import BaseModel
 
 from .constants import TBL_NAMES, FACTOR_DECIMAL_PRECISION
-from .Config_States import Model_RefStates
 
 REF_BENEFIT = TBL_NAMES['REF_BENEFIT']
 REF_BENEFIT_DURATION = TBL_NAMES['REF_BENEFIT_DURATION']
@@ -79,6 +76,10 @@ class Model_RefBenefitDurationItems(BaseModel):
 
 class Model_ConfigBenefit(BaseModel):
     __tablename__ = CONFIG_BENEFIT
+    __table_args__ = (
+        db.UniqueConstraint('benefit_code', 'coverage_id'),
+        db.CheckConstraint('benefit_effective_date <= benefit_expiration_date'),
+    )
 
     benefit_id = db.Column(db.Integer, primary_key=True)
     coverage_id = db.Column(db.Integer, db.ForeignKey(
@@ -98,17 +99,6 @@ class Model_ConfigBenefit(BaseModel):
     benefit = db.relationship("Model_RefBenefit")
     states = db.relationship("Model_ConfigBenefitStateAvailability", back_populates="benefit")
 
-    @hybrid_method
-    def check_valid_state(
-        self,
-        state: str,
-        effective_date: datetime.date,
-        as_of_date: datetime.datetime = datetime.datetime(9999, 12, 31)
-    ):
-        return Model_ConfigBenefitStateAvailability.check_valid_state(
-            self.benefit_id, state, effective_date, as_of_date
-        )
-
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id}>"
 
@@ -119,12 +109,14 @@ class Model_ConfigBenefit(BaseModel):
 
 class Model_ConfigBenefitStateAvailability(BaseModel):
     __tablename__ = CONFIG_BENEFIT_STATE_AVAILABILITY
+    __table_args__ = (
+        db.UniqueConstraint('benefit_id', 'state_id', 'state_effective_date'),
+        db.CheckConstraint('state_effective_date <= state_expiration_date')
+    )
 
     benefit_state_availability_id = db.Column(db.Integer, primary_key=True)
-    benefit_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_BENEFIT}.benefit_id"))
-    state_code = db.Column(
-        db.String(2), db.ForeignKey(f"{REF_STATE}.state_code"))
+    benefit_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT}.benefit_id"), nullable=False)
+    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"), nullable=False)
     state_effective_date = db.Column(db.Date, nullable=False)
     state_expiration_date = db.Column(db.Date, nullable=False)
     min_value = db.Column(db.Numeric(2), nullable=False)
@@ -144,42 +136,12 @@ class Model_ConfigBenefitStateAvailability(BaseModel):
     def find(cls, id):
         return cls.query.filter(cls.benefit_state_availability_id == id).first()
 
-    @classmethod
-    def check_valid_state(
-        cls,
-        benefit_id: int,
-        state: str,
-        effective_date: datetime.date,
-        as_of_date: datetime.datetime = datetime.datetime(9999, 12, 31)
-    ):
-        """
-        For a specific benefit ID, filter for the specific state. If not there, 
-        look for the default state value. Then filter, for the effective date. 
-
-        There should be a record if the state is valid.
-        """
-        base_qry = cls.query.filter(
-            cls.benefit_id == benefit_id,
-            between(as_of_date, cls.row_eff_dts, cls.row_exp_dts))
-        qry = base_qry.filter(cls.state_code == state)
-        if qry.first() is None:
-            qry = base_qry.filter(cls.state_code == 'XX')
-
-        qry = qry.filter(
-            between(effective_date, cls.state_effective_date, cls.state_expiration_date))
-        return qry.first() is not None
-
-    @classmethod
-    def find_by_state(cls, state: str, effective_date: datetime.date = None, active_record_indicator: str = "Y"):
-        qry = cls.query.filter(
-            cls.state_code == state, cls.active_record_indicator == active_record_indicator)
-        if effective_date:
-            return qry.filter(between(effective_date, cls.state_effective_date, cls.state_expiration_date)).all()
-        return qry.all()
-
 
 class Model_ConfigBenefitDuration(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION
+    __table_args__ = (
+        db.UniqueConstraint('benefit_state_availability_id', 'benefit_duration_code'),
+    )
 
     benefit_duration_id = db.Column(db.Integer, primary_key=True)
     benefit_state_availability_id = db.Column(db.Integer, db.ForeignKey(
@@ -202,53 +164,22 @@ class Model_ConfigBenefitDuration(BaseModel):
 
 class Model_ConfigBenefitDurationItems(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION_ITEMS
+    __table_args__ = (
+        db.UniqueConstraint('benefit_duration_id', 'item_code'),
+    )
 
     benefit_duration_item_id = db.Column(db.Integer, primary_key=True)
-    benefit_duration_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"), nullable=False)
-    item_code = db.Column(
-        db.String(30), db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
+    benefit_duration_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"), nullable=False)
+    item_code = db.Column(db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
     benefit_duration_factor = db.Column(
         db.Numeric(FACTOR_DECIMAL_PRECISION), nullable=False)
 
     duration = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="duration_items")
-    states = db.relationship("Model_ConfigBenefitDurationItemStateAvailability", back_populates="duration_item")
-
+        
     def __repr__(self):
         return f"<Benefit Duration Item Id: {self.benefit_duration_item_id}>"
 
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.benefit_duration_item_id == id).first()
-
-
-class Model_ConfigBenefitDurationItemStateAvailability(BaseModel):
-    __tablename__ = CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY
-
-    benefit_duration_item_state_availability_id = db.Column(
-        db.Integer, primary_key=True)
-    benefit_duration_item_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_BENEFIT_DURATION_ITEMS}.benefit_duration_item_id"), nullable=False)
-    state_code = db.Column(
-        db.String(2), db.ForeignKey(f"{REF_STATE}.state_code"), nullable=False)
-    state_effective_date = db.Column(db.Date, nullable=False)
-    state_expiration_date = db.Column(db.Date, nullable=False)
-
-    duration_item = db.relationship("Model_ConfigBenefitDurationItems",
-                                    back_populates="states")
-
-    def __repr__(self):
-        return f"<Benefit Duration Item State Availability ID: {self.benefit_duration_item_state_availability_id}>"
-
-    @classmethod
-    def find(cls, id):
-        return cls.query.filter(cls.benefit_duration_item_state_availability_id == id).first()
-
-    @classmethod
-    def find_by_state(cls, state: str, effective_date: datetime.date = None, active_record_indicator: str = "Y"):
-        qry = cls.query.filter(
-            cls.state_code == state, cls.active_record_indicator == active_record_indicator)
-        if effective_date:
-            return qry.filter(between(effective_date, cls.state_effective_date, cls.state_expiration_date)).all()
-        return qry.all()
