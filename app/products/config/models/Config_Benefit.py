@@ -125,6 +125,7 @@ class Model_ConfigBenefitStateAvailability(BaseModel):
     unit_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_UNIT_CODE}.unit_code"), nullable=False)
 
+    state = db.relationship("Model_RefStates")
     benefit = db.relationship("Model_ConfigBenefit", back_populates="states")
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit", lazy="joined")

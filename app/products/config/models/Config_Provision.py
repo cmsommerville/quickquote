@@ -1,7 +1,10 @@
 import datetime
 from sqlalchemy import between
+from sqlalchemy.orm import aliased, contains_eager
 from app.extensions import db
-from app.shared import BaseModel, BaseModel
+from app.shared import BaseModel
+
+from .Config_States import Model_RefStates
 
 from .constants import TBL_NAMES
 
@@ -56,6 +59,43 @@ class Model_ConfigProvision(BaseModel):
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.provision_id == id).first()
+
+
+    @classmethod
+    def find_by_state(
+        cls, 
+        state: str, 
+        effective_date: datetime.date, 
+        product_id: int
+        ): 
+
+        PSA = aliased(Model_ConfigProvisionStateAvailability, name='PSA')
+        RefStateProv = aliased(Model_RefStates)
+
+        # filter effective dates on product
+        qry = db.session.query(cls)\
+            .filter(between(
+                effective_date, 
+                cls.provision_effective_date, 
+                cls.provision_expiration_date))
+
+        # filter for product ID
+        qry = qry.filter(cls.product_id == product_id)
+    
+        # filter coverage and benefit state availability
+        qry = qry.join(cls.states)\
+            .join(RefStateProv, PSA.state)\
+            .filter(
+                RefStateProv.state_code == state, 
+                between(
+                    effective_date, 
+                    PSA.state_effective_date, 
+                    PSA.state_expiration_date)
+                )\
+            .options(contains_eager(cls.states)).populate_existing()
+
+        return qry.all()
+
 
 
 class Model_ConfigProvisionStateAvailability(BaseModel):

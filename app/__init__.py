@@ -21,6 +21,11 @@ schema = make_executable_schema(
 )
 
 
+def bindRoutes(api, routes):
+    for route in routes: 
+        api.add_resource(route['class'], *route['endpoints'])
+
+
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
@@ -36,24 +41,17 @@ def create_app(config):
     api = Api(app)
 
     from .products.admin import CreateTables, SessionData
-    from .products.config import Resource_ProductConfig, Resource_ProductVariationConfig
-    from .products.selections import PlanSelections, CoverageBenefitSelections, ProvisionSelections, RatingCalculatorResource, AgeBandsSelections, RateTableList, BenefitResource, PlanSearch
+    from .products.selections import RateTableList
+    from .products.config.resources import routes as config_routes
+    from .products.selections.resources import routes as selection_routes
+
+
+    bindRoutes(api, config_routes)
+    bindRoutes(api, selection_routes)
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
-
-    api.add_resource(Resource_ProductConfig, '/config/product')
-    api.add_resource(Resource_ProductVariationConfig, '/config/product-variations')
     api.add_resource(RateTableList, '/config/rate-table')
-
-    api.add_resource(PlanSelections, '/selections/plan')
-    api.add_resource(AgeBandsSelections, '/selections/age-bands')
-    api.add_resource(CoverageBenefitSelections, '/selections/benefits')
-    api.add_resource(ProvisionSelections, '/selections/provisions')
-    api.add_resource(RatingCalculatorResource, '/rating-calculator')
-    api.add_resource(BenefitResource, '/benefit-test')
-
-    api.add_resource(PlanSearch, '/search/plan')
 
     @app.route("/graphql", methods=["GET"])
     def graphql_playground():

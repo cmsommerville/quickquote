@@ -21,18 +21,12 @@ class BaseModel(db.Model):
     def save_all_to_db(cls, data):
         try:
             db.session.add_all(data)
-        except IntegrityError:
-            db.session.rollback()
-            raise
         except Exception:
             db.session.rollback()
             raise
 
         try:
             db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            raise
         except Exception:
             db.session.rollback()
             raise
@@ -40,18 +34,26 @@ class BaseModel(db.Model):
     def save_to_db(self):
         try:
             db.session.add(self)
-        except IntegrityError:
-            db.session.rollback()
-            raise
         except Exception:
             db.session.rollback()
             raise
 
         try:
             db.session.commit()
-        except IntegrityError:
+        except Exception:
             db.session.rollback()
             raise
+
+
+    def delete(self):
+        try:
+            db.session.delete(self)
+        except Exception:
+            db.session.rollback()
+            raise
+
+        try:
+            db.session.commit()
         except Exception:
             db.session.rollback()
             raise

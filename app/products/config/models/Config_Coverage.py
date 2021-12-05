@@ -1,11 +1,12 @@
 import datetime
 from sqlalchemy import between
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import contains_eager, aliased
 from app.extensions import db
 from app.shared import BaseModel, BaseModel
 
 from .constants import TBL_NAMES, COVERAGE_SECTION_DEFAULT
 from .Config_States import Model_RefStates
+from .Config_Benefit import Model_ConfigBenefit, Model_ConfigBenefitStateAvailability
 
 REF_COVERAGE = TBL_NAMES['REF_COVERAGE']
 REF_STATE = TBL_NAMES['REF_STATE']
@@ -38,6 +39,52 @@ class Model_ConfigCoverage(BaseModel):
         return f"<Coverage ID: {self.coverage_id} - {self.coverage_code}>"
 
 
+    @classmethod
+    def find_by_state(
+        cls, 
+        state: str, 
+        effective_date: datetime.date, 
+        product_id: int
+        ): 
+
+        CSA = aliased(Model_ConfigCoverageStateAvailability, name='CSA')
+        BSA = aliased(Model_ConfigBenefitStateAvailability, name='BSA')
+        RefStateCov = aliased(Model_RefStates)
+        RefStateBnft = aliased(Model_RefStates)
+
+        # filter effective dates on product
+        qry = db.session.query(cls)\
+            .filter(between(
+                effective_date, 
+                cls.coverage_effective_date, 
+                cls.coverage_expiration_date))
+
+        # filter for product ID
+        qry = qry.filter(cls.product_id == product_id)
+    
+        # filter coverage and benefit state availability
+        qry = qry.join(cls.states)\
+            .join(RefStateCov, CSA.state)\
+            .join(RefStateBnft, BSA.state)\
+            .filter(
+                RefStateCov.state_code == state, 
+                between(
+                    effective_date, 
+                    CSA.state_effective_date, 
+                    CSA.state_expiration_date)
+                )\
+            .filter(
+                RefStateBnft.state_code == state, 
+                between(
+                    effective_date, 
+                    BSA.state_effective_date, 
+                    BSA.state_expiration_date)
+            ).options(contains_eager(cls.states)).populate_existing()
+
+        return qry.all()
+
+
+
 class Model_ConfigCoverageStateAvailability(BaseModel):
     __tablename__ = CONFIG_COVERAGE_STATE_AVAILABILITY
     __table_args__ = (
@@ -51,4 +98,5 @@ class Model_ConfigCoverageStateAvailability(BaseModel):
     state_effective_date = db.Column(db.Date, nullable=False)
     state_expiration_date = db.Column(db.Date, nullable=False)
 
+    state = db.relationship("Model_RefStates")
     coverage = db.relationship("Model_ConfigCoverage", back_populates="states")

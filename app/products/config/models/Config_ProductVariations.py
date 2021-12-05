@@ -1,7 +1,11 @@
+import datetime
+from sqlalchemy import between
+from sqlalchemy.orm import contains_eager
 from app.extensions import db
 from app.shared import BaseModel
 
 from .constants import TBL_NAMES
+from .Config_States import Model_RefStates
 
 REF_RATING_ALGORITHM = TBL_NAMES['REF_RATING_ALGORITHM']
 REF_STATE = TBL_NAMES['REF_STATE']
@@ -79,11 +83,32 @@ class Model_ConfigAgeBandsSet(BaseModel):
     age_band_expiration_date = db.Column(db.Date, nullable=False)
 
     age_bands = db.relationship('Model_ConfigAgeBands')
+    state = db.relationship("Model_RefStates")
     product_variation = db.relationship(
         "Model_ConfigProductVariations", back_populates="age_band_sets")
 
     def __repr__(self):
         return f"<Age Band Set: {self.age_band_set_id}>"
+    
+    @classmethod
+    def find_by_state(
+        cls, 
+        state: str, 
+        effective_date: datetime.date, 
+        product_variation_id: int
+        ): 
+
+        # filter for product variation ID
+        qry = db.session.query(cls)\
+            .filter(cls.product_variation_id == product_variation_id)\
+            .filter(between(
+                effective_date, 
+                cls.age_band_effective_date, 
+                cls.age_band_expiration_date))\
+            .filter(Model_RefStates.state_code == state)\
+            .options(contains_eager(cls.state)).populate_existing()
+
+        return qry.all()
 
 
 class Model_ConfigAgeBands(BaseModel):
