@@ -1,65 +1,71 @@
 <template>
   <div>
-    <div class="mb-4" v-if="loaded">
-      <v-row>
-        <v-col sm="5">
-          <v-form>
-            <v-text-field
-              v-model="label"
-              filled
-              outlined
-              label="Provision Name"
-            />
+    <v-form>
+      <div class="mb-4 main-form" v-if="loaded">
+        <v-text-field
+          v-model="provision_label"
+          filled
+          outlined
+          label="Provision Name"
+        />
 
-            <v-text-field
-              v-model="name"
-              filled
-              outlined
-              label="Provision Code"
-            />
+        <v-text-field
+          v-model="provision_code"
+          filled
+          outlined
+          label="Provision Code"
+        />
 
-            <v-row>
-              <v-col :sm="ui.component === 'v-select' ? 9 : 12">
-                <v-select
-                  v-model="ui.component"
-                  filled
-                  outlined
-                  label="Component Type"
-                  :items="componentTypes"
-                  item-text="label"
-                  item-value="code"
-                />
-              </v-col>
-              <v-col v-if="ui.component === 'v-select'" sm="3">
-                <app-modal-list-form
-                  v-if="ui.component === 'v-select'"
-                  title="Select Options"
-                  :schema="[
-                    { code: 'text', label: 'Label' },
-                    { code: 'value', label: 'Value' },
-                  ]"
-                  @submit:list-data="selectListItemsHandler"
-                  class="ma-2"
-                >
-                  <v-icon>mdi-pencil-outline</v-icon>
-                </app-modal-list-form>
-              </v-col>
-            </v-row>
+        <v-text-field
+          v-model="provision_effective_date"
+          filled
+          outlined
+          type="date"
+          label="Effective Date"
+        />
 
-            <v-select
-              v-if="ui.component === 'v-text-field'"
-              v-model="ui.type"
-              filled
-              outlined
-              label="Input Type"
-              :items="inputTypes"
-              item-text="label"
-              item-value="code"
-            />
-          </v-form>
-        </v-col>
-        <v-col></v-col>
-        <v-col sm="6" class="d-flex flex-column">
+        <v-text-field
+          v-model="provision_expiration_date"
+          filled
+          outlined
+          type="date"
+          label="Expiration Date"
+        />
+
+        <!-- 
+        <v-select
+          v-model="ui.component"
+          filled
+          outlined
+          label="Component Type"
+          :items="componentTypes"
+          item-text="label"
+          item-value="code"
+        />
+        <app-modal-list-form
+          v-if="ui.component === 'v-select'"
+          title="Select Options"
+          :schema="[
+            { code: 'text', label: 'Label' },
+            { code: 'value', label: 'Value' },
+          ]"
+          @submit:list-data="selectListItemsHandler"
+          class="ma-2"
+        >
+          <v-icon>mdi-pencil-outline</v-icon>
+        </app-modal-list-form>
+
+        <v-select
+          v-if="ui.component === 'v-text-field'"
+          v-model="ui.type"
+          filled
+          outlined
+          label="Input Type"
+          :items="inputTypes"
+          item-text="label"
+          item-value="code"
+        /> -->
+        <!-- <v-col sm="6" class="d-flex flex-column">
           <v-row>
             <v-col sm="12">
               <app-dashboard-card
@@ -93,16 +99,51 @@
               </app-dashboard-card>
             </v-col>
           </v-row>
-        </v-col>
-      </v-row>
+        </v-col> -->
+      </div>
+    </v-form>
+
+    <div class="section-configure">
+      <app-dashboard-card
+        title="User Interface"
+        img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+        @click:configure="configureUI"
+      >
+        {{ "Setup UI!" }}
+      </app-dashboard-card>
+
+      <app-dashboard-card
+        title="States"
+        img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+        @click:configure="configureStates"
+      >
+        {{
+          config && config.states
+            ? `${config.states.length} states configured`
+            : "Setup States!"
+        }}
+      </app-dashboard-card>
+
+      <app-dashboard-card
+        title="Coverages"
+        img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+        @click:configure="configureFactors"
+      >
+        {{
+          config && config.factors
+            ? `${config.factors.length} factors configured`
+            : "Setup Factors!"
+        }}
+      </app-dashboard-card>
     </div>
+
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
       <v-btn
         color="primary"
         class="mx-4"
         @click="saveProvision"
-        :disabled="!formIsValid"
+        :disabled="!valid"
       >
         Save
       </v-btn>
@@ -111,8 +152,8 @@
 </template>
 
 <script>
-import { COMPONENT_TYPES, INPUT_TYPES } from "../../data/lookups.js";
-import AppModalListForm from "../../components/AppModalListForm.vue";
+import axios from "../../services/axios";
+// import AppModalListForm from "../../components/AppModalListForm.vue";
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
@@ -123,120 +164,107 @@ export default {
       required: false,
     },
   },
-  components: { AppModalListForm, AppDashboardCard },
+  components: { AppDashboardCard },
+
   async mounted() {
     this.loaded = false;
-    const code = this.$route.query.code;
-    if (code) {
-      const prov = await this.$store.getters.getProvisionConfig;
-      // if (prov) {
-      this.config = { ...prov };
-      this.label = prov.label;
-      this.name = prov.name;
-      this.ui = { ...prov.ui };
-      this.states = prov.states ? prov.states : this.states;
-      // }
+    this.product_id = this.$route.query.product_id;
+    if (this.$route.query.provision_id) {
+      this.editable = false;
+      const res = await axios.get(
+        `/config/provision/${this.$route.query.provision_id}`
+      );
+      this.provision_id = this.$route.query.provision_id;
+      this.initializeData(res.data);
     }
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
+      editable: true,
       modal: false,
       config: null,
-      label: null,
-      name: null,
-      ui: {},
-      states: [
-        { label: "Alabama", code: "AL", value: "permitted" },
-        { label: "Alaska", code: "AK", value: "mandatory" },
-        { label: "Arizona", code: "AZ", value: "prohibited" },
-        { label: "Arkansas", code: "AR", value: "permitted" },
-        { label: "North Carolina", code: "NC", value: "permitted" },
-        { label: "South Carolina", code: "SC", value: "permitted" },
-      ],
-
-      componentTypes: [...COMPONENT_TYPES],
-      inputTypes: [...INPUT_TYPES],
+      provision_id: null,
+      provision_code: null,
+      provision_label: null,
+      provision_effective_date: "1900-01-01",
+      provision_expiration_date: "9999-12-31",
     };
   },
   computed: {
-    formIsValid() {
-      return !!this.label && !!this.name;
+    valid() {
+      return (
+        !!this.provision_label &&
+        !!this.provision_code &&
+        !!this.provision_effective_date &&
+        !!this.provision_expiration_date
+      );
     },
-    stateAvailabilityList() {
+    output() {
       return {
-        permitted: {
-          color: "primary",
-          states: this.states.filter((state) => state.value === "permitted"),
+        product_id: this.product_id,
+        provision_code: this.provision_code,
+        provision: {
+          provision_code: this.provision_code,
+          provision_label: this.provision_label,
         },
-        mandatory: {
-          color: "teal",
-          states: this.states.filter((state) => state.value === "mandatory"),
-        },
-        prohibited: {
-          color: "red",
-          states: this.states.filter((state) => state.value === "prohibited"),
-        },
-      };
-    },
-    outputProvision() {
-      return {
-        ...this.config,
-        label: this.label,
-        name: this.name,
-        ui: { ...this.ui },
-        states: this.states,
+        provision_effective_date: this.provision_effective_date,
+        provision_expiration_date: this.provision_expiration_date,
       };
     },
   },
   methods: {
-    routeToProvisionList() {
+    initializeData(config) {
+      this.config = { ...config };
+      this.provision_label = config.provision.provision_label;
+      this.provision_code = config.provision_code;
+      this.provision_effective_date = config.provision_effective_date;
+      this.provision_expiration_date = config.provision_expiration_date;
+    },
+    routeTo(route_name, params = {}) {
       this.$router.push({
-        name: "config-provision-list",
-        params: { productId: this.productId },
+        name: route_name,
+        query: { product_id: this.product_id, ...params },
       });
     },
-    routeToProvisionFactors() {
-      this.$router.push({
-        name: "config-provision-factors",
-        params: { productId: this.productId },
-        query: { code: this.name },
-      });
+    async saveProvision() {
+      const output = { ...this.output };
+      if (this.provision_id) {
+        output.provision_id = this.provision_id;
+      }
+      await axios.post("/config/provision", { ...output });
     },
-    routeToProvisionStates() {
-      this.$router.push({
-        name: "config-provision-states",
-        params: { productId: this.productId },
-        query: { code: this.name },
-      });
-    },
-    storeProvision() {
-      this.$store.commit("SET_NEW_PROVISION", this.outputProvision);
+    configureUI() {
+      console.log("UI");
     },
     configureStates() {
-      this.storeProvision();
-      this.routeToProvisionStates();
+      this.saveProvision();
+      this.routeTo("config-provision-states", {
+        provision_id: this.provision_id,
+      });
     },
     configureFactors() {
-      this.storeProvision();
-      this.routeToProvisionFactors();
-    },
-    saveProvision() {
-      this.storeProvision();
-      this.$store.dispatch("addNewProvisionToList");
-      this.routeToProvisionList();
-    },
-    selectListItemsHandler(payload) {
-      this.ui.items = [...payload];
+      console.log("factors");
     },
   },
 };
 </script>
 
-<style>
-.card-state {
-  position: relative;
+<style scoped>
+.main-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 10px;
+  row-gap: 15px;
+}
+
+.section-configure {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 15px;
 }
 
 .btn-edit {

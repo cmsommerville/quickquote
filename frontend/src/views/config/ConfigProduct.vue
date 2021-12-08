@@ -1,89 +1,106 @@
 <template>
   <div>
     <div class="mb-4" v-if="loaded">
-      <v-row>
-        <v-col></v-col>
-        <v-col sm="4">
-          <v-text-field v-model="label" filled outlined label="Product Name" />
-        </v-col>
-        <v-col></v-col>
-        <v-col sm="4">
-          <v-text-field v-model="code" filled outlined label="Product Code" />
-        </v-col>
-        <v-col></v-col>
-      </v-row>
-      <v-row>
-        <v-col sm="6" class="d-flex flex-column">
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Variations"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureVariations"
-              >
-                {{
-                  config && config.variations
-                    ? `${config.variations.length} variations configured`
-                    : "Setup Variations!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="States"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureStates"
-              >
-                {{
-                  config && config.statesApproved
-                    ? `${config.statesApproved.length} states configured`
-                    : "Setup States!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-        </v-col>
+      <div class="main-form">
+        <v-text-field
+          v-model="product_label"
+          filled
+          outlined
+          :disabled="!editable"
+          label="Product Label"
+        />
+        <v-text-field
+          v-model="product_code"
+          filled
+          outlined
+          :disabled="!editable"
+          label="Product Code"
+        />
+        <v-text-field
+          v-model="product_effective_date"
+          type="date"
+          filled
+          outlined
+          :disabled="!editable"
+          label="Effective Date"
+        />
+        <v-text-field
+          v-model="product_expiration_date"
+          type="date"
+          filled
+          outlined
+          :disabled="!editable"
+          label="Expiration Date"
+        />
+      </div>
+      <div class="section-configure">
+        <app-dashboard-card
+          title="Variations"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureVariations"
+        >
+          {{
+            config && config.variations
+              ? `${config.variations.length} variations configured`
+              : "Setup Variations!"
+          }}
+        </app-dashboard-card>
 
-        <v-col sm="6" class="d-flex flex-column">
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Benefits"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureBenefits"
-              >
-                {{
-                  config && config.benefits
-                    ? `${config.benefits.length} benefits configured`
-                    : "Setup Benefits!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
+        <app-dashboard-card
+          title="States"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureStates"
+        >
+          {{
+            config && config.states
+              ? `${config.states.length} states configured`
+              : "Setup States!"
+          }}
+        </app-dashboard-card>
 
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Provisions"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureProvisions"
-              >
-                {{
-                  config && config.provisions
-                    ? `${config.provisions.length} provisions`
-                    : "Setup Provisions!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+        <app-dashboard-card
+          title="Coverages"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureCoverages"
+        >
+          {{
+            config && config.benefits
+              ? `${config.benefits.length} benefits configured`
+              : "Setup Benefits!"
+          }}
+        </app-dashboard-card>
+
+        <app-dashboard-card
+          title="Provisions"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureProvisions"
+        >
+          {{
+            config && config.provisions
+              ? `${config.provisions.length} provisions`
+              : "Setup Provisions!"
+          }}
+        </app-dashboard-card>
+      </div>
     </div>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveProduct"> Save </v-btn>
+      <v-btn
+        color="primary"
+        class="mx-4"
+        :disabled="!valid"
+        @click="saveProduct"
+      >
+        Save
+      </v-btn>
+      <v-btn
+        v-if="!!product_id"
+        color="secondary"
+        class="mx-4"
+        @click="editable = true"
+      >
+        Edit
+      </v-btn>
     </div>
 
     <v-snackbar
@@ -103,7 +120,8 @@
 </template>
 
 <script>
-// import AppModalListForm from "../../components/AppModalListForm.vue";
+import axios from "../../services/axios";
+
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
@@ -111,64 +129,111 @@ export default {
   components: { AppDashboardCard },
   async mounted() {
     this.loaded = false;
-    const config = await this.$store.getters.getConfig;
-    this.config = { ...config };
-    this.label = config.label;
-    this.code = config.code;
+    if (this.$route.query.product_id) {
+      this.editable = false;
+      const res = await axios.get(
+        `/config/product/${this.$route.query.product_id}`
+      );
+      this.product_id = this.$route.query.product_id;
+      this.initializeData(res.data);
+    }
     this.loaded = true;
   },
   data() {
     return {
       snackbar: false,
       snackbar_message: null,
+      editable: true,
       loaded: false,
       config: null,
-      label: null,
-      code: null,
+      product_id: null,
+      product_label: null,
+      product_code: null,
+      product_effective_date: "1900-01-01",
+      product_expiration_date: "9999-12-31",
     };
   },
-  computed: {},
+  computed: {
+    valid() {
+      return (
+        !!this.product_label &&
+        !!this.product_code &&
+        !!this.product_effective_date &&
+        !!this.product_expiration_date
+      );
+    },
+    output() {
+      return {
+        product_label: this.product_label,
+        product_code: this.product_code,
+        product_effective_date: this.product_effective_date,
+        product_expiration_date: this.product_expiration_date,
+      };
+    },
+  },
   methods: {
-    routeToProvisionList() {
+    initializeData(config) {
+      this.config = { ...config };
+      this.product_label = config.product_label;
+      this.product_code = config.product_code;
+      this.product_effective_date = config.product_effective_date;
+      this.product_expiration_date = config.product_expiration_date;
+    },
+    routeTo(route_name) {
       this.$router.push({
-        name: "config-provision-list",
-        params: {
-          productId: this.config._id,
+        name: route_name,
+        query: {
+          product_id: this.product_id,
         },
       });
     },
-    routeToBenefitList() {
-      this.$router.push({
-        name: "config-benefit-list",
-        params: {
-          productId: this.config._id,
-        },
-      });
-    },
-    saveProduct() {
-      this.$store.dispatch("saveConfigToDB");
+    async saveProduct() {
+      let res;
+      if (this.product_id) {
+        res = await axios.put(`/config/product/${this.product_id}`, {
+          ...this.output,
+          product_id: this.product_id,
+        });
+      } else {
+        res = await axios.post("/config/product", { ...this.output });
+      }
+
+      this.initializeData(res.data);
       this.snackbar_message = "Saved to DB";
       this.snackbar = true;
     },
     configureProvisions() {
-      this.routeToProvisionList();
+      this.routeTo("config-provision-list");
     },
-    configureBenefits() {
-      this.routeToBenefitList();
+    configureCoverages() {
+      this.routeTo("config-coverage-list");
     },
     configureStates() {
-      console.log("Configure states!");
+      this.saveProduct();
+      this.routeTo("config-product-states");
     },
     configureVariations() {
-      console.log("Configure variations!");
+      this.saveProduct();
+      this.routeTo("config-product-variation-list");
     },
   },
 };
 </script>
 
-<style>
-.card-state {
-  position: relative;
+<style scoped>
+.main-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 10px;
+  row-gap: 15px;
+}
+
+.section-configure {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 15px;
 }
 
 .btn-edit {

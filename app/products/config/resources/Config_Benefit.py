@@ -1,15 +1,14 @@
 from flask import request
 from flask_restful import Resource
 
-from ..models import Model_ConfigBenefit, Model_ConfigBenefitStateAvailability, \
+from ..models import Model_ConfigBenefit,\
     Model_ConfigBenefitDuration, Model_ConfigBenefitDurationItems
-from ..schemas import Schema_ConfigBenefit, Schema_ConfigBenefitStateAvailability, \
+from ..schemas import Schema_ConfigBenefit, \
     Schema_ConfigBenefitDuration, Schema_ConfigBenefitDurationItems
 
 config_benefit_schema = Schema_ConfigBenefit()
 config_benefit_duration_schema = Schema_ConfigBenefitDuration()
 config_benefit_duration_items_schema = Schema_ConfigBenefitDurationItems()
-config_benefit_state_schema = Schema_ConfigBenefitStateAvailability()
 
 config_benefit_schema_list = Schema_ConfigBenefit(many=True)
 
@@ -51,34 +50,6 @@ class CRUD_BenefitConfig(Resource):
         config.delete()
         return "Deleted", 204
         
-
-
-class CRUD_BenefitStateAvailabilityConfig(Resource):
-
-    @classmethod
-    def get(cls, id):
-        config = Model_ConfigBenefitStateAvailability.find(id)
-        return config_benefit_state_schema.dump(config), 200
-
-    @classmethod
-    def post(cls):
-        req = request.get_json()
-        config = config_benefit_state_schema.load(req)
-        config.save_to_db()
-        return config_benefit_state_schema.dump(config), 201
-
-    @classmethod
-    def put(cls, id):
-        req = request.get_json()
-        config = config_benefit_state_schema.load({**req, "benefit_state_availability_id": id})
-        config.save_to_db()
-        return config_benefit_state_schema.dump(config), 201
-
-    @classmethod
-    def delete(cls, id):
-        config = Model_ConfigBenefitStateAvailability.find(id)
-        config.delete()
-        return "Deleted", 204
 
 
 

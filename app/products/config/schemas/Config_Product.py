@@ -9,10 +9,18 @@ class Schema_ConfigProduct(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
 
+
+class Schema_ConfigProduct_FK(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Model_ConfigProduct
+        load_instance = True
+
 class Schema_ConfigProductStateAvailability(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Model_ConfigProductStateAvailability
         load_instance = True
         include_relationships = True
         include_fk = True
+    
+    product = ma.Nested("Schema_ConfigProduct_FK")
 

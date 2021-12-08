@@ -1,13 +1,26 @@
 <template>
-  <div class="content" v-if="provisions">
-    <v-row v-for="prov in provisions" :key="prov.name">
+  <div class="content" v-if="loaded">
+    <v-row
+      v-for="variation in product_variations"
+      :key="variation.product_variation_id"
+    >
       <v-col cols="12" xs="12">
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
-            <v-card-title>{{ prov.provision.provision_label }}</v-card-title>
-            <!-- <v-card-subtitle
-              >Component Type: {{ prov.ui.component }}</v-card-subtitle
-            > -->
+            <v-card-title>{{ variation.product_variation_label }}</v-card-title>
+            <v-card-subtitle
+              >{{
+                new Date(
+                  variation.product_variation_effective_date
+                ).toLocaleDateString("en-US", { timeZone: "UTC" })
+              }}
+              -
+              {{
+                new Date(
+                  variation.product_variation_expiration_date
+                ).toLocaleDateString("en-US", { timeZone: "UTC" })
+              }}</v-card-subtitle
+            >
           </div>
           <div class="card-edit-buttons ma-2">
             <v-tooltip bottom>
@@ -19,7 +32,7 @@
                   class="mr-2"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editProvision(prov.provision_id)"
+                  @click="edit(variation.product_variation_id)"
                   ><v-icon color="primary">mdi-pencil</v-icon></v-btn
                 >
               </template>
@@ -37,16 +50,14 @@
         bottom
         fab
         right
-        @click="routeTo('config-provision')"
+        @click="routeTo('config-product-variation')"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveProvisions">
-        Save Changes
-      </v-btn>
+      <v-btn color="primary" class="mx-4" @click="save"> Save Changes </v-btn>
     </div>
   </div>
 </template>
@@ -58,26 +69,22 @@ export default {
   name: "ConfigProvisionList",
   data() {
     return {
+      loaded: false,
       product_id: null,
-      provisions: [],
+      product_variations: [],
     };
   },
   async mounted() {
+    this.loaded = false;
     this.product_id = this.$route.query.product_id;
     const res = await axios.get(
-      `/qry-config/all-provisions?product_id=${this.product_id}`
+      `/qry-config/all-product-variations?product_id=${this.product_id}`
     );
-    this.provisions = [...res.data];
+    this.product_variations = [...res.data];
+    this.loaded = true;
   },
   methods: {
-    // saveProvisions() {
-    //   this.$store.commit("APPEND_ALL_PROVISIONS");
-    //   this.$router.push({
-    //     name: "config-product",
-    //     params: { productId: this.productId },
-    //   });
-    // },
-    saveProvisions() {
+    save() {
       console.log("Saved");
     },
     routeTo(route_name, params = {}) {
@@ -86,8 +93,8 @@ export default {
         query: { product_id: this.product_id, ...params },
       });
     },
-    editProvision(id) {
-      this.routeTo("config-provision", { provision_id: id });
+    edit(id) {
+      this.routeTo("config-product-variation", { product_variation_id: id });
     },
   },
 };

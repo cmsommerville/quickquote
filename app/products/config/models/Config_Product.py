@@ -28,8 +28,8 @@ class Model_ConfigProduct(BaseModel):
 
     product_variations = db.relationship(
         "Model_ConfigProductVariations", back_populates="product")
-    coverages = db.relationship(
-        "Model_ConfigCoverage", back_populates="product")
+    benefits = db.relationship(
+        "Model_ConfigBenefit", back_populates="product")
     provisions = db.relationship(
         "Model_ConfigProvision", back_populates="product")
     states = db.relationship(
@@ -41,6 +41,10 @@ class Model_ConfigProduct(BaseModel):
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.product_id == id).first()
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
     @classmethod
     def find_by_state(
@@ -97,3 +101,7 @@ class Model_ConfigProductStateAvailability(BaseModel):
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.product_state_availability_id == id).first()
+
+    @classmethod
+    def find_by_product(cls, id):
+        return cls.query.filter(cls.product_id == id).all()

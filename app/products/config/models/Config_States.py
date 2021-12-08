@@ -22,3 +22,7 @@ class Model_RefStates(BaseModel):
     @classmethod
     def find(cls, code):
         return cls.query.filter(cls.state_code == code).first()
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()

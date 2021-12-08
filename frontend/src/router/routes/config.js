@@ -1,5 +1,9 @@
 import ConfigProductList from "../../views/config/ConfigProductList";
 import ConfigProduct from "../../views/config/ConfigProduct";
+import ConfigProductStates from "../../views/config/ConfigProductStates.vue";
+import ConfigProductVariations from "../../views/config/ConfigProductVariations.vue";
+import ConfigProductVariationsList from "../../views/config/ConfigProductVariationsList.vue";
+import ConfigCoverageList from "../../views/config/ConfigCoverageList.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
 import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue";
@@ -18,43 +22,64 @@ export default [
     component: ConfigProductList,
   },
   {
-    path: "/config/product/:productId",
+    path: "/config/product",
     name: "config-product",
     component: ConfigProduct,
   },
   {
-    path: "/config/product/:productId/provisions",
+    path: "/config/product-variations",
+    name: "config-product-variation-list",
+    component: ConfigProductVariationsList,
+  },
+  {
+    path: "/config/product-variation",
+    name: "config-product-variation",
+    component: ConfigProductVariations,
+  },
+  {
+    path: "/config/coverages",
+    name: "config-coverage-list",
+    component: ConfigCoverageList,
+  },
+  {
+    path: "/config/product/provisions",
     name: "config-provision-list",
     component: ConfigProvisionList,
     props: true,
   },
   {
-    path: "/config/product/:productId/provision",
+    path: "/config/product/states",
+    name: "config-product-states",
+    component: ConfigProductStates,
+    props: true,
+  },
+  {
+    path: "/config/product/provision",
     name: "config-provision",
     component: ConfigProvision,
     props: true,
   },
   {
-    path: "/config/product/:productId/provision/states",
+    path: "/config/product/provision/states",
     name: "config-provision-states",
     component: ConfigProvisionStates,
     props: true,
   },
   {
-    path: "/config/product/:productId/provision/factors",
+    path: "/config/product/provision/factors",
     name: "config-provision-factors",
     component: ConfigProvisionFactors,
     props: true,
   },
 
   {
-    path: "/config/product/:productId/benefits",
+    path: "/config/product/benefits",
     name: "config-benefit-list",
     component: ConfigBenefitList,
     props: true,
   },
   {
-    path: "/config/product/:productId/benefit",
+    path: "/config/product/benefit",
     name: "config-benefit",
     component: ConfigBenefit,
     props: true,

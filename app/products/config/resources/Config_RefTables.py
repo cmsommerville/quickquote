@@ -43,9 +43,9 @@ class CRUD_RefRatingAlgorithm(Resource):
 class CRUD_RefStates(Resource):
 
     @classmethod
-    def get(cls, code):
-        config = Model_RefRatingAlgorithm.find(code)
-        return schema_ref_rating_algorithm.dump(config), 200
+    def get(cls):
+        config = Model_RefStates.find_all()
+        return schema_ref_states_list.dump(config), 200
 
     @classmethod
     def post(cls):
@@ -57,12 +57,12 @@ class CRUD_RefStates(Resource):
     @classmethod
     def put(cls, code):
         req = request.get_json()
-        config = schema_ref_rating_algorithm.load({**req, "rating_algorithm_code": code})
+        config = schema_ref_states.load({**req, "state_code": code})
         config.save_to_db()
-        return schema_ref_rating_algorithm.dump(config), 201
+        return schema_ref_states.dump(config), 201
 
     @classmethod
     def delete(cls, code):
-        config = Model_RefRatingAlgorithm.find(code)
+        config = Model_RefStates.find(code)
         config.delete()
         return "Deleted", 204

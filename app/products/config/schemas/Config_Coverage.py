@@ -1,5 +1,5 @@
 from app.extensions import ma
-from ..models import Model_ConfigCoverage, Model_ConfigCoverageStateAvailability
+from ..models import Model_ConfigCoverage
 
 
 class Schema_ConfigCoverage(ma.SQLAlchemyAutoSchema):
@@ -8,11 +8,3 @@ class Schema_ConfigCoverage(ma.SQLAlchemyAutoSchema):
         load_instance = True
         include_relationships = True
         include_fk = True
-
-class Schema_ConfigCoverageStateAvailability(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Model_ConfigCoverageStateAvailability
-        load_instance = True
-        include_relationships = True
-        include_fk = True
-

@@ -7,6 +7,15 @@ from ..schemas import Schema_ConfigProduct
 config_product_schema = Schema_ConfigProduct()
 config_product_schema_list = Schema_ConfigProduct(many=True)
 
+
+class Query_AllProducts(Resource):
+
+    @classmethod
+    def get(cls):
+        res = Model_ConfigProduct.find_all()
+        return config_product_schema_list.dump(res), 200
+
+
 class Query_ProductStateConfig(Resource):
 
     @classmethod

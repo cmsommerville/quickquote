@@ -60,6 +60,9 @@ class Model_ConfigProvision(BaseModel):
     def find(cls, id):
         return cls.query.filter(cls.provision_id == id).first()
 
+    @classmethod
+    def find_by_product(cls, id):
+        return cls.query.filter(cls.product_id == id).all()
 
     @classmethod
     def find_by_state(

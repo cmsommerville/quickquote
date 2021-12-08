@@ -18,8 +18,21 @@
                 @dblclick="editProduct"
               >
                 <v-card-title class="tile-product-title">
-                  {{ product.code === "accident" ? "AC" : "CI" }}
+                  {{ product.product_code }}
                 </v-card-title>
+              </v-card>
+            </v-item>
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-item v-slot="{ active, toggle }">
+              <v-card
+                class="d-flex justify-center align-center tile-product"
+                :dark="active"
+                height="200"
+                @click="toggle"
+                @dblclick="editProduct"
+              >
+                <v-card-title class="tile-product-title"> New </v-card-title>
               </v-card>
             </v-item>
           </v-col>
@@ -39,7 +52,7 @@ import axios from "../../services/axios.js";
 export default {
   name: "ConfigProductList",
   async mounted() {
-    const res = await axios.get("/config/plans");
+    const res = await axios.get("/qry-config/all-products");
     this.products = [...res.data];
   },
   data() {
@@ -50,16 +63,21 @@ export default {
   },
   computed: {
     selectedProduct() {
-      return this.products[this.selectedProductIndex];
+      return this.products[this.selectedProductIndex - 1];
     },
   },
   methods: {
     async editProduct() {
-      await this.$store.dispatch("initializeConfig", this.selectedProduct);
-      this.$router.push({
-        name: "config-product",
-        params: { productId: this.selectedProduct._id },
-      });
+      if (this.selectedProduct && this.selectedProduct.product_id) {
+        this.$router.push({
+          name: "config-product",
+          query: { product_id: this.selectedProduct.product_id },
+        });
+      } else {
+        this.$router.push({
+          name: "config-product",
+        });
+      }
     },
   },
 };

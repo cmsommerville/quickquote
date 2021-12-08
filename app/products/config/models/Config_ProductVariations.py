@@ -41,7 +41,6 @@ class Model_ConfigProductVariations(BaseModel):
     product_variation_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"))
     product_variation_code = db.Column(db.String(30), nullable=False)
-
     product_variation_effective_date = db.Column(db.Date(), nullable=False)
     product_variation_expiration_date = db.Column(db.Date(), nullable=False)
     product_variation_label = db.Column(db.String(100), nullable=False)
@@ -59,6 +58,8 @@ class Model_ConfigProductVariations(BaseModel):
         "Model_ConfigProduct", back_populates="product_variations")
     age_band_sets = db.relationship(
         "Model_ConfigAgeBandsSet", back_populates="product_variation")
+    benefits = db.relationship(
+        "Model_ConfigBenefitProductVariation", back_populates="product_variation")
 
     def __repr__(self):
         return f"<Product Variation: {self.product_variation_id} - {self.product_variation_code}>"
@@ -66,6 +67,10 @@ class Model_ConfigProductVariations(BaseModel):
     @classmethod
     def find(cls, id: int):
         return cls.query.filter(cls.product_variation_id == id).first()
+
+    @classmethod
+    def find_by_product(cls, id: int):
+        return cls.query.filter(cls.product_id == id).all()
 
 
 class Model_ConfigAgeBandsSet(BaseModel):

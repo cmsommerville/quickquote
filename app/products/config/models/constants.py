@@ -6,6 +6,7 @@ TBL_NAMES = {
     "CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY": "config_benefit_duration_item_state_availability",
     "CONFIG_BENEFIT_DURATION_ITEMS": "config_benefit_duration_items",
     "CONFIG_BENEFIT_FACTOR_APPLICABILITY": "config_benefit_factor_applicability",
+    "CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY": "config_benefit_product_variation_applicability", 
     "CONFIG_BENEFIT_STATE_AVAILABILITY": "config_benefit_state_availability",
     "CONFIG_COVERAGE": "config_coverage",
     "CONFIG_COVERAGE_STATE_AVAILABILITY": "config_coverage_state_availability",

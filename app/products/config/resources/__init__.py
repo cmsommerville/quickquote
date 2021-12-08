@@ -8,6 +8,7 @@ from .Query_Product import *
 from .Query_Coverage import *
 from .Query_Provision import *
 from .Query_AgeBands import *
+from .Query_ProductVariations import *
 
 routes = [
     {
@@ -35,18 +36,10 @@ routes = [
         "class": CRUD_CoverageConfig, 
         "endpoints": ['/config/coverage/<int:id>', '/config/coverage']
     }, 
-    {
-        "class": CRUD_CoverageStateAvailabilityConfig, 
-        "endpoints": ['/config/coverage/state/<int:id>', '/config/coverage/state']
-    }, 
 
     {
         "class": CRUD_BenefitConfig, 
         "endpoints": ['/config/benefit/<int:id>', '/config/benefit']
-    }, 
-    {
-        "class": CRUD_BenefitStateAvailabilityConfig, 
-        "endpoints": ['/config/benefit/state/<int:id>', '/config/benefit/state']
     }, 
     {
         "class": CRUD_BenefitDurationConfig, 
@@ -74,18 +67,39 @@ routes = [
         "class": CRUD_RefStates, 
         "endpoints": ['/config/ref-states/<string:code>', '/config/ref-states']
     }, 
+    {
+        "class": CRUD_RefRatingAlgorithm, 
+        "endpoints": ['/config/ref-rating-algorithm/<string:code>', '/config/ref-rating-algorithm']
+    }, 
+    
 
     {
         "class": Query_ProductStateConfig, 
-        "endpoints": ['/qry-config/product']
+        "endpoints": ['/qry-config/product-state']
+    }, 
+    {
+        "class": Query_AllProducts, 
+        "endpoints": ['/qry-config/all-products']
+    }, 
+    {
+        "class": Query_AllProductVariations, 
+        "endpoints": ['/qry-config/all-product-variations']
+    }, 
+    {
+        "class": Query_AllCoverages,  
+        "endpoints": ['/qry-config/all-coverages']
+    }, 
+    {
+        "class": Query_AllProvisions, 
+        "endpoints": ['/qry-config/all-provisions']
     }, 
     {
         "class": Query_CoverageStateConfig, 
-        "endpoints": ['/qry-config/coverage']
+        "endpoints": ['/qry-config/coverage-state']
     }, 
     {
         "class": Query_ProvisionStateConfig, 
-        "endpoints": ['/qry-config/provision']
+        "endpoints": ['/qry-config/provision-state']
     }, 
     {
         "class": Query_AgeBandsStateConfig, 

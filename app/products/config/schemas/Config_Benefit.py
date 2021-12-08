@@ -1,6 +1,6 @@
 from app.extensions import ma
 from ..models import Model_ConfigBenefit, Model_ConfigBenefitDuration, \
-    Model_ConfigBenefitStateAvailability, Model_ConfigBenefitDurationItems, \
+    Model_ConfigBenefitDurationItems, \
     Model_RefBenefit, Model_RefBenefitDuration, Model_RefBenefitDurationItems, \
     Model_RefUnitCode
 
@@ -11,12 +11,6 @@ class Schema_ConfigBenefit(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
 
-class Schema_ConfigBenefitStateAvailability(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Model_ConfigBenefitStateAvailability
-        load_instance = True
-        include_relationships = True
-        include_fk = True
 
 class Schema_ConfigBenefitDuration(ma.SQLAlchemyAutoSchema):
     class Meta:

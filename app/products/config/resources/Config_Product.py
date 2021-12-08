@@ -31,9 +31,9 @@ class CRUD_ProductConfig(Resource):
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_product_state_schema_list.load(req)
+        config = config_product_schema.load(req)
         config.save_to_db()
-        return config_product_state_schema_list.dump(config), 201
+        return config_product_schema.dump(config), 201
 
     @classmethod
     def put(cls, id):
@@ -54,15 +54,15 @@ class CRUD_ProductStateAvailabilityConfig(Resource):
 
     @classmethod
     def get(cls, id):
-        config = Model_ConfigProductStateAvailability.find(id)
-        return config_product_state_schema.dump(config), 200
+        config = Model_ConfigProductStateAvailability.find_by_product(id)
+        return config_product_state_schema_list.dump(config), 200
 
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_product_state_schema.load(req)
+        config = config_product_state_schema_list.load(req)
         Model_ConfigProductStateAvailability.save_all_to_db(config)
-        return config_product_state_schema.dump(config), 201
+        return config_product_state_schema_list.dump(config), 201
 
     @classmethod
     def put(cls, id):

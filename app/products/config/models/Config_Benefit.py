@@ -12,10 +12,10 @@ REF_UNIT_CODE = TBL_NAMES['REF_UNIT_CODE']
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_DURATION = TBL_NAMES['CONFIG_BENEFIT_DURATION']
 CONFIG_BENEFIT_DURATION_ITEMS = TBL_NAMES['CONFIG_BENEFIT_DURATION_ITEMS']
-CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY = TBL_NAMES[
-    'CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY']
-CONFIG_BENEFIT_STATE_AVAILABILITY = TBL_NAMES['CONFIG_BENEFIT_STATE_AVAILABILITY']
+CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY']
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']
+CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
+CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
 
 
 class Model_RefBenefit(BaseModel):
@@ -82,6 +82,7 @@ class Model_ConfigBenefit(BaseModel):
     )
 
     benefit_id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"))
     coverage_id = db.Column(db.Integer, db.ForeignKey(
         f"{CONFIG_COVERAGE}.coverage_id"), nullable=False)
     benefit_code = db.Column(
@@ -94,10 +95,15 @@ class Model_ConfigBenefit(BaseModel):
     unit_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_UNIT_CODE}.unit_code"), nullable=False)
 
+    product = db.relationship(
+        "Model_ConfigProduct", back_populates="benefits")
+    product_variations = db.relationship(
+        "Model_ConfigBenefitProductVariation", back_populates="benefit")
     coverage = db.relationship(
         "Model_ConfigCoverage", back_populates="benefits")
     benefit = db.relationship("Model_RefBenefit")
-    states = db.relationship("Model_ConfigBenefitStateAvailability", back_populates="benefit")
+    durations = db.relationship(
+        "Model_ConfigBenefitDuration", back_populates="benefit")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id}>"
@@ -107,50 +113,44 @@ class Model_ConfigBenefit(BaseModel):
         return cls.query.filter(cls.benefit_id == id).first()
 
 
-class Model_ConfigBenefitStateAvailability(BaseModel):
-    __tablename__ = CONFIG_BENEFIT_STATE_AVAILABILITY
-    __table_args__ = (
-        db.UniqueConstraint('benefit_id', 'state_id', 'state_effective_date'),
-        db.CheckConstraint('state_effective_date <= state_expiration_date')
-    )
 
-    benefit_state_availability_id = db.Column(db.Integer, primary_key=True)
-    benefit_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT}.benefit_id"), nullable=False)
-    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"), nullable=False)
-    state_effective_date = db.Column(db.Date, nullable=False)
-    state_expiration_date = db.Column(db.Date, nullable=False)
-    min_value = db.Column(db.Numeric(2), nullable=False)
-    max_value = db.Column(db.Numeric(2), nullable=False)
-    step_value = db.Column(db.Numeric(2), nullable=False)
-    unit_code = db.Column(db.String(30), db.ForeignKey(
-        f"{REF_UNIT_CODE}.unit_code"), nullable=False)
+class Model_ConfigBenefitProductVariation(BaseModel):
+    __tablename__ = CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY
 
-    state = db.relationship("Model_RefStates")
-    benefit = db.relationship("Model_ConfigBenefit", back_populates="states")
-    durations = db.relationship(
-        "Model_ConfigBenefitDuration", back_populates="benefit", lazy="joined")
+    benefit_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT}.benefit_id"), primary_key=True)
+    product_variation_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT_VARIATIONS}.product_variation_id"), primary_key=True)
+
+    benefit = db.relationship(
+        "Model_ConfigBenefit", back_populates="product_variations")
+    product_variation = db.relationship(
+        "Model_ConfigProductVariations", back_populates="benefits")
 
     def __repr__(self):
-        return f"<Benefit Id: {self.benefit_id} - State: {self.state_code}>"
+        return f"<Benefit Id: {self.benefit_id} - Variation ID: {self.product_variation_id}>"
 
     @classmethod
-    def find(cls, id):
-        return cls.query.filter(cls.benefit_state_availability_id == id).first()
+    def find_benefits(cls, id):
+        return cls.query.filter(cls.benefit_id == id).all()
+
+    @classmethod
+    def find_product_variations(cls, id):
+        return cls.query.filter(cls.product_variation_id == id).all()
+
 
 
 class Model_ConfigBenefitDuration(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION
     __table_args__ = (
-        db.UniqueConstraint('benefit_state_availability_id', 'benefit_duration_code'),
+        db.UniqueConstraint('benefit_id', 'benefit_duration_code'),
     )
 
     benefit_duration_id = db.Column(db.Integer, primary_key=True)
-    benefit_state_availability_id = db.Column(db.Integer, db.ForeignKey(
-        f"{CONFIG_BENEFIT_STATE_AVAILABILITY}.benefit_state_availability_id"))
+    benefit_id = db.Column(db.Integer, db.ForeignKey(
+        f"{CONFIG_BENEFIT}.benefit_id"))
     benefit_duration_code = db.Column(
         db.String(30), db.ForeignKey(f"{REF_BENEFIT_DURATION}.duration_code"))
 
-    benefit = db.relationship("Model_ConfigBenefitStateAvailability",
+    benefit = db.relationship("Model_ConfigBenefit",
                               back_populates="durations")
     duration_items = db.relationship(
         "Model_ConfigBenefitDurationItems", back_populates="duration", lazy="joined")

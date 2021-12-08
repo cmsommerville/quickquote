@@ -1,31 +1,18 @@
 <template>
   <div>
-    <v-card v-if="inherit">
-      <v-card-title>States</v-card-title>
-      <v-card-text
-        >State applicability is inherited from the product level.</v-card-text
+    <div>
+      <v-list-item
+        v-for="state in states"
+        :key="state.provision_state_applicability_id"
+        dense
       >
-    </v-card>
-    <div v-if="!inherit">
-      <v-list-item v-for="state in states" :key="state.code" dense>
         <v-row>
           <v-col sm="2" class="d-flex justify-center align-self-start">
             <v-select
               :items="stateInput"
-              item-text="label"
-              item-value="code"
-              v-model="state.code"
-              filled
-              outlined
-              dense
-            ></v-select>
-          </v-col>
-          <v-col sm="3" class="d-flex justify-center align-self-start">
-            <v-select
-              :items="requirementTypes"
-              item-text="label"
-              item-value="code"
-              v-model="state.value"
+              item-text="state_name"
+              item-value="state_id"
+              v-model="state.state_id"
               filled
               outlined
               dense
@@ -34,11 +21,10 @@
 
           <v-col sm="3" class="d-flex justify-center align-self-start">
             <v-text-field
-              v-model="state.effectiveDate"
+              v-model="state.state_effective_date"
               filled
               outlined
               dense
-              :disabled="state.value && state.value === 'prohibited'"
               type="date"
               label="Effective Date"
             />
@@ -46,7 +32,7 @@
 
           <v-col sm="3" class="d-flex justify-center align-self-start">
             <v-text-field
-              v-model="state.expiryDate"
+              v-model="state.state_expiration_date"
               filled
               outlined
               dense
@@ -63,45 +49,24 @@
       <v-btn color="primary" class="mx-4" @click="submitProvisionStates">
         Save
       </v-btn>
-      <v-btn
-        v-if="inherit"
-        color="secondary"
-        class="mx-4"
-        @click="overrideInheritedApplicability"
-      >
-        Override
-      </v-btn>
-      <v-btn
-        v-if="!inherit"
-        color="secondary"
-        class="mx-4"
-        @click="addStateInput"
-      >
+
+      <v-btn color="secondary" class="mx-4" @click="addStateInput">
         Add State
-      </v-btn>
-      <v-btn v-if="!inherit" color="secondary" class="mx-4" @click="setInherit">
-        Inherit State Applicability
       </v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import { STATES } from "../../data/lookups.js";
+import axios from "../../services/axios";
 
 export default {
   name: "ConfigProvisionStates",
-  props: {
-    productId: {
-      type: String,
-      required: false,
-    },
-  },
   data() {
     return {
       inherit: false,
       config: null,
-      stateInput: [...STATES],
+      stateInput: [],
       states: [],
       requirementTypes: [
         { code: "permitted", label: "Permitted" },
@@ -111,27 +76,42 @@ export default {
     };
   },
   mounted() {
-    this.config = this.$store.getters.getProvisionConfig;
-    if (this.config.states === "inherit") {
-      this.inherit = true;
-    } else {
-      this.states = [...this.config.states];
+    this.loaded = false;
+    if (this.$route.query.provision_id) {
+      this.product_id = this.$route.query.product_id;
+      this.provision_id = this.$route.query.provision_id;
+      Promise.all([
+        axios.get(`/config/provision/state/${this.$route.query.provision_id}`),
+        axios.get("/config/ref-states"),
+      ])
+        .then(([states, stateInput]) => {
+          if (states.data.length) {
+            this.states = [...states.data];
+            this.provision_effective_date =
+              states.data[0].provision.provision_effective_date ?? "1900-01-01";
+            this.provision_expiration_date =
+              states.data[0].provision.provision_expiration_date ??
+              "1900-01-01";
+          }
+          this.stateInput = [...stateInput.data];
+
+          this.loaded = true;
+        })
+        .catch((this.error = true));
     }
   },
   computed: {
-    outputProvision() {
+    output() {
       return {
         ...this.config,
-        states: this.inherit ? "inherit" : this.states,
       };
     },
   },
   methods: {
-    routeToProvision() {
+    routeTo(route_name, params = {}) {
       this.$router.push({
-        name: "config-provision",
-        query: { code: this.config.name },
-        params: { productId: this.productId },
+        name: route_name,
+        query: { product_id: this.product_id, ...params },
       });
     },
     addStateInput() {
@@ -161,4 +141,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>
