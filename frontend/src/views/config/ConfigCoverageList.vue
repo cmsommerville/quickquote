@@ -5,21 +5,6 @@
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
             <v-card-title>{{ coverage.coverage_label }}</v-card-title>
-            <v-card-subtitle
-              >{{
-                new Date(variation.coverage_effective_date).toLocaleDateString(
-                  "en-US",
-                  { timeZone: "UTC" }
-                )
-              }}
-              -
-              {{
-                new Date(variation.coverage_expiration_date).toLocaleDateString(
-                  "en-US",
-                  { timeZone: "UTC" }
-                )
-              }}</v-card-subtitle
-            >
           </div>
           <div class="card-edit-buttons ma-2">
             <v-tooltip bottom>
@@ -49,14 +34,16 @@
         bottom
         fab
         right
-        @click="routeTo('config-product-variation')"
+        @click="routeTo('config-coverage')"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="save"> Save Changes </v-btn>
+      <v-btn color="primary" class="mx-4" @click="routeTo('config-product')">
+        Back to Product
+      </v-btn>
     </div>
   </div>
 </template>
@@ -65,7 +52,7 @@
 import axios from "../../services/axios";
 
 export default {
-  name: "ConfigProvisionList",
+  name: "ConfigCoverageList",
   data() {
     return {
       loaded: false,
@@ -75,9 +62,9 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    this.product_variation_id = this.$route.query.product_variation_id;
+    this.product_id = this.$route.query.product_id;
     const res = await axios.get(
-      `/qry-config/all-coverages?product_variation_id=${this.product_variation_id}`
+      `/qry-config/all-coverages?product_id=${this.product_id}`
     );
     this.coverages = [...res.data];
     this.loaded = true;

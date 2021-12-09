@@ -19,6 +19,7 @@ class Model_ConfigCoverage(BaseModel):
     )
 
     coverage_id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"), nullable=False)
     coverage_code = db.Column(db.String(30), nullable=False)
     coverage_label = db.Column(db.String(100), nullable=False)
     section_code = db.Column(db.String(30), default=COVERAGE_SECTION_DEFAULT)
@@ -27,3 +28,11 @@ class Model_ConfigCoverage(BaseModel):
 
     def __repr__(self):
         return f"<Coverage ID: {self.coverage_id} - {self.coverage_code}>"
+
+    @classmethod
+    def find(cls, id): 
+        return cls.query.filter(cls.coverage_id == id).first()
+
+    @classmethod
+    def find_by_product(cls, id: int):
+        return cls.query.filter(cls.product_id == id).all()

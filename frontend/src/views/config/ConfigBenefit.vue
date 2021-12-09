@@ -1,124 +1,114 @@
 <template>
   <div>
-    <div class="mb-4" v-if="loaded">
-      <v-row>
-        <v-col sm="5">
-          <v-form>
-            <v-text-field
-              v-model="label"
-              filled
-              outlined
-              label="Benefit Name"
-            />
+    <div class="mb-4 main-section" v-if="loaded">
+      <v-form class="benefit-form">
+        <v-text-field
+          v-model="benefit_label"
+          filled
+          outlined
+          label="Benefit Name"
+        />
 
-            <v-text-field v-model="code" filled outlined label="Benefit Code" />
+        <v-text-field
+          v-model="benefit.benefit_code"
+          filled
+          outlined
+          label="Benefit Code"
+        />
 
-            <v-row>
-              <v-col :sm="ui.component === 'v-select' ? 9 : 12">
-                <v-select
-                  v-model="ui.component"
-                  filled
-                  outlined
-                  label="Component Type"
-                  :items="componentTypes"
-                  item-text="label"
-                  item-value="code"
-                />
-              </v-col>
-              <v-col v-if="ui.component === 'v-select'" sm="3">
-                <app-modal-list-form
-                  v-if="ui.component === 'v-select'"
-                  title="Select Options"
-                  :schema="[
-                    { code: 'text', label: 'Label' },
-                    { code: 'value', label: 'Value' },
-                  ]"
-                  @submit:list-data="selectListItemsHandler"
-                  class="ma-2"
-                >
-                  <v-icon>mdi-pencil-outline</v-icon>
-                </app-modal-list-form>
-              </v-col>
-            </v-row>
+        <v-text-field
+          v-model="benefit.benefit_effective_date"
+          type="date"
+          filled
+          outlined
+          label="Effective Date"
+        />
+        <v-text-field
+          v-model="benefit.benefit_expiration_date"
+          type="date"
+          filled
+          outlined
+          label="Expiration Date"
+        />
 
-            <v-select
-              v-if="ui.component === 'v-text-field'"
-              v-model="ui.type"
-              filled
-              outlined
-              label="Input Type"
-              :items="inputTypes"
-              item-text="label"
-              item-value="code"
-            />
-          </v-form>
-        </v-col>
-        <v-col></v-col>
-        <v-col sm="6" class="d-flex flex-column">
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Amounts"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureBenefit('config-benefit-amounts')"
-              >
-                Setup Benefit Amounts!
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
+        <v-select
+          v-model="benefit.coverage_id"
+          :items="coverages"
+          item-text="coverage_label"
+          item-value="coverage_id"
+          filled
+          outlined
+          label="Coverage"
+        />
 
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Duration"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureBenefit('config-benefit-durations')"
-              >
-                Vary by duration!
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
+        <v-spacer></v-spacer>
 
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="States"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureBenefit('config-benefit-states')"
-              >
-                {{
-                  states === "inherit"
-                    ? "Applicability inherited"
-                    : states.length
-                    ? `${states.length} states configured`
-                    : "Setup States!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
+        <v-text-field
+          v-model="benefit.min_value"
+          type="number"
+          filled
+          outlined
+          label="Benefit Minimum"
+        />
+        <v-text-field
+          v-model="benefit.max_value"
+          type="number"
+          filled
+          outlined
+          label="Benefit Maximum"
+        />
+        <v-text-field
+          v-model="benefit.step_value"
+          type="number"
+          filled
+          outlined
+          label="Step Size"
+        />
+        <v-select
+          v-model="benefit.unit_code"
+          :items="unit_code_types"
+          filled
+          outlined
+          label="Unit Type"
+        />
+      </v-form>
+      <div class="config-cards">
+        <app-dashboard-card
+          title="Amounts"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configure"
+        >
+          Setup Benefit Amounts!
+        </app-dashboard-card>
 
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Factors"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureBenefit('config-benefit-factors')"
-              >
-                {{ `${factors.length} factor variations` }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+        <app-dashboard-card
+          title="Duration"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configure"
+        >
+          Vary by duration!
+        </app-dashboard-card>
+
+        <app-dashboard-card
+          title="States"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configure"
+        >
+          Setup States!
+        </app-dashboard-card>
+
+        <app-dashboard-card
+          title="Factors"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configure"
+        >
+          Setup Factors
+        </app-dashboard-card>
+      </div>
     </div>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn
-        color="primary"
-        class="mx-4"
-        @click="saveBenefit"
-        :disabled="!formIsValid"
-      >
+      <v-btn color="primary" class="mx-4" @click="save" :disabled="!valid">
         Save
       </v-btn>
     </div>
@@ -126,30 +116,33 @@
 </template>
 
 <script>
-import { COMPONENT_TYPES, INPUT_TYPES } from "../../data/lookups.js";
-import AppModalListForm from "../../components/AppModalListForm.vue";
+import axios from "../../services/axios";
+
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
   name: "ConfigBenefit",
-  props: {
-    productId: {
-      type: String,
-      required: false,
-    },
-  },
-  components: { AppModalListForm, AppDashboardCard },
+  components: { AppDashboardCard },
   async mounted() {
     this.loaded = false;
-    const bnft = await this.$store.getters.getBenefitConfig;
+    this.product_id = this.$route.query.product_id;
 
-    this.config = { ...bnft };
-    this.label = bnft.label ?? null;
-    this.code = bnft.code ?? null;
-    this.ui = bnft.ui ? { ...bnft.ui } : {};
-    this.amounts = bnft.amounts ? { ...bnft.amounts } : {};
-    this.factors = bnft.factors ? [...bnft.factors] : [];
-    this.states = bnft.states ?? this.states;
+    const res_covg = await axios.get(
+      `/qry-config/all-coverages?product_id=${this.$route.query.product_id}`
+    );
+
+    this.coverages = [...res_covg.data];
+
+    if (this.$route.query.benefit_id) {
+      this.editable = false;
+      const res = await axios.get(
+        `/config/benefit/${this.$route.query.benefit_id}`
+      );
+      this.benefit_id = this.$route.query.benefit_id;
+      this.initializeData(res.data);
+    } else {
+      this.initializeData();
+    }
 
     this.loaded = true;
   },
@@ -157,71 +150,116 @@ export default {
     return {
       loaded: false,
       config: {},
-      label: null,
-      code: null,
-      ui: {},
-      amounts: {},
-      factors: [],
-      states: [
-        { label: "Alabama", code: "AL", value: "permitted" },
-        { label: "Alaska", code: "AK", value: "mandatory" },
-        { label: "Arizona", code: "AZ", value: "prohibited" },
-        { label: "Arkansas", code: "AR", value: "permitted" },
-        { label: "North Carolina", code: "NC", value: "permitted" },
-        { label: "South Carolina", code: "SC", value: "permitted" },
-      ],
-      componentTypes: [...COMPONENT_TYPES],
-      inputTypes: [...INPUT_TYPES],
+      coverages: [],
+      product_id: null,
+      benefit_id: null,
+      benefit_label: null,
+      benefit: {
+        benefit_code: null,
+        benefit_effective_date: "1900-01-01",
+        benefit_expiration_date: "9999-12-31",
+        coverage_id: null,
+        min_value: null,
+        max_value: null,
+        step_value: null,
+        unit_code: null,
+      },
+      unit_code_types: ["Dollars", "Percent"],
     };
   },
   computed: {
-    formIsValid() {
-      return !!this.label && !!this.code;
+    valid() {
+      return (
+        !!this.benefit_label &&
+        !!this.benefit.benefit_code &&
+        !!this.benefit.benefit_effective_date &&
+        !!this.benefit.benefit_expiration_date &&
+        !!this.benefit.coverage_id &&
+        this.benefit.min_value !== null &&
+        !!this.benefit.max_value &&
+        !!this.benefit.step_value &&
+        !!this.benefit.unit_code
+      );
     },
-    outputBenefit() {
+    output() {
       return {
-        ...this.config,
-        label: this.label,
-        code: this.code,
-        ui: { ...this.ui },
+        ...this.benefit,
+        product_id: this.product_id,
+        benefit: {
+          benefit_code: this.benefit.benefit_code,
+          benefit_label: this.benefit_label,
+        },
       };
     },
   },
   methods: {
-    routeToBenefitRoute(name) {
+    initializeData(config = {}) {
+      this.config = { ...config };
+      this.benefit_label = config.benefit.benefit_label ?? null;
+      this.benefit.benefit_code = config.benefit_code ?? null;
+      this.benefit.benefit_effective_date =
+        config.benefit_effective_date ?? "1900-01-01";
+      this.benefit.benefit_expiration_date =
+        config.benefit_expiration_date ?? "9999-12-31";
+      this.benefit.coverage_id = config.coverage_id ?? null;
+      this.benefit.min_value = config.min_value ?? 0;
+      this.benefit.max_value = config.max_value ?? null;
+      this.benefit.step_value = config.step_value ?? null;
+      this.benefit.unit_code = config.unit_code ?? null;
+
+      if (config.benefit_id) {
+        this.benefit_id = config.benefit_id;
+      }
+      if (config.coverage_id) {
+        this.coverage_id = config.coverage_id;
+      }
+    },
+    routeTo(name, params = {}) {
       this.$router.push({
         name: name,
-        params: { productId: this.productId },
+        query: { product_id: this.product_id, ...params },
       });
     },
-    routeToBenefitList() {
-      this.$router.push({
-        name: "config-benefit-list",
-        params: { productId: this.productId },
-      });
+    configure() {
+      console.log("woot woot");
     },
-    storeBenefit() {
-      this.$store.commit("SET_NEW_BENEFIT", this.outputBenefit);
-    },
-    saveBenefit() {
-      this.storeBenefit();
-      this.$store.dispatch("addNewBenefitToList");
-      this.routeToBenefitList();
-    },
-    configureBenefit(route) {
-      this.storeBenefit();
-      this.routeToBenefitRoute(route);
-    },
-    selectListItemsHandler(payload) {
-      this.ui.items = [...payload];
+    async save() {
+      if (this.benefit_id) {
+        await axios.put(`/config/benefit/${this.benefit_id}`, {
+          ...this.output,
+          benefit_id: this.benefit_id,
+        });
+      } else {
+        await axios.post("/config/benefit", {
+          ...this.output,
+        });
+      }
+
+      this.routeTo("config-benefit-list");
     },
   },
 };
 </script>
 
 <style scoped>
-.card-state {
-  position: relative;
+.main-section {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  column-gap: 30px;
+  row-gap: 15px;
+}
+
+.benefit-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.config-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 15px;
 }
 
 .btn-edit {

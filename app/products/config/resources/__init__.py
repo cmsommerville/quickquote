@@ -6,6 +6,7 @@ from .Config_RefTables import *
 from .Config_Benefit import *
 from .Query_Product import *
 from .Query_Coverage import *
+from .Query_Benefit import *
 from .Query_Provision import *
 from .Query_AgeBands import *
 from .Query_ProductVariations import *
@@ -71,6 +72,10 @@ routes = [
         "class": CRUD_RefRatingAlgorithm, 
         "endpoints": ['/config/ref-rating-algorithm/<string:code>', '/config/ref-rating-algorithm']
     }, 
+    {
+        "class": CRUD_RefUnitCode, 
+        "endpoints": ['/config/ref-unit-code/<string:code>', '/config/ref-unit-code']
+    }, 
     
 
     {
@@ -88,6 +93,10 @@ routes = [
     {
         "class": Query_AllCoverages,  
         "endpoints": ['/qry-config/all-coverages']
+    }, 
+    {
+        "class": Query_AllBenefits,  
+        "endpoints": ['/qry-config/all-benefits']
     }, 
     {
         "class": Query_AllProvisions, 

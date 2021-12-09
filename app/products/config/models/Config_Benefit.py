@@ -89,9 +89,9 @@ class Model_ConfigBenefit(BaseModel):
         db.String(30), db.ForeignKey(f"{REF_BENEFIT}.benefit_code"), nullable=False)
     benefit_effective_date = db.Column(db.Date(), nullable=False)
     benefit_expiration_date = db.Column(db.Date(), nullable=False)
-    min_value = db.Column(db.Numeric(2), nullable=False)
-    max_value = db.Column(db.Numeric(2), nullable=False)
-    step_value = db.Column(db.Numeric(2), nullable=False)
+    min_value = db.Column(db.Numeric(12, 2), nullable=False)
+    max_value = db.Column(db.Numeric(12, 2), nullable=False)
+    step_value = db.Column(db.Numeric(12, 4), nullable=False)
     unit_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_UNIT_CODE}.unit_code"), nullable=False)
 
@@ -112,6 +112,9 @@ class Model_ConfigBenefit(BaseModel):
     def find(cls, id):
         return cls.query.filter(cls.benefit_id == id).first()
 
+    @classmethod
+    def find_by_product(cls, id: int):
+        return cls.query.filter(cls.product_id == id).all()
 
 
 class Model_ConfigBenefitProductVariation(BaseModel):
@@ -173,7 +176,7 @@ class Model_ConfigBenefitDurationItems(BaseModel):
     benefit_duration_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"), nullable=False)
     item_code = db.Column(db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
     benefit_duration_factor = db.Column(
-        db.Numeric(FACTOR_DECIMAL_PRECISION), nullable=False)
+        db.Numeric(FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION), nullable=False)
 
     duration = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="duration_items")

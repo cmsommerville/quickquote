@@ -64,6 +64,17 @@
           @click:configure="configureCoverages"
         >
           {{
+            config && config.coverages
+              ? `${config.coverages.length} coverages configured`
+              : "Setup Coverages!"
+          }}
+        </app-dashboard-card>
+        <app-dashboard-card
+          title="Benefits"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureBenefits"
+        >
+          {{
             config && config.benefits
               ? `${config.benefits.length} benefits configured`
               : "Setup Benefits!"
@@ -85,12 +96,7 @@
     </div>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn
-        color="primary"
-        class="mx-4"
-        :disabled="!valid"
-        @click="saveProduct"
-      >
+      <v-btn color="primary" class="mx-4" :disabled="!valid" @click="save">
         Save
       </v-btn>
       <v-btn
@@ -178,6 +184,9 @@ export default {
       this.product_code = config.product_code;
       this.product_effective_date = config.product_effective_date;
       this.product_expiration_date = config.product_expiration_date;
+      if (config.product_id) {
+        this.product_id = config.product_id;
+      }
     },
     routeTo(route_name) {
       this.$router.push({
@@ -187,7 +196,10 @@ export default {
         },
       });
     },
-    async saveProduct() {
+    async save() {
+      if (!this.valid) {
+        return;
+      }
       let res;
       if (this.product_id) {
         res = await axios.put(`/config/product/${this.product_id}`, {
@@ -201,19 +213,24 @@ export default {
       this.initializeData(res.data);
       this.snackbar_message = "Saved to DB";
       this.snackbar = true;
+      this.editable = false;
     },
     configureProvisions() {
       this.routeTo("config-provision-list");
     },
     configureCoverages() {
+      this.save();
       this.routeTo("config-coverage-list");
     },
+    configureBenefits() {
+      this.routeTo("config-benefit-list");
+    },
     configureStates() {
-      this.saveProduct();
+      this.save();
       this.routeTo("config-product-states");
     },
     configureVariations() {
-      this.saveProduct();
+      this.save();
       this.routeTo("config-product-variation-list");
     },
   },

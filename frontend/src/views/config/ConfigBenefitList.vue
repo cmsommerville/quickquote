@@ -1,13 +1,10 @@
 <template>
   <div class="content" v-if="benefits">
-    <v-row v-for="bnft in benefits" :key="bnft.code">
+    <v-row v-for="bnft in benefits" :key="bnft.benefit_id">
       <v-col cols="12" xs="12">
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
-            <v-card-title>{{ bnft.label }}</v-card-title>
-            <v-card-subtitle
-              >Component Type: {{ bnft.ui.component }}</v-card-subtitle
-            >
+            <v-card-title>{{ bnft.benefit.benefit_label }}</v-card-title>
           </div>
           <div class="card-edit-buttons ma-2">
             <v-tooltip bottom>
@@ -19,7 +16,7 @@
                   class="mr-2"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editBenefit(bnft.code)"
+                  @click="edit(bnft.benefit_id)"
                   ><v-icon color="primary">mdi-pencil</v-icon></v-btn
                 >
               </template>
@@ -37,68 +34,47 @@
         bottom
         fab
         right
-        @click="routeToBenefit(null)"
+        @click="routeTo('config-benefit')"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveBenefits">
-        Save Changes
+      <v-btn color="primary" class="mx-4" @click="routeTo('config-product')">
+        Back to Product
       </v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "../../services/axios.js";
 export default {
   name: "ConfigBenefitList",
-  props: {
-    productId: {
-      type: String,
-      required: false,
-    },
-  },
   data() {
     return {
-      benefits: null,
+      benefits: [],
     };
   },
-  mounted() {
-    this.benefits = [...this.$store.getters.getBenefitConfigList];
+  async mounted() {
+    this.loaded = false;
+    this.product_id = this.$route.query.product_id;
+    const res = await axios.get(
+      `/qry-config/all-benefits?product_id=${this.product_id}`
+    );
+    this.benefits = [...res.data];
+    this.loaded = true;
   },
   methods: {
-    routeToProduct() {
+    routeTo(route_name, params = {}) {
       this.$router.push({
-        name: "config-product",
-        params: { productId: this.productId },
+        name: route_name,
+        query: { product_id: this.product_id, ...params },
       });
     },
-    routeToBenefit(code) {
-      if (code) {
-        this.$router.push({
-          name: "config-benefit",
-          query: { code },
-          params: { productId: this.productId },
-        });
-      } else {
-        this.$router.push({
-          name: "config-benefit",
-          params: { productId: this.productId },
-        });
-      }
-    },
-    saveBenefits() {
-      this.$store.commit("APPEND_ALL_BENEFITS");
-      this.routeToProduct();
-    },
-    editBenefit(code) {
-      this.$store.commit(
-        "SET_NEW_BENEFIT",
-        this.benefits.find((item) => item.code === code)
-      );
-      this.routeToBenefit(code);
+    edit(id) {
+      this.routeTo("config-benefit", { benefit_id: id });
     },
   },
 };
