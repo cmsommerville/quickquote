@@ -99,6 +99,10 @@ routes = [
         "endpoints": ['/qry-config/all-benefits']
     }, 
     {
+        "class": Query_AllBenefitDurations,  
+        "endpoints": ['/qry-config/all-benefit-durations']
+    }, 
+    {
         "class": Query_AllProvisions, 
         "endpoints": ['/qry-config/all-provisions']
     }, 

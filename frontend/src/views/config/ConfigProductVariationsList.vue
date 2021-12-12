@@ -67,16 +67,20 @@ import axios from "../../services/axios";
 
 export default {
   name: "ConfigProvisionList",
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   data() {
     return {
       loaded: false,
-      product_id: null,
       product_variations: [],
     };
   },
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
     const res = await axios.get(
       `/qry-config/all-product-variations?product_id=${this.product_id}`
     );
@@ -85,12 +89,13 @@ export default {
   },
   methods: {
     save() {
-      console.log("Saved");
+      this.routeTo("config-product", { product_id: this.product_id });
     },
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: { product_id: this.product_id, ...params },
+        params: { product_id: this.product_id },
+        query: { ...params },
       });
     },
     edit(id) {

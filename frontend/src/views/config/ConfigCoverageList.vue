@@ -41,7 +41,11 @@
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="routeTo('config-product')">
+      <v-btn
+        color="primary"
+        class="mx-4"
+        @click="routeTo('config-product', { product_id: product_id })"
+      >
         Back to Product
       </v-btn>
     </div>
@@ -53,6 +57,12 @@ import axios from "../../services/axios";
 
 export default {
   name: "ConfigCoverageList",
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   data() {
     return {
       loaded: false,
@@ -62,7 +72,6 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
     const res = await axios.get(
       `/qry-config/all-coverages?product_id=${this.product_id}`
     );
@@ -70,13 +79,11 @@ export default {
     this.loaded = true;
   },
   methods: {
-    save() {
-      console.log("Saved");
-    },
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: { product_id: this.product_id, ...params },
+        params: { product_id: this.product_id },
+        query: { ...params },
       });
     },
     edit(id) {

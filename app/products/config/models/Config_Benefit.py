@@ -85,6 +85,7 @@ class Model_ConfigBenefit(BaseModel):
     product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"))
     coverage_id = db.Column(db.Integer, db.ForeignKey(
         f"{CONFIG_COVERAGE}.coverage_id"), nullable=False)
+    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"), nullable=False)
     benefit_code = db.Column(
         db.String(30), db.ForeignKey(f"{REF_BENEFIT}.benefit_code"), nullable=False)
     benefit_effective_date = db.Column(db.Date(), nullable=False)
@@ -104,6 +105,7 @@ class Model_ConfigBenefit(BaseModel):
     benefit = db.relationship("Model_RefBenefit")
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit")
+    state = db.relationship("Model_RefStates")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id}>"
@@ -155,6 +157,7 @@ class Model_ConfigBenefitDuration(BaseModel):
 
     benefit = db.relationship("Model_ConfigBenefit",
                               back_populates="durations")
+    duration = db.relationship("Model_RefBenefitDuration")
     duration_items = db.relationship(
         "Model_ConfigBenefitDurationItems", back_populates="duration", lazy="joined")
 
@@ -164,6 +167,10 @@ class Model_ConfigBenefitDuration(BaseModel):
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.benefit_duration_id == id).first()
+
+    @classmethod
+    def find_by_benefit(cls, id):
+        return cls.query.filter(cls.benefit_id == id).all()
 
 
 class Model_ConfigBenefitDurationItems(BaseModel):
@@ -180,6 +187,8 @@ class Model_ConfigBenefitDurationItems(BaseModel):
 
     duration = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="duration_items")
+
+    duration_item = db.relationship("Model_RefBenefitDurationItems")
         
     def __repr__(self):
         return f"<Benefit Duration Item Id: {self.benefit_duration_item_id}>"

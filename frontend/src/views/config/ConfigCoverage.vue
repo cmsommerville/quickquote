@@ -38,9 +38,14 @@ import axios from "../../services/axios";
 
 export default {
   name: "ConfigCoverage",
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
 
     if (this.$route.query.coverage_id) {
       this.editable = false;
@@ -60,7 +65,6 @@ export default {
       loaded: false,
       config: {},
       coverage_id: null,
-      product_id: null,
       coverage_code: null,
       coverage_label: null,
       section_code: null,
@@ -95,11 +99,9 @@ export default {
     routeTo(name, params = {}) {
       this.$router.push({
         name: name,
-        query: { product_id: this.product_id, ...params },
+        params: { product_id: this.product_id },
+        query: { ...params },
       });
-    },
-    configure() {
-      console.log("woot woot");
     },
     async save() {
       if (this.coverage_id) {

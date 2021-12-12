@@ -3,7 +3,7 @@
     <div class="mb-4 main-section" v-if="loaded">
       <v-form class="benefit-form">
         <v-text-field
-          v-model="benefit_label"
+          v-model="benefit.benefit_label"
           filled
           outlined
           label="Benefit Name"
@@ -41,7 +41,15 @@
           label="Coverage"
         />
 
-        <v-spacer></v-spacer>
+        <v-select
+          v-model="benefit.state_id"
+          :items="states"
+          item-text="state_name"
+          item-value="state_id"
+          filled
+          outlined
+          label="State"
+        />
 
         <v-text-field
           v-model="benefit.min_value"
@@ -74,35 +82,27 @@
       </v-form>
       <div class="config-cards">
         <app-dashboard-card
-          title="Amounts"
-          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configure"
-        >
-          Setup Benefit Amounts!
-        </app-dashboard-card>
-
-        <app-dashboard-card
           title="Duration"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configure"
+          @click:configure="configureDurations"
         >
-          Vary by duration!
+          Setup Durations!
         </app-dashboard-card>
 
         <app-dashboard-card
-          title="States"
+          title="Plan Rates"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configure"
         >
-          Setup States!
+          Setup Plan Rates!
         </app-dashboard-card>
 
         <app-dashboard-card
-          title="Factors"
+          title="Provisions"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configure"
         >
-          Setup Factors
+          Attach Provisions!
         </app-dashboard-card>
       </div>
     </div>
@@ -110,6 +110,13 @@
     <div class="call-to-action d-flex justify-center align-center mt-4">
       <v-btn color="primary" class="mx-4" @click="save" :disabled="!valid">
         Save
+      </v-btn>
+      <v-btn
+        color="primary"
+        class="mx-4"
+        @click="routeTo('config-benefit-list')"
+      >
+        Back
       </v-btn>
     </div>
   </div>
@@ -123,15 +130,14 @@ import AppDashboardCard from "../../components/AppDashboardCard.vue";
 export default {
   name: "ConfigBenefit",
   components: { AppDashboardCard },
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
-
-    const res_covg = await axios.get(
-      `/qry-config/all-coverages?product_id=${this.$route.query.product_id}`
-    );
-
-    this.coverages = [...res_covg.data];
 
     if (this.$route.query.benefit_id) {
       this.editable = false;
@@ -143,34 +149,35 @@ export default {
     } else {
       this.initializeData();
     }
+    const promise_covg = axios.get(
+      `/qry-config/all-coverages?product_id=${this.product_id}`
+    );
+    const promise_states = axios.get("/config/ref-states");
 
-    this.loaded = true;
+    Promise.all([promise_covg, promise_states]).then(
+      ([res_covg, res_states]) => {
+        this.coverages = [...res_covg.data];
+        this.states = [...res_states.data];
+
+        this.loaded = true;
+      }
+    );
   },
   data() {
     return {
       loaded: false,
-      config: {},
       coverages: [],
-      product_id: null,
+      states: [],
       benefit_id: null,
-      benefit_label: null,
-      benefit: {
-        benefit_code: null,
-        benefit_effective_date: "1900-01-01",
-        benefit_expiration_date: "9999-12-31",
-        coverage_id: null,
-        min_value: null,
-        max_value: null,
-        step_value: null,
-        unit_code: null,
-      },
+      benefit: {},
       unit_code_types: ["Dollars", "Percent"],
     };
   },
   computed: {
     valid() {
       return (
-        !!this.benefit_label &&
+        this.benefit.state_id !== null &&
+        !!this.benefit.benefit_label &&
         !!this.benefit.benefit_code &&
         !!this.benefit.benefit_effective_date &&
         !!this.benefit.benefit_expiration_date &&
@@ -182,30 +189,34 @@ export default {
       );
     },
     output() {
+      const { benefit_label, benefit_code, ...benefit } = this.benefit;
       return {
-        ...this.benefit,
-        product_id: this.product_id,
+        ...benefit,
+        benefit_code,
         benefit: {
-          benefit_code: this.benefit.benefit_code,
-          benefit_label: this.benefit_label,
+          benefit_code,
+          benefit_label,
         },
+        product_id: this.product_id,
       };
     },
   },
   methods: {
     initializeData(config = {}) {
-      this.config = { ...config };
-      this.benefit_label = config.benefit.benefit_label ?? null;
-      this.benefit.benefit_code = config.benefit_code ?? null;
-      this.benefit.benefit_effective_date =
-        config.benefit_effective_date ?? "1900-01-01";
-      this.benefit.benefit_expiration_date =
-        config.benefit_expiration_date ?? "9999-12-31";
-      this.benefit.coverage_id = config.coverage_id ?? null;
-      this.benefit.min_value = config.min_value ?? 0;
-      this.benefit.max_value = config.max_value ?? null;
-      this.benefit.step_value = config.step_value ?? null;
-      this.benefit.unit_code = config.unit_code ?? null;
+      this.benefit = {
+        state_id: null,
+        benefit_code: null,
+        benefit_effective_date: "1900-01-01",
+        benefit_expiration_date: "9999-12-31",
+        coverage_id: null,
+        min_value: null,
+        max_value: null,
+        step_value: null,
+        unit_code: null,
+        benefit_label: null,
+        ...(config.benefit ? config.benefit : {}),
+        ...config,
+      };
 
       if (config.benefit_id) {
         this.benefit_id = config.benefit_id;
@@ -217,25 +228,31 @@ export default {
     routeTo(name, params = {}) {
       this.$router.push({
         name: name,
-        query: { product_id: this.product_id, ...params },
+        params: { product_id: this.product_id, benefit_id: this.benefit_id },
+        query: { ...params },
       });
+    },
+    configureDurations() {
+      this.save();
+      this.routeTo("config-benefit-duration-list");
     },
     configure() {
       console.log("woot woot");
     },
     async save() {
+      let res;
       if (this.benefit_id) {
-        await axios.put(`/config/benefit/${this.benefit_id}`, {
+        res = await axios.put(`/config/benefit/${this.benefit_id}`, {
           ...this.output,
           benefit_id: this.benefit_id,
         });
       } else {
-        await axios.post("/config/benefit", {
+        res = await axios.post("/config/benefit", {
           ...this.output,
         });
       }
 
-      this.routeTo("config-benefit-list");
+      this.initializeData(res.data);
     },
   },
 };

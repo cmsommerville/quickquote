@@ -11,12 +11,10 @@ import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue"
 import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vue";
 import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
 import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
-import ConfigBenefitStates from "../../views/config/ConfigBenefitStates.vue";
-import ConfigBenefitAmounts from "../../views/config/ConfigBenefitAmounts.vue";
-import ConfigBenefitFactors from "../../views/config/ConfigBenefitFactors.vue";
-import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurations.vue";
+import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurationList.vue";
+import ConfigBenefitDuration from "../../views/config/ConfigBenefitDuration.vue";
 
-export default [
+const routesProduct = [
   {
     path: "/config/products",
     name: "config-product-list",
@@ -28,90 +26,98 @@ export default [
     component: ConfigProduct,
   },
   {
-    path: "/config/product-variations",
-    name: "config-product-variation-list",
-    component: ConfigProductVariationsList,
-  },
-  {
-    path: "/config/product-variation",
-    name: "config-product-variation",
-    component: ConfigProductVariations,
-  },
-  {
-    path: "/config/coverages",
-    name: "config-coverage-list",
-    component: ConfigCoverageList,
-  },
-  {
-    path: "/config/coverage",
-    name: "config-coverage",
-    component: ConfigCoverage,
-  },
-  {
-    path: "/config/product/provisions",
-    name: "config-provision-list",
-    component: ConfigProvisionList,
-    props: true,
-  },
-  {
-    path: "/config/product/states",
+    path: "/config/product/:product_id/states",
     name: "config-product-states",
     component: ConfigProductStates,
     props: true,
   },
-  {
-    path: "/config/product/provision",
-    name: "config-provision",
-    component: ConfigProvision,
-    props: true,
-  },
-  {
-    path: "/config/product/provision/states",
-    name: "config-provision-states",
-    component: ConfigProvisionStates,
-    props: true,
-  },
-  {
-    path: "/config/product/provision/factors",
-    name: "config-provision-factors",
-    component: ConfigProvisionFactors,
-    props: true,
-  },
+];
 
+const routesProductVariation = [
   {
-    path: "/config/product/benefits",
+    path: "/config/product/:product_id/product-variations",
+    name: "config-product-variation-list",
+    component: ConfigProductVariationsList,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/product-variation",
+    name: "config-product-variation",
+    component: ConfigProductVariations,
+    props: true,
+  },
+];
+
+const routesBenefit = [
+  {
+    path: "/config/product/:product_id/benefits",
     name: "config-benefit-list",
     component: ConfigBenefitList,
     props: true,
   },
   {
-    path: "/config/product/benefit",
+    path: "/config/product/:product_id/benefit",
     name: "config-benefit",
     component: ConfigBenefit,
+    alias: "/config/product/:product_id/benefit/:benefit_id",
     props: true,
   },
   {
-    path: "/config/product/:productId/benefit/states",
-    name: "config-benefit-states",
-    component: ConfigBenefitStates,
-    props: true,
-  },
-  {
-    path: "/config/product/:productId/benefit/amounts",
-    name: "config-benefit-amounts",
-    component: ConfigBenefitAmounts,
-    props: true,
-  },
-  {
-    path: "/config/product/:productId/benefit/factors",
-    name: "config-benefit-factors",
-    component: ConfigBenefitFactors,
-    props: true,
-  },
-  {
-    path: "/config/product/:productId/benefit/durations",
-    name: "config-benefit-durations",
+    path: "/config/product/:product_id/benefit/durations",
+    name: "config-benefit-duration-list",
     component: ConfigBenefitDurations,
     props: true,
   },
+  {
+    path: "/config/product/:product_id/benefit/:benefit_id/duration",
+    name: "config-benefit-duration",
+    component: ConfigBenefitDuration,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/coverages",
+    name: "config-coverage-list",
+    component: ConfigCoverageList,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/coverage",
+    name: "config-coverage",
+    component: ConfigCoverage,
+    props: true,
+  },
+];
+
+const routesProvision = [
+  {
+    path: "/config/product/:product_id/provisions",
+    name: "config-provision-list",
+    component: ConfigProvisionList,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/provision",
+    name: "config-provision",
+    component: ConfigProvision,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/provision/:provision_id/states",
+    name: "config-provision-states",
+    component: ConfigProvisionStates,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/provision/:provision_id/factors",
+    name: "config-provision-factors",
+    component: ConfigProvisionFactors,
+    props: true,
+  },
+];
+
+export default [
+  ...routesProduct,
+  ...routesProductVariation,
+  ...routesBenefit,
+  ...routesProvision,
 ];

@@ -2,13 +2,13 @@
   <div>
     <div class="mt-6">
       <v-list-item
-        v-for="state in states"
+        v-for="state in product_states"
         :key="state.code"
         dense
         class="state-item"
       >
         <v-select
-          :items="stateInput"
+          :items="states"
           item-text="state_name"
           item-value="state_id"
           v-model="state.state_id"
@@ -23,8 +23,8 @@
           outlined
           dense
           type="date"
-          :min="product_effective_date"
-          :max="product_expiration_date"
+          :min="product.product_effective_date"
+          :max="product.product_expiration_date"
           label="Effective Date"
         />
         <v-text-field
@@ -33,17 +33,15 @@
           outlined
           dense
           type="date"
-          :min="product_effective_date"
-          :max="product_expiration_date"
+          :min="product.product_effective_date"
+          :max="product.product_expiration_date"
           label="Expiration Date"
         />
       </v-list-item>
     </div>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveProductStates">
-        Save
-      </v-btn>
+      <v-btn color="primary" class="mx-4" @click="save"> Save </v-btn>
       <v-btn color="secondary" class="mx-4" @click="addStateInput">
         Add State
       </v-btn>
@@ -56,43 +54,39 @@ import axios from "../../services/axios";
 
 export default {
   name: "ConfigProductStates",
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   data() {
     return {
       loaded: false,
-      product_id: null,
-      product_effective_date: "1900-01-01",
-      product_expiration_date: "9999-12-31",
-      stateInput: null,
+      product: {},
+      product_states: [],
       states: [],
       error: false,
     };
   },
   mounted() {
     this.loaded = false;
-    if (this.$route.query.product_id) {
-      this.product_id = this.$route.query.product_id;
-      Promise.all([
-        axios.get(`/config/product/state/${this.$route.query.product_id}`),
-        axios.get("/config/ref-states"),
-      ])
-        .then(([states, stateInput]) => {
-          if (states.data.length) {
-            this.states = [...states.data];
-            this.product_effective_date =
-              states.data[0].product.product_effective_date ?? "1900-01-01";
-            this.product_expiration_date =
-              states.data[0].product.product_expiration_date ?? "1900-01-01";
-          }
-          this.stateInput = [...stateInput.data];
-
-          this.loaded = true;
-        })
-        .catch((this.error = true));
-    }
+    Promise.all([
+      axios.get(`/config/product/state/${this.product_id}`),
+      axios.get("/config/ref-states"),
+      axios.get(`/config/product/${this.product_id}`),
+    ])
+      .then(([states, stateInput, product]) => {
+        this.product = { ...product.data };
+        this.product_states = [...states.data];
+        this.states = [...stateInput.data];
+        this.loaded = true;
+      })
+      .catch((this.error = true));
   },
   computed: {
     output() {
-      return this.states.map((state) => {
+      return this.product_states.map((state) => {
         return {
           ...state,
           product_id: +this.product_id,
@@ -101,25 +95,27 @@ export default {
     },
   },
   methods: {
-    routeTo(route_name) {
+    routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: { product_id: this.product_id },
+        params: { product_id: this.product_id },
+        query: { ...params },
       });
     },
     addStateInput() {
-      this.states = [
-        ...this.states,
+      this.product_states = [
+        ...this.product_states,
         {
+          product_id: this.product_id,
           state_id: null,
-          state_effective_date: this.product_effective_date,
-          state_expiration_date: this.product_expiration_date,
+          state_effective_date: this.product.product_effective_date,
+          state_expiration_date: this.product.product_expiration_date,
         },
       ];
     },
-    async saveProductStates() {
+    async save() {
       await axios.post("/config/product/state", this.output);
-      this.routeTo("config-product");
+      this.routeTo("config-product", { product_id: this.product_id });
     },
   },
 };

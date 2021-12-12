@@ -188,11 +188,14 @@ export default {
         this.product_id = config.product_id;
       }
     },
-    routeTo(route_name) {
+    routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: {
+        params: {
           product_id: this.product_id,
+        },
+        query: {
+          ...params,
         },
       });
     },

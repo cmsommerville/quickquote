@@ -120,7 +120,11 @@
       >
         Edit
       </v-btn>
-      <v-btn color="accent" class="mx-4" @click="routeTo('config-product')">
+      <v-btn
+        color="accent"
+        class="mx-4"
+        @click="routeTo('config-product', { product_id: product_id })"
+      >
         Back
       </v-btn>
     </div>
@@ -147,11 +151,16 @@ import axios from "../../services/axios";
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
-  name: "ConfigProduct",
+  name: "ConfigProductVariation",
   components: { AppDashboardCard },
+  props: {
+    product_id: {
+      required: true,
+      type: Number,
+    },
+  },
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
     if (this.$route.query.product_variation_id) {
       const res = await axios.get(
         `/config/product-variations/${this.$route.query.product_variation_id}`
@@ -168,7 +177,6 @@ export default {
       editable: true,
       loaded: false,
       config: null,
-      product_id: null,
       product_variation_id: null,
       product_variation_label: null,
       product_variation_code: null,
@@ -238,8 +246,8 @@ export default {
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
+        params: { product_id: this.product_id },
         query: {
-          product_id: this.product_id,
           ...params,
         },
       });
