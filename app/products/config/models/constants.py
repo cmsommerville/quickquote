@@ -18,6 +18,7 @@ TBL_NAMES = {
     "CONFIG_PROVISION": "config_provision",
     "CONFIG_PROVISION_STATE_AVAILABILITY": "config_provision_state_availability",
     "CONFIG_PROVISION_UI_COMPONENT": "config_provision_ui_component",
+    "CONFIG_RATE_GROUP": "config_rate_group", 
     "REF_BENEFIT": "ref_benefit",
     "REF_BENEFIT_DURATION": "ref_benefit_duration",
     "REF_BENEFIT_DURATION_ITEMS": "ref_benefit_duration_items",
@@ -29,6 +30,8 @@ TBL_NAMES = {
     "REF_PRODUCT_VARIATIONS": "ref_product_variations",
     "REF_PROVISION": "ref_provision",
     "REF_RATING_ALGORITHM": "ref_rating_algorithm",
+    "REF_RATE_GROUP": "ref_rate_group", 
+    "REF_RATE_TYPE": "ref_rate_type", 
     "REF_STATE": "ref_state",
     "REF_TEXT_FIELD_TYPES": "ref_text_field_types",
     "REF_UNIT_CODE": "ref_unit_code"

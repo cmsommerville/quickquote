@@ -13,6 +13,7 @@ import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
 import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
 import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurationList.vue";
 import ConfigBenefitDuration from "../../views/config/ConfigBenefitDuration.vue";
+import ConfigRateGroupList from "../../views/config/ConfigRateGroupList.vue";
 
 const routesProduct = [
   {
@@ -44,6 +45,15 @@ const routesProductVariation = [
     path: "/config/product/:product_id/product-variation",
     name: "config-product-variation",
     component: ConfigProductVariations,
+    props: true,
+  },
+];
+
+const routesRateGroup = [
+  {
+    path: "/config/product/:product_id/rate-groups",
+    name: "config-rate-group-list",
+    component: ConfigRateGroupList,
     props: true,
   },
 ];
@@ -116,6 +126,7 @@ const routesProvision = [
 ];
 
 export default [
+  ...routesRateGroup,
   ...routesProduct,
   ...routesProductVariation,
   ...routesBenefit,

@@ -11,20 +11,22 @@ class CreateTables(Resource):
         try:
             tables = [tbl for nm, tbl in db.metadata.tables.items()]
 
-            dropTables = request.args.get('drop')
+            dropTables = request.args.get('drop', "N")
+            createTables = request.args.get('create', "N")
+
             if dropTables == 'Y':
                 for tbl in tables:
                     drop_history_table(tbl)
 
                 db.drop_all()
 
-            db.create_all()
-            for tbl in tables:
-                alter_versioned_table(tbl)
+            if createTables == "Y": 
+                db.create_all()
+                for tbl in tables:
+                    alter_versioned_table(tbl)
 
         except Exception as e:
             return str(e), 400
         else:
-            return {"message": "Created tables"}, 200
-
+            return {"message": "Success"}, 200
 

@@ -1,4 +1,5 @@
 from .Config_States import *
+from .Config_RateGroup import *
 from .Config_Product import *
 from .Config_ProductVariations import *
 from .Config_Coverage import *

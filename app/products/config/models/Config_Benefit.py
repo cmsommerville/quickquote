@@ -16,6 +16,7 @@ CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PRODU
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
+CONFIG_RATE_GROUP = TBL_NAMES['CONFIG_RATE_GROUP']
 
 
 class Model_RefBenefit(BaseModel):
@@ -82,12 +83,16 @@ class Model_ConfigBenefit(BaseModel):
     )
 
     benefit_id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"))
-    coverage_id = db.Column(db.Integer, db.ForeignKey(
+    product_id = db.Column(db.ForeignKey(
+        f"{CONFIG_PRODUCT}.product_id"))
+    coverage_id = db.Column(db.ForeignKey(
         f"{CONFIG_COVERAGE}.coverage_id"), nullable=False)
-    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"), nullable=False)
-    benefit_code = db.Column(
-        db.String(30), db.ForeignKey(f"{REF_BENEFIT}.benefit_code"), nullable=False)
+    rate_group_id = db.Column(db.ForeignKey(
+        f"{CONFIG_RATE_GROUP}.rate_group_id"), nullable=False)
+    state_id = db.Column(db.ForeignKey(
+        f"{REF_STATE}.state_id"), nullable=False)
+    benefit_code = db.Column(db.ForeignKey(
+        f"{REF_BENEFIT}.benefit_code"), nullable=False)
     benefit_effective_date = db.Column(db.Date(), nullable=False)
     benefit_expiration_date = db.Column(db.Date(), nullable=False)
     min_value = db.Column(db.Numeric(12, 2), nullable=False)
@@ -95,6 +100,7 @@ class Model_ConfigBenefit(BaseModel):
     step_value = db.Column(db.Numeric(12, 4), nullable=False)
     unit_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_UNIT_CODE}.unit_code"), nullable=False)
+    is_durational = db.Column(db.Boolean, default=False)
 
     product = db.relationship(
         "Model_ConfigProduct", back_populates="benefits")
@@ -103,6 +109,7 @@ class Model_ConfigBenefit(BaseModel):
     coverage = db.relationship(
         "Model_ConfigCoverage", back_populates="benefits")
     benefit = db.relationship("Model_RefBenefit")
+    rate_group = db.relationship("Model_ConfigRateGroup")
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit")
     state = db.relationship("Model_RefStates")

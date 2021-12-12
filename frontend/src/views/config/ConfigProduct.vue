@@ -92,6 +92,14 @@
               : "Setup Provisions!"
           }}
         </app-dashboard-card>
+
+        <app-dashboard-card
+          title="Rate Groups"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureRateGroups"
+        >
+          Setup Rate Groups!
+        </app-dashboard-card>
       </div>
     </div>
     <v-divider></v-divider>
@@ -220,6 +228,10 @@ export default {
     },
     configureProvisions() {
       this.routeTo("config-provision-list");
+    },
+    configureRateGroups() {
+      this.save();
+      this.routeTo("config-rate-group-list");
     },
     configureCoverages() {
       this.save();

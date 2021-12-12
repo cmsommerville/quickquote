@@ -3,6 +3,7 @@ from .Config_Product import *
 from .Config_ProductVariations import *
 from .Config_Provision import *
 from .Config_RefTables import *
+from .Config_RateGroup import *
 from .Config_Benefit import *
 from .Query_Product import *
 from .Query_Coverage import *
@@ -10,6 +11,7 @@ from .Query_Benefit import *
 from .Query_Provision import *
 from .Query_AgeBands import *
 from .Query_ProductVariations import *
+from .Query_RateGroup import *
 
 routes = [
     {
@@ -33,6 +35,10 @@ routes = [
         "endpoints": ['/config/age-band/<int:id>', '/config/age-band']
     }, 
 
+    {
+        "class": CRUD_RateGroupConfig, 
+        "endpoints": ['/config/rate-group/<int:id>', '/config/rate-group']
+    }, 
     {
         "class": CRUD_CoverageConfig, 
         "endpoints": ['/config/coverage/<int:id>', '/config/coverage']
@@ -105,6 +111,10 @@ routes = [
     {
         "class": Query_AllProvisions, 
         "endpoints": ['/qry-config/all-provisions']
+    }, 
+    {
+        "class": Query_AllRateGroups, 
+        "endpoints": ['/qry-config/all-rate-groups']
     }, 
     {
         "class": Query_CoverageStateConfig, 

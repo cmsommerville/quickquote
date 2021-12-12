@@ -90,14 +90,6 @@
         </app-dashboard-card>
 
         <app-dashboard-card
-          title="Plan Rates"
-          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configure"
-        >
-          Setup Plan Rates!
-        </app-dashboard-card>
-
-        <app-dashboard-card
           title="Provisions"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configure"
