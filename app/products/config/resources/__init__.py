@@ -49,6 +49,10 @@ routes = [
         "endpoints": ['/config/benefit/<int:id>', '/config/benefit']
     }, 
     {
+        "class": CRUD_BenefitStateAvailabilityConfig, 
+        "endpoints": ['/config/benefit-state/<int:id>', '/config/benefit-state']
+    }, 
+    {
         "class": CRUD_BenefitDurationConfig, 
         "endpoints": ['/config/benefit-duration/<int:id>', '/config/benefit-duration']
     }, 

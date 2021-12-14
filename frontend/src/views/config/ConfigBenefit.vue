@@ -42,10 +42,22 @@
         />
 
         <v-select
+          v-model="benefit.rate_group_id"
+          :items="rate_groups"
+          item-text="rate_group_label"
+          item-value="rate_group_id"
+          filled
+          outlined
+          label="Rate Group"
+        />
+
+        <v-switch v-model="vary_by_state" label="Vary by State" />
+        <v-select
           v-model="benefit.state_id"
           :items="states"
           item-text="state_name"
           item-value="state_id"
+          :disabled="!vary_by_state"
           filled
           outlined
           label="State"
@@ -131,37 +143,47 @@ export default {
   async mounted() {
     this.loaded = false;
 
-    if (this.$route.query.benefit_id) {
-      this.editable = false;
-      const res = await axios.get(
-        `/config/benefit/${this.$route.query.benefit_id}`
-      );
-      this.benefit_id = this.$route.query.benefit_id;
-      this.initializeData(res.data);
-    } else {
-      this.initializeData();
-    }
     const promise_covg = axios.get(
       `/qry-config/all-coverages?product_id=${this.product_id}`
     );
     const promise_states = axios.get("/config/ref-states");
+    const promise_rg = axios.get(
+      `/qry-config/all-rate-groups?product_id=${this.product_id}`
+    );
+    const promise_bnft = this.fetchBenefitData;
 
-    Promise.all([promise_covg, promise_states]).then(
-      ([res_covg, res_states]) => {
+    Promise.all([promise_covg, promise_states, promise_bnft, promise_rg]).then(
+      ([res_covg, res_states, res_bnft, res_rate_group]) => {
         this.coverages = [...res_covg.data];
         this.states = [...res_states.data];
+        this.rate_groups = [
+          ...res_rate_group.data.map((item) => {
+            return {
+              ...item,
+              ...item.rate_group,
+            };
+          }),
+        ];
+        this.initializeData(res_bnft.data);
 
         this.loaded = true;
       }
     );
+
+    if (this.$route.query.benefit_id) {
+      this.editable = false;
+      this.benefit_id = this.$route.query.benefit_id;
+    }
   },
   data() {
     return {
       loaded: false,
       coverages: [],
+      rate_groups: [],
       states: [],
       benefit_id: null,
       benefit: {},
+      vary_by_state: false,
       unit_code_types: ["Dollars", "Percent"],
     };
   },
@@ -196,11 +218,12 @@ export default {
   methods: {
     initializeData(config = {}) {
       this.benefit = {
-        state_id: null,
+        state_id: 0,
         benefit_code: null,
         benefit_effective_date: "1900-01-01",
         benefit_expiration_date: "9999-12-31",
         coverage_id: null,
+        rate_group_id: null,
         min_value: null,
         max_value: null,
         step_value: null,
@@ -216,6 +239,14 @@ export default {
       if (config.coverage_id) {
         this.coverage_id = config.coverage_id;
       }
+    },
+    fetchBenefitData() {
+      if (this.$route.query.benefit_id) {
+        return axios.get(`/config/benefit/${this.$route.query.benefit_id}`);
+      }
+      return new Promise((resolve) => {
+        resolve({ data: [] });
+      });
     },
     routeTo(name, params = {}) {
       this.$router.push({

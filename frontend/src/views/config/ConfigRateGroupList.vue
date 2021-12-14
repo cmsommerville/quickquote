@@ -86,8 +86,7 @@ export default {
       });
     },
     edit(id) {
-      //   this.routeTo("config-product-variation", { product_variation_id: id });
-      console.log(id);
+      this.routeTo("config-rate-group", { rate_group_id: id });
     },
   },
 };

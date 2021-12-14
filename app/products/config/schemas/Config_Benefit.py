@@ -1,4 +1,5 @@
 import decimal
+from app.products.config.models.Config_Benefit import Model_ConfigBenefitStateAvailability
 from marshmallow import post_dump
 from app.extensions import ma
 from .Config_States import Schema_RefStates
@@ -47,6 +48,26 @@ class Schema_ConfigBenefit(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
     benefit = ma.Nested(Schema_RefBenefit)
+    state = ma.Nested(Schema_RefStates)
+
+    @post_dump(pass_many=True)
+    def formatDecimal(self, data, many, **kwargs):
+        if many:
+            return [{k: v if type(v) != decimal.Decimal else float(v) for k, v in item.items()}
+                    for item in data]
+        else:
+            new_data = {k: v if type(v) != decimal.Decimal else float(v)
+                        for k, v in data.items()}
+            return new_data
+
+class Schema_ConfigBenefitStateAvailability(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Model_ConfigBenefitStateAvailability
+        load_instance = True
+        include_relationships = True
+        include_fk = True
+
+    benefit = ma.Nested(Schema_ConfigBenefit)
     state = ma.Nested(Schema_RefStates)
 
     @post_dump(pass_many=True)

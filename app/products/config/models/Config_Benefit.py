@@ -1,4 +1,5 @@
 import datetime
+from sqlalchemy import DDL, event
 from app.extensions import db
 from app.shared import BaseModel
 
@@ -13,6 +14,7 @@ CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_DURATION = TBL_NAMES['CONFIG_BENEFIT_DURATION']
 CONFIG_BENEFIT_DURATION_ITEMS = TBL_NAMES['CONFIG_BENEFIT_DURATION_ITEMS']
 CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY']
+CONFIG_BENEFIT_STATE_AVAILABILITY = TBL_NAMES['CONFIG_BENEFIT_STATE_AVAILABILITY']
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
@@ -78,7 +80,7 @@ class Model_RefBenefitDurationItems(BaseModel):
 class Model_ConfigBenefit(BaseModel):
     __tablename__ = CONFIG_BENEFIT
     __table_args__ = (
-        db.UniqueConstraint('benefit_code', 'coverage_id'),
+        db.UniqueConstraint('benefit_code', 'state_id'),
         db.CheckConstraint('benefit_effective_date <= benefit_expiration_date'),
     )
 
@@ -124,6 +126,37 @@ class Model_ConfigBenefit(BaseModel):
     @classmethod
     def find_by_product(cls, id: int):
         return cls.query.filter(cls.product_id == id).all()
+        
+
+class Model_ConfigBenefitStateAvailability(BaseModel):
+    __tablename__ = CONFIG_BENEFIT_STATE_AVAILABILITY
+    __table_args__ = (
+        db.UniqueConstraint('benefit_id', 'state_id', 'state_effective_date'),
+        db.CheckConstraint('state_effective_date <= state_expiration_date'),
+    )
+
+    benefit_state_availability_id = db.Column(db.Integer, primary_key=True)
+    benefit_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT}.benefit_id"), nullable=False)
+    state_id = db.Column(db.ForeignKey(
+        f"{REF_STATE}.state_id"), nullable=False)
+    state_effective_date = db.Column(db.Date(), nullable=False)
+    state_expiration_date = db.Column(db.Date(), nullable=False)
+
+    benefit = db.relationship("Model_ConfigBenefit", 
+        primaryjoin="""and_(Model_ConfigBenefitStateAvailability.benefit_id == Model_ConfigBenefit.benefit_id, 
+            Model_ConfigBenefit.state_id == 0)""")
+    state = db.relationship("Model_RefStates")
+
+    def __repr__(self):
+        return f"<Benefit State Availability Id: {self.benefit_state_availability_id}>"
+
+    @classmethod
+    def find(cls, id: int):
+        return cls.query.filter(cls.benefit_state_availability_id == id).first()
+
+    @classmethod
+    def find_by_benefit(cls, id: int):
+        return cls.query.filter(cls.benefit_id == id).all()
 
 
 class Model_ConfigBenefitProductVariation(BaseModel):

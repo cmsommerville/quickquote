@@ -4,8 +4,9 @@ from flask_restful import Resource
 from ..models import Model_RefBenefit, Model_RefBenefitDuration, Model_RefBenefitDurationItems, \
     Model_RefComparisonOperator, Model_RefComponentTypes, Model_RefInterpolationRule, \
     Model_RefRatingAlgorithm, Model_RefProvision, Model_RefStates, Model_RefTextFieldTypes, \
-    Model_RefUnitCode
-from ..schemas import Schema_RefRatingAlgorithm, Schema_RefStates, Schema_RefUnitCode
+    Model_RefUnitCode, Model_RefRateGroup, Model_RefRateType
+from ..schemas import Schema_RefRatingAlgorithm, Schema_RefStates, Schema_RefUnitCode, \
+    Schema_RefRateGroup, Schema_RefRateType
 
 schema_ref_states = Schema_RefStates()
 schema_ref_rating_algorithm = Schema_RefRatingAlgorithm()

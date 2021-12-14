@@ -17,9 +17,9 @@ class CRUD_RateGroupConfig(Resource):
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_schema_list.load(req)
-        Model_ConfigRateGroup.save_all_to_db(config)
-        return config_schema_list.dump(config), 201
+        config = config_schema.load(req)
+        config.save_to_db()
+        return config_schema.dump(config), 201
 
     @classmethod
     def put(cls, id):
