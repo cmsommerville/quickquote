@@ -150,7 +150,7 @@ export default {
     const promise_rg = axios.get(
       `/qry-config/all-rate-groups?product_id=${this.product_id}`
     );
-    const promise_bnft = this.fetchBenefitData;
+    const promise_bnft = this.fetchBenefitData();
 
     Promise.all([promise_covg, promise_states, promise_bnft, promise_rg]).then(
       ([res_covg, res_states, res_bnft, res_rate_group]) => {
@@ -178,6 +178,7 @@ export default {
   data() {
     return {
       loaded: false,
+      config: {},
       coverages: [],
       rate_groups: [],
       states: [],
@@ -217,6 +218,7 @@ export default {
   },
   methods: {
     initializeData(config = {}) {
+      this.config = { ...config };
       this.benefit = {
         state_id: 0,
         benefit_code: null,

@@ -13041,7 +13041,7 @@
 					"_parent": {
 						"$ref": "AAAAAAF9UivVs6Xzj5g="
 					},
-					"name": "PlanRateConfig",
+					"name": "RateGroupConfig",
 					"ownedElements": [
 						{
 							"_type": "ERDRelationship",
@@ -14518,7 +14518,7 @@
 					"_parent": {
 						"$ref": "AAAAAAF9UivVs6Xzj5g="
 					},
-					"name": "RefPlanRate",
+					"name": "RefRateGroup",
 					"ownedElements": [
 						{
 							"_type": "ERDRelationship",
@@ -20666,7 +20666,7 @@
 									"top": 1074,
 									"width": 295.6240234375,
 									"height": 13,
-									"text": "PlanRateConfig"
+									"text": "RateGroupConfig"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",
@@ -20764,7 +20764,7 @@
 									"top": 1085,
 									"width": 237.81591796875,
 									"height": 13,
-									"text": "RefPlanRate"
+									"text": "RefRateGroup"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",

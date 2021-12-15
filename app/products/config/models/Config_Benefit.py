@@ -1,5 +1,6 @@
 import datetime
-from sqlalchemy import DDL, event
+from sqlalchemy import DDL, event, between, or_
+from marshmallow import ValidationError
 from app.extensions import db
 from app.shared import BaseModel
 
@@ -115,6 +116,8 @@ class Model_ConfigBenefit(BaseModel):
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit")
     state = db.relationship("Model_RefStates")
+    benefit_states = db.relationship(
+        "Model_ConfigBenefitStateAvailability", back_populates="benefit")
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id}>"
@@ -126,6 +129,65 @@ class Model_ConfigBenefit(BaseModel):
     @classmethod
     def find_by_product(cls, id: int):
         return cls.query.filter(cls.product_id == id).all()
+
+    @classmethod
+    def find_all_state_benefit(cls, benefit_code: str):
+        return cls.query.filter(cls.benefit_code == benefit_code, cls.state_id == 0).first()
+
+    @classmethod
+    def count_specific_state_benefit(cls, 
+        benefit_code: str, 
+        state_id: int, 
+        effective_date: datetime.date, 
+        expiration_date: datetime.date
+    ):
+        return cls.query.filter(
+            cls.benefit_code == benefit_code, 
+            cls.state_id == state_id, 
+            or_(
+                between(effective_date, cls.benefit_effective_date, cls.benefit_expiration_date), 
+                between(expiration_date, cls.benefit_effective_date, cls.benefit_expiration_date)
+            )
+        ).count()
+
+    def _state_handler(self, 
+        state_id: id, 
+        benefit_code: str, 
+        benefit_effective_date: datetime.date
+    ): 
+        # if adding a state specific benefit configuration
+        if state_id > 0: 
+            # lookup the benefit id associated with 'all' states
+            expireBenefitState = self.find_all_state_benefit(benefit_code)
+            expire_benefit_id = expireBenefitState.benefit_id
+
+            # expire the state 
+            Model_ConfigBenefitStateAvailability.expire_state(
+                expire_benefit_id, state_id, benefit_effective_date - datetime.timedelta(days=1))
+
+    def save_to_db(self):
+        # get incoming state and benefit
+        state_id = self.state_id
+        benefit_code = self.benefit_code
+        benefit_effective_date = self.benefit_effective_date
+        
+        try: 
+            self._state_handler(state_id, benefit_code, benefit_effective_date)
+        except: 
+            db.session.rollback()
+            raise
+
+        try:
+            db.session.add(self)
+        except Exception:
+            db.session.rollback()
+            raise
+
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
         
 
 class Model_ConfigBenefitStateAvailability(BaseModel):
@@ -143,8 +205,7 @@ class Model_ConfigBenefitStateAvailability(BaseModel):
     state_expiration_date = db.Column(db.Date(), nullable=False)
 
     benefit = db.relationship("Model_ConfigBenefit", 
-        primaryjoin="""and_(Model_ConfigBenefitStateAvailability.benefit_id == Model_ConfigBenefit.benefit_id, 
-            Model_ConfigBenefit.state_id == 0)""")
+        primaryjoin="and_(Model_ConfigBenefitStateAvailability.benefit_id == Model_ConfigBenefit.benefit_id, Model_ConfigBenefit.state_id == 0)")
     state = db.relationship("Model_RefStates")
 
     def __repr__(self):
@@ -157,6 +218,47 @@ class Model_ConfigBenefitStateAvailability(BaseModel):
     @classmethod
     def find_by_benefit(cls, id: int):
         return cls.query.filter(cls.benefit_id == id).all()
+
+    def _state_handler(self, benefit_code: str): 
+        # check if any benefits associated with specific state
+        existingBenefitStateCount = Model_ConfigBenefit.count_specific_state_benefit(
+            benefit_code, 
+            self.state_id, 
+            self.state_effective_date, 
+            self.state_expiration_date
+        )
+        if existingBenefitStateCount > 0:
+            raise ValidationError("A state-specific benefit has already been configured")
+
+    def save_to_db(self):
+        # get incoming benefit
+        benefit_code = Model_ConfigBenefit.find(self.benefit_id).benefit_code
+        
+        try: 
+            self._state_handler(benefit_code)
+        except: 
+            db.session.rollback()
+            raise
+
+        try:
+            db.session.add(self)
+        except Exception:
+            db.session.rollback()
+            raise
+
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
+        
+    @classmethod
+    def expire_state(cls, benefit_id: int, state_id: int, expiration_date: datetime.date):
+        try: 
+            cls.query.filter(cls.benefit_id == benefit_id, cls.state_id == state_id).update({cls.state_expiration_date: expiration_date})
+        except:
+            cls.query.filter(cls.benefit_id == benefit_id, cls.state_id == state_id).delete()
+        return True
 
 
 class Model_ConfigBenefitProductVariation(BaseModel):
@@ -180,7 +282,6 @@ class Model_ConfigBenefitProductVariation(BaseModel):
     @classmethod
     def find_product_variations(cls, id):
         return cls.query.filter(cls.product_variation_id == id).all()
-
 
 
 class Model_ConfigBenefitDuration(BaseModel):
