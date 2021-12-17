@@ -4,8 +4,8 @@
       <v-col cols="12" xs="12">
         <v-card class="d-flex justify-space-between">
           <div class="card-content">
-            <v-card-title>{{ bnft.benefit.benefit_label }}</v-card-title>
-            <v-card-subtitle>{{ bnft.state.state_name }}</v-card-subtitle>
+            <v-card-title>{{ bnft.ref_benefit.benefit_label }}</v-card-title>
+            <v-card-subtitle>{{ displayStates(bnft.states) }}</v-card-subtitle>
           </div>
           <div class="card-edit-buttons ma-2">
             <v-tooltip bottom>
@@ -73,7 +73,16 @@ export default {
     const res = await axios.get(
       `/qry-config/all-benefits?product_id=${this.product_id}`
     );
-    this.benefits = [...res.data];
+    this.benefits = [
+      ...res.data.map((item) => {
+        return {
+          ...item,
+          states: item.child_states.map((state) => {
+            return { ...state.state };
+          }),
+        };
+      }),
+    ];
     this.loaded = true;
   },
   methods: {
@@ -83,6 +92,20 @@ export default {
         params: { product_id: this.product_id },
         query: { ...params },
       });
+    },
+    displayStates(states, max_states_display = 5) {
+      if (states.length <= 0) return "No states configured!";
+      let display_text = states
+        .slice(0, max_states_display)
+        .map((state) => {
+          return state.state_name;
+        })
+        .join(", ");
+
+      if (states.length > max_states_display) {
+        display_text += " and more!";
+      }
+      return display_text;
     },
     edit(id) {
       this.routeTo("config-benefit", { benefit_id: id });

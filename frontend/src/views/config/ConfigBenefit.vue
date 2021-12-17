@@ -94,11 +94,26 @@
       </v-form>
       <div class="config-cards">
         <app-dashboard-card
+          title="States"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configureStates"
+        >
+          Setup States!
+        </app-dashboard-card>
+        <app-dashboard-card
           title="Duration"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configureDurations"
         >
           Setup Durations!
+        </app-dashboard-card>
+
+        <app-dashboard-card
+          title="Product Variations"
+          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
+          @click:configure="configure"
+        >
+          Attach Product Variations!
         </app-dashboard-card>
 
         <app-dashboard-card
@@ -123,6 +138,20 @@
         Back
       </v-btn>
     </div>
+
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+      class="text-uppercase font-weight-black"
+    >
+      {{ snackbar_message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="secondary" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -178,6 +207,8 @@ export default {
   data() {
     return {
       loaded: false,
+      snackbar: false,
+      snackbar_message: "Saved to DB",
       config: {},
       coverages: [],
       rate_groups: [],
@@ -208,7 +239,7 @@ export default {
       return {
         ...benefit,
         benefit_code,
-        benefit: {
+        ref_benefit: {
           benefit_code,
           benefit_label,
         },
@@ -231,7 +262,7 @@ export default {
         step_value: null,
         unit_code: null,
         benefit_label: null,
-        ...(config.benefit ? config.benefit : {}),
+        ...(config.ref_benefit ? config.ref_benefit : {}),
         ...config,
       };
 
@@ -261,8 +292,12 @@ export default {
       this.save();
       this.routeTo("config-benefit-duration-list");
     },
+    configureStates() {
+      this.save();
+      this.routeTo("config-benefit-states");
+    },
     configure() {
-      console.log("woot woot");
+      console.log("woot");
     },
     async save() {
       let res;
@@ -278,6 +313,7 @@ export default {
       }
 
       this.initializeData(res.data);
+      this.snackbar = true;
     },
   },
 };

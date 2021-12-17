@@ -1,6 +1,5 @@
 import decimal
-from app.products.config.models.Config_Benefit import Model_ConfigBenefitStateAvailability
-from marshmallow import post_dump
+from marshmallow import post_dump, pre_dump
 from app.extensions import ma
 from .Config_States import Schema_RefStates
 from ..models import Model_ConfigBenefit, Model_ConfigBenefitDuration, \
@@ -38,8 +37,6 @@ class Schema_RefUnitCode(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
 
-
-
 class Schema_ConfigBenefit(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Model_ConfigBenefit
@@ -47,8 +44,9 @@ class Schema_ConfigBenefit(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
 
-    benefit = ma.Nested(Schema_RefBenefit)
+    ref_benefit = ma.Nested(Schema_RefBenefit)
     state = ma.Nested(Schema_RefStates)
+    child_states = ma.List(ma.Nested('self', exclude=('child_states',)))
 
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):
@@ -60,15 +58,20 @@ class Schema_ConfigBenefit(ma.SQLAlchemyAutoSchema):
                         for k, v in data.items()}
             return new_data
 
-class Schema_ConfigBenefitStateAvailability(ma.SQLAlchemyAutoSchema):
+
+class Schema_ConfigBenefitStateAvailability(ma.Schema):
     class Meta:
-        model = Model_ConfigBenefitStateAvailability
-        load_instance = True
-        include_relationships = True
-        include_fk = True
+        model = Model_ConfigBenefit
 
-    benefit = ma.Nested(Schema_ConfigBenefit)
-    state = ma.Nested(Schema_RefStates)
+    benefit_id = ma.Integer()
+    state_id = ma.Integer()
+    parent_id = ma.Integer()
+    product_id = ma.Integer()
+    benefit_code = ma.String()
+    benefit_effective_date = ma.Date()
+    benefit_expiration_date = ma.Date()
+    state_code = ma.Function(lambda obj: obj.state.state_code)
+    state_name = ma.Function(lambda obj: obj.state.state_name)
 
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):
@@ -79,6 +82,7 @@ class Schema_ConfigBenefitStateAvailability(ma.SQLAlchemyAutoSchema):
             new_data = {k: v if type(v) != decimal.Decimal else float(v)
                         for k, v in data.items()}
             return new_data
+
 
 
 class Schema_ConfigBenefitDurationItems(ma.SQLAlchemyAutoSchema):

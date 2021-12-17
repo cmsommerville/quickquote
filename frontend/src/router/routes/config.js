@@ -11,6 +11,7 @@ import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue"
 import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vue";
 import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
 import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
+import ConfigBenefitStates from "../../views/config/ConfigBenefitStates.vue";
 import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurationList.vue";
 import ConfigBenefitDuration from "../../views/config/ConfigBenefitDuration.vue";
 import ConfigRateGroupList from "../../views/config/ConfigRateGroupList.vue";
@@ -76,11 +77,16 @@ const routesBenefit = [
     path: "/config/product/:product_id/benefit",
     name: "config-benefit",
     component: ConfigBenefit,
-    alias: "/config/product/:product_id/benefit/:benefit_id",
     props: true,
   },
   {
-    path: "/config/product/:product_id/benefit/durations",
+    path: "/config/product/:product_id/benefit/:benefit_id/states",
+    name: "config-benefit-states",
+    component: ConfigBenefitStates,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/benefit/:benefit_id/durations",
     name: "config-benefit-duration-list",
     component: ConfigBenefitDurations,
     props: true,

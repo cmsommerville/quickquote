@@ -45,6 +45,7 @@ def create_app(config):
     from .products.config.resources import routes as config_routes
     from .products.selections.resources import routes as selection_routes
 
+    from .products.config.data.initialize import Resource_InitializeData
 
     bindRoutes(api, config_routes)
     bindRoutes(api, selection_routes)
@@ -52,6 +53,7 @@ def create_app(config):
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
     api.add_resource(RateTableList, '/config/rate-table')
+    api.add_resource(Resource_InitializeData, '/config/initialize-data')
 
     @app.route("/graphql", methods=["GET"])
     def graphql_playground():
