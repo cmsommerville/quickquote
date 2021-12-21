@@ -76,11 +76,11 @@ export default {
   name: "ConfigBenefitStates",
   props: {
     product_id: {
-      type: Number,
+      type: [Number, String],
       required: true,
     },
     benefit_id: {
-      type: Number,
+      type: [Number, String],
       required: true,
     },
   },

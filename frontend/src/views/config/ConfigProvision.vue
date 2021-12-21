@@ -31,75 +31,6 @@
           type="date"
           label="Expiration Date"
         />
-
-        <!-- 
-        <v-select
-          v-model="ui.component"
-          filled
-          outlined
-          label="Component Type"
-          :items="componentTypes"
-          item-text="label"
-          item-value="code"
-        />
-        <app-modal-list-form
-          v-if="ui.component === 'v-select'"
-          title="Select Options"
-          :schema="[
-            { code: 'text', label: 'Label' },
-            { code: 'value', label: 'Value' },
-          ]"
-          @submit:list-data="selectListItemsHandler"
-          class="ma-2"
-        >
-          <v-icon>mdi-pencil-outline</v-icon>
-        </app-modal-list-form>
-
-        <v-select
-          v-if="ui.component === 'v-text-field'"
-          v-model="ui.type"
-          filled
-          outlined
-          label="Input Type"
-          :items="inputTypes"
-          item-text="label"
-          item-value="code"
-        /> -->
-        <!-- <v-col sm="6" class="d-flex flex-column">
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="States"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureStates"
-              >
-                {{
-                  states === "inherit"
-                    ? "Applicability inherited"
-                    : states.length
-                    ? `${states.length} states configured`
-                    : "Setup States!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col sm="12">
-              <app-dashboard-card
-                title="Factors"
-                img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-                @click:configure="configureFactors"
-              >
-                {{
-                  config && config.factor
-                    ? `${config.factor.variability.length} factor variations`
-                    : "Setup Factors!"
-                }}
-              </app-dashboard-card>
-            </v-col>
-          </v-row>
-        </v-col> -->
       </div>
     </v-form>
 
@@ -125,7 +56,7 @@
       </app-dashboard-card>
 
       <app-dashboard-card
-        title="Coverages"
+        title="Factors"
         img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
         @click:configure="configureFactors"
       >
@@ -153,22 +84,20 @@
 
 <script>
 import axios from "../../services/axios";
-// import AppModalListForm from "../../components/AppModalListForm.vue";
 import AppDashboardCard from "../../components/AppDashboardCard.vue";
 
 export default {
   name: "ConfigProvision",
   props: {
-    productId: {
-      type: String,
-      required: false,
+    product_id: {
+      type: [Number, String],
+      required: true,
     },
   },
   components: { AppDashboardCard },
 
   async mounted() {
     this.loaded = false;
-    this.product_id = this.$route.query.product_id;
     if (this.$route.query.provision_id) {
       this.editable = false;
       const res = await axios.get(
@@ -225,7 +154,11 @@ export default {
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: { product_id: this.product_id, ...params },
+        params: {
+          product_id: this.product_id,
+          provision_id: this.provision_id,
+        },
+        query: { ...params },
       });
     },
     async saveProvision() {
@@ -233,19 +166,20 @@ export default {
       if (this.provision_id) {
         output.provision_id = this.provision_id;
       }
-      await axios.post("/config/provision", { ...output });
+      const res = await axios.post("/config/provision", { ...output });
+      this.provision_id = res.data.provision_id;
     },
     configureUI() {
-      console.log("UI");
+      this.saveProvision();
+      this.routeTo("config-provision-ui");
     },
     configureStates() {
       this.saveProvision();
-      this.routeTo("config-provision-states", {
-        provision_id: this.provision_id,
-      });
+      this.routeTo("config-provision-states");
     },
     configureFactors() {
-      console.log("factors");
+      this.saveProvision();
+      this.routeTo("config-provision-factors");
     },
   },
 };

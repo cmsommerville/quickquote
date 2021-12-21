@@ -7,6 +7,7 @@ import ConfigCoverageList from "../../views/config/ConfigCoverageList.vue";
 import ConfigCoverage from "../../views/config/ConfigCoverage.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
+import ConfigProvisionUI from "../../views/config/ConfigProvisionUI.vue";
 import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue";
 import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vue";
 import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
@@ -122,6 +123,12 @@ const routesProvision = [
     path: "/config/product/:product_id/provision",
     name: "config-provision",
     component: ConfigProvision,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/provision/:provision_id/ui",
+    name: "config-provision-ui",
+    component: ConfigProvisionUI,
     props: true,
   },
   {

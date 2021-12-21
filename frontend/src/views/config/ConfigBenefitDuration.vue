@@ -74,11 +74,11 @@ export default {
   props: {
     product_id: {
       required: true,
-      type: Number,
+      type: [Number, String],
     },
     benefit_id: {
       required: true,
-      type: Number,
+      type: [Number, String],
     },
   },
   async mounted() {

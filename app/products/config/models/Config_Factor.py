@@ -29,15 +29,11 @@ class Model_RefInterpolationRule(BaseModel):
 
 class Model_ConfigFactor(BaseModel):
     __tablename__ = CONFIG_FACTOR
-    __table_args__ = (
-        db.UniqueConstraint('provision_id'),
-    )
 
     factor_id = db.Column(db.Integer, primary_key=True)
     provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"), nullable=False)
     factor_value = db.Column(db.Numeric(
         FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION), nullable=False)
-    factor_priority = db.Column(db.Integer, nullable=False)
     factor_interpolation_low_value = db.Column(
         db.Numeric(FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION))
     factor_interpolation_high_value = db.Column(
@@ -45,16 +41,18 @@ class Model_ConfigFactor(BaseModel):
     factor_interpolation_rule_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_INTERPOLATION_RULE}.interpolation_rule_code"))
 
-    provision = db.relationship(
-        "Model_ConfigProvision", back_populates="factors")
+    factor_rules = db.relationship("Model_ConfigFactorRule", back_populates="factor")
 
     def __repr__(self):
-        return f"<Factor Id: {self.factor_id} - {self.factor_priority}: {self.factor_value}>"
+        return f"<Factor Id: {self.factor_id}: {self.factor_value}>"
 
     @classmethod
     def find(cls, id):
         return cls.query.filter(cls.factor_id == id).first()
 
+    @classmethod
+    def find_by_provision(cls, id):
+        return cls.query.filter(cls.provision_id == id).all()
 
 class Model_RefComparisonOperator(BaseModel):
     __tablename__ = REF_COMPARISON_OPERATOR
@@ -78,7 +76,7 @@ class Model_ConfigFactorRule(BaseModel):
     )
 
     factor_rule_id = db.Column(db.Integer, primary_key=True)
-    factor_id = db.Column(db.ForeignKey(f"{CONFIG_FACTOR}.factor_id"), nullable=False)
+    factor_id = db.Column(db.ForeignKey(f"{CONFIG_FACTOR}.factor_id"))
     factor_rule_priority=db.Column(db.Integer, nullable=False)
     class_name = db.Column(db.String(100), nullable=False)
     field_name = db.Column(db.String(100), nullable=False)
@@ -86,6 +84,8 @@ class Model_ConfigFactorRule(BaseModel):
         f"{REF_COMPARISON_OPERATOR}.comparison_operator_code"), nullable=False)
     field_value = db.Column(db.String(100), nullable=False)
     field_value_data_type = db.Column(db.String(100), nullable=False)
+
+    factor = db.relationship('Model_ConfigFactor', back_populates="factor_rules")
 
     def __repr__(self):
         return f"<Factor Rule ID: {self.factor_rule_id}>"

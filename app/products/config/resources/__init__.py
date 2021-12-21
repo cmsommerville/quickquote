@@ -5,6 +5,7 @@ from .Config_Provision import *
 from .Config_RefTables import *
 from .Config_RateGroup import *
 from .Config_Benefit import *
+from .Config_Factor import *
 from .Query_Product import *
 from .Query_Coverage import *
 from .Query_Benefit import *
@@ -12,6 +13,7 @@ from .Query_Provision import *
 from .Query_AgeBands import *
 from .Query_ProductVariations import *
 from .Query_RateGroup import *
+from .Query_Factor import *
 
 routes = [
     {
@@ -73,6 +75,26 @@ routes = [
         "class": CRUD_ProvisionUIComponentConfig, 
         "endpoints": ['/config/provision-ui-component/<int:id>', '/config/provision-ui-component']
     }, 
+    {
+        "class": CRUD_ProvisionUIComponent_TextFieldConfig, 
+        "endpoints": ['/config/provision-ui-component-text-field/<int:id>', '/config/provision-ui-component-text-field']
+    }, 
+    {
+        "class": CRUD_ProvisionUIComponent_SelectItemConfig, 
+        "endpoints": ['/config/provision-ui-component-select-item-field/<int:id>', '/config/provision-ui-component-select-item-field']
+    }, 
+    
+
+
+    {
+        "class": CRUD_FactorConfig, 
+        "endpoints": ['/config/factor/<int:id>', '/config/factor']
+    }, 
+    {
+        "class": CRUD_FactorRuleConfig, 
+        "endpoints": ['/config/factor-rule/<int:id>', '/config/factor-rule']
+    }, 
+
 
     {
         "class": CRUD_RefStates, 
@@ -85,6 +107,22 @@ routes = [
     {
         "class": CRUD_RefUnitCode, 
         "endpoints": ['/config/ref-unit-code/<string:code>', '/config/ref-unit-code']
+    }, 
+    {
+        "class": CRUD_RefComponentTypes, 
+        "endpoints": ['/config/ref-component-types']
+    }, 
+    {
+        "class": CRUD_RefTextFieldTypes, 
+        "endpoints": ['/config/ref-text-field-types']
+    }, 
+    {
+        "class": CRUD_RefComparisonOperator, 
+        "endpoints": ['/config/ref-comparison-operator/<string:code>', '/config/ref-comparison-operator']
+    }, 
+    {
+        "class": CRUD_RefInterpolationRule, 
+        "endpoints": ['/config/ref-interpolation-rule/<string:code>', '/config/ref-interpolation-rule']
     }, 
     
 
@@ -117,6 +155,14 @@ routes = [
         "endpoints": ['/qry-config/all-provisions']
     }, 
     {
+        "class": Query_AllProvisionStates, 
+        "endpoints": ['/qry-config/all-provision-states']
+    }, 
+    {
+        "class": Query_AllUIComponents, 
+        "endpoints": ['/qry-config/all-ui-components']
+    }, 
+    {
         "class": Query_AllRateGroups, 
         "endpoints": ['/qry-config/all-rate-groups']
     }, 
@@ -131,6 +177,10 @@ routes = [
     {
         "class": Query_AgeBandsStateConfig, 
         "endpoints": ['/qry-config/age-bands']
+    }, 
+    {
+        "class": Query_AllFactors, 
+        "endpoints": ['/qry-config/factors']
     }, 
     
 ]

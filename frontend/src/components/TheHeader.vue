@@ -6,7 +6,9 @@
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>
-        <the-logo dark />
+        <router-link to="/">
+          <the-logo dark />
+        </router-link>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>

@@ -1,5 +1,6 @@
 import requests
 import json
+from app.products.config.models.Config_Provision import REF_TEXT_FIELD_TYPES
 from flask_restful import Resource
 from .constants import *
 from app.extensions import db
@@ -21,6 +22,12 @@ class Resource_InitializeData(Resource):
 
         # # unit codes
         requests.post('http://localhost:5000/config/ref-unit-code', json=REF_UNIT_CODES)
+
+        # # ui component types
+        requests.post('http://localhost:5000/config/ref-component-types', json=REF_UI_COMPONENT_TYPES)
+
+        # # text field types
+        requests.post('http://localhost:5000/config/ref-text-field-types', json=REF_INPUT_TYPES)
 
 
         for alg in REF_RATING_ALGORITHMS: 

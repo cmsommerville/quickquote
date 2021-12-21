@@ -52,16 +52,7 @@
         />
 
         <v-switch v-model="vary_by_state" label="Vary by State" />
-        <v-select
-          v-model="benefit.state_id"
-          :items="states"
-          item-text="state_name"
-          item-value="state_id"
-          :disabled="!vary_by_state"
-          filled
-          outlined
-          label="State"
-        />
+        <v-switch v-model="benefit.is_durational" label="Vary by Duration" />
 
         <v-text-field
           v-model="benefit.min_value"
@@ -93,7 +84,20 @@
         />
       </v-form>
       <div class="config-cards">
+        <v-select
+          v-if="vary_by_state"
+          v-model="benefit.state_id"
+          :items="states"
+          item-text="state_name"
+          item-value="state_id"
+          :disabled="!vary_by_state"
+          filled
+          outlined
+          label="State"
+        />
+
         <app-dashboard-card
+          v-if="!vary_by_state"
           title="States"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configureStates"
@@ -166,7 +170,7 @@ export default {
   props: {
     product_id: {
       required: true,
-      type: Number,
+      type: [Number, String],
     },
   },
   async mounted() {
@@ -262,6 +266,7 @@ export default {
         step_value: null,
         unit_code: null,
         benefit_label: null,
+        is_durational: false,
         ...(config.ref_benefit ? config.ref_benefit : {}),
         ...config,
       };

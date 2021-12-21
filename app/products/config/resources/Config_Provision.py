@@ -19,6 +19,8 @@ config_provision_ui_select_item_schema = Schema_ConfigProvisionUIComponent_Selec
 config_provision_state_schema = Schema_ConfigProvisionStateAvailability()
 
 config_provision_schema_list = Schema_ConfigProvision(many=True)
+config_provision_state_schema_list = Schema_ConfigProvisionStateAvailability(many=True)
+config_provision_ui_select_item_schema_list = Schema_ConfigProvisionUIComponent_SelectItemField(many=True)
 
 class Resource_ProvisionStateConfig(Resource):
 
@@ -70,9 +72,9 @@ class CRUD_ProvisionStateAvailabilityConfig(Resource):
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_provision_state_schema.load(req)
-        config.save_to_db()
-        return config_provision_state_schema.dump(config), 201
+        config = config_provision_state_schema_list.load(req)
+        Model_ConfigProvisionStateAvailability.save_all_to_db(config)
+        return config_provision_state_schema_list.dump(config), 201
 
     @classmethod
     def put(cls, id):
@@ -94,21 +96,62 @@ class CRUD_ProvisionUIComponentConfig(Resource):
     @classmethod
     def get(cls, id):
         config = Model_ConfigProvisionUIComponent.find(id)
-        return config_provision_ui_schema.dump(config), 200
+        if config is None:
+            return [], 200
+        if config.component_type == "INPUT":
+            return config_provision_ui_text_schema.dump(config), 200
+        if config.component_type == "CHECKBOX":
+            return config_provision_ui_checkbox_schema.dump(config), 200
+        if config.component_type == "SELECT":
+            return config_provision_ui_select_schema.dump(config), 200
+        return "error", 404
 
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_provision_ui_schema.load(req)
+        component_type = req.get('component_type')
+
+        if component_type == "INPUT":
+            config = config_provision_ui_text_schema.load(req)
+        elif component_type == "CHECKBOX":
+            config = config_provision_ui_checkbox_schema.load(req)
+        elif component_type == "SELECT":
+            config = config_provision_ui_select_schema.load(req)
+
         config.save_to_db()
-        return config_provision_ui_schema.dump(config), 201
+
+        if config.component_type == "INPUT":
+            return config_provision_ui_text_schema.dump(config), 201
+        if config.component_type == "CHECKBOX":
+            return config_provision_ui_checkbox_schema.dump(config), 201
+        if config.component_type == "SELECT":
+            return config_provision_ui_select_schema.dump(config), 201
+
+        return "error", 404
 
     @classmethod
     def put(cls, id):
         req = request.get_json()
-        config = config_provision_ui_schema.load({**req, "provision_id": id})
+
+        component_type = req.get('component_type')
+
+        if component_type == "INPUT":
+            config = config_provision_ui_text_schema.load({**req, "provision_id": id})
+        elif component_type == "CHECKBOX":
+            config = config_provision_ui_checkbox_schema.load({**req, "provision_id": id})
+        elif component_type == "SELECT":
+            config = config_provision_ui_select_schema.load({**req, "provision_id": id})
+
         config.save_to_db()
-        return config_provision_ui_schema.dump(config), 201
+
+        if config.component_type == "INPUT":
+            return config_provision_ui_text_schema.dump(config), 201
+        if config.component_type == "CHECKBOX":
+            return config_provision_ui_checkbox_schema.dump(config), 201
+        if config.component_type == "SELECT":
+            return config_provision_ui_select_schema.dump(config), 201
+        
+        return "error", 404
 
     @classmethod
     def delete(cls, id):
@@ -208,14 +251,14 @@ class CRUD_ProvisionUIComponent_SelectItemConfig(Resource):
     @classmethod
     def post(cls):
         req = request.get_json()
-        config = config_provision_ui_select_item_schema.load(req)
-        config.save_to_db()
-        return config_provision_ui_select_item_schema.dump(config), 201
+        config = config_provision_ui_select_item_schema_list.load(req)
+        Model_ConfigProvisionUIComponent_SelectItemField.save_all_to_db(config)
+        return config_provision_ui_select_item_schema_list.dump(config), 201
 
     @classmethod
     def put(cls, id):
         req = request.get_json()
-        config = config_provision_ui_select_item_schema.load({**req, "provision_id": id})
+        config = config_provision_ui_select_item_schema.load({**req, "ui_component_item_id": id})
         config.save_to_db()
         return config_provision_ui_select_item_schema.dump(config), 201
 

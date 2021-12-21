@@ -75,6 +75,21 @@ REF_RATING_ALGORITHMS = [
     }
 ]
 
+REF_UI_COMPONENT_TYPES = [
+    {"component_type_code": "v-text-field", "component_type_label": "Input Field", "component_type_enum": "INPUT"}, 
+    {"component_type_code": "v-checkbox", "component_type_label": "Checkbox", "component_type_enum": "CHECKBOX"}, 
+    {"component_type_code": "v-switch", "component_type_label": "Switch", "component_type_enum": "SWITCH"}, 
+    {"component_type_code": "v-select", "component_type_label": "Select", "component_type_enum": "SELECT"}, 
+    {"component_type_code": "v-radio", "component_type_label": "Radio", "component_type_enum": "RADIO"}, 
+]
+
+
+REF_INPUT_TYPES = [
+    {"type_code": "input"}, 
+    {"type_code": "number"}, 
+    {"type_code": "date"}, 
+]
+
 
 CONFIG_PRODUCT = {
     "product_code": "AC", 
@@ -118,3 +133,4 @@ CONFIG_RATE_GROUP = {
         "rate_group_label": "Lump Sum"
     }
 }
+

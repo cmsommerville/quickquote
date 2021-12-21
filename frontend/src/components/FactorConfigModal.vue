@@ -112,6 +112,27 @@ export default {
       ],
     };
   },
+  computed: {
+    output() {
+      return {
+        factor_value: this.factor_value,
+        rules: this.config.map((rule, index) => {
+          let val;
+          if (!isNaN(rule.value)) {
+            val = +rule.value;
+          }
+          return {
+            comparison_operator_code: rule.comparison,
+            class_name: "test",
+            factor_rule_priority: index,
+            field_name: rule.item.code,
+            field_value: rule.value,
+            field_value_data_type: typeof val,
+          };
+        }),
+      };
+    },
+  },
   methods: {
     addCondition() {
       this.config = [...this.config, {}];
@@ -121,16 +142,7 @@ export default {
       this.factor_value = null;
     },
     emitConfig() {
-      const payload = { rules: {} };
-      for (const rule of this.config) {
-        let { item, ...obj } = rule;
-        payload.rules[item.code] = {
-          label: item.label,
-          ...obj,
-        };
-      }
-      payload.factor_value = this.factor_value;
-      this.$emit("submit:factor-config", payload);
+      this.$emit("submit:factor-config", this.output);
       this.initialize();
       this.dialog = false;
     },

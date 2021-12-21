@@ -16,3 +16,18 @@ def listProducts_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
+
+
+def resolver_test(obj, info, val):
+    try:
+        payload = {
+            "success": True,
+            "value": val if val > 10 else 10
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload

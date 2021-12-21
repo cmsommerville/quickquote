@@ -56,34 +56,32 @@ import axios from "../../services/axios";
 
 export default {
   name: "ConfigProvisionList",
+  props: {
+    product_id: {
+      required: true,
+      type: [Number, String],
+    },
+  },
   data() {
     return {
-      product_id: null,
       provisions: [],
     };
   },
   async mounted() {
-    this.product_id = this.$route.query.product_id;
     const res = await axios.get(
       `/qry-config/all-provisions?product_id=${this.product_id}`
     );
     this.provisions = [...res.data];
   },
   methods: {
-    // saveProvisions() {
-    //   this.$store.commit("APPEND_ALL_PROVISIONS");
-    //   this.$router.push({
-    //     name: "config-product",
-    //     params: { productId: this.productId },
-    //   });
-    // },
     saveProvisions() {
       console.log("Saved");
     },
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        query: { product_id: this.product_id, ...params },
+        params: { product_id: this.product_id },
+        query: { ...params },
       });
     },
     editProvision(id) {

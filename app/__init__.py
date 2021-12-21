@@ -8,12 +8,13 @@ from ariadne import load_schema_from_path, make_executable_schema, graphql_sync,
 from ariadne.constants import PLAYGROUND_HTML
 
 from app.extensions import db, mongo, ma, sess
-from app.graphql.queries import listProducts_resolver
+from app.graphql.queries import listProducts_resolver, resolver_test
 
 load_dotenv()
 
 query = ObjectType("Query")
 query.set_field("listProducts", listProducts_resolver)
+query.set_field("test", resolver_test)
 
 type_defs = load_schema_from_path("schemas.graphql")
 schema = make_executable_schema(
