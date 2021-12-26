@@ -1,10 +1,7 @@
-from app.extensions import db, ma
-from app.products.config.models.models.Config_Benefit import Schema_ConfigBenefit
-from app.shared import BaseModel, BaseSchema, CRUD_ResourceFactory
+from app.extensions import db
+from app.shared import BaseModel
 
-from .constants import TBL_NAMES
-from .Config_Benefit import Schema_ConfigBenefit
-from .Config_Product import Schema_ConfigProduct
+from .__constants__ import TBL_NAMES
 
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
@@ -38,7 +35,7 @@ class Model_ConfigProductVariation(BaseModel):
     product = db.relationship(
         "Model_ConfigProduct", back_populates="product_variations")
     age_band_sets = db.relationship(
-        "Model_ConfigAgeBandsSet", back_populates="product_variation")
+        "Model_ConfigAgeBandSet", back_populates="product_variation")
     benefits = db.relationship(
         "Model_ConfigBenefitProductVariation", back_populates="product_variation")
 
@@ -46,22 +43,3 @@ class Model_ConfigProductVariation(BaseModel):
     def find_by_product(cls, id: int):
         return cls.query.filter(cls.product_id == id).all()
 
-
-class Schema_ConfigProductVariation(BaseSchema):
-    class Meta:
-        model = Model_ConfigProductVariation
-        load_instance = True
-        include_relationships = True
-        include_fk = True
-
-    product = ma.Nested(Schema_ConfigProduct)
-    benefits = ma.List(ma.Nested(Schema_ConfigBenefit))
-
-
-RF_config_product_variation = CRUD_ResourceFactory(
-    resource_name = "CRUD_Config_ProductVariation", 
-    route = "/config/product-variation",
-    model = Model_ConfigProductVariation, 
-    schema = Schema_ConfigProductVariation, 
-    primary_key="product_variation_id"
-)

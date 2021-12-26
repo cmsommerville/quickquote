@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 CONFIG_AGE_BANDS = TBL_NAMES['CONFIG_AGE_BANDS']
 CONFIG_AGE_BANDS_SET = TBL_NAMES['CONFIG_AGE_BANDS_SET']

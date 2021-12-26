@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY']
@@ -21,7 +21,7 @@ class Model_ConfigBenefitProductVariation(BaseModel):
     benefit = db.relationship(
         "Model_ConfigBenefit", back_populates="product_variations")
     product_variation = db.relationship(
-        "Model_ConfigProductVariations", back_populates="benefits")
+        "Model_ConfigProductVariation", back_populates="benefits")
 
     @classmethod
     def find_product_variations(cls, id):

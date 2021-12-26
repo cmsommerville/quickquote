@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 REF_RATING_ALGORITHM = TBL_NAMES['REF_RATING_ALGORITHM']
 

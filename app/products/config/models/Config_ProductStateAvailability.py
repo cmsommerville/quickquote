@@ -1,9 +1,7 @@
-from app.extensions import db, ma
-from app.shared import BaseModel, BaseSchema, CRUD_ResourceFactory
+from app.extensions import db
+from app.shared import BaseModel
 
-from .constants import TBL_NAMES
-from .Config_Product import Schema_ConfigProduct
-from .Ref_States import Schema_RefStates
+from .__constants__ import TBL_NAMES
 
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_STATE_AVAILABILITY = TBL_NAMES['CONFIG_PRODUCT_STATE_AVAILABILITY']

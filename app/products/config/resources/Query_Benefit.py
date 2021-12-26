@@ -1,5 +1,4 @@
 from flask import request
-from app.products.config.models.Config_Benefit import Model_ConfigBenefitDuration
 from flask_restful import Resource
 
 from ..models import Model_ConfigBenefit, Model_ConfigBenefitDuration

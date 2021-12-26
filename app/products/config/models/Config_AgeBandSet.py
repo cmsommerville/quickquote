@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 CONFIG_AGE_BANDS_SET = TBL_NAMES['CONFIG_AGE_BANDS_SET']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
@@ -20,10 +20,10 @@ class Model_ConfigAgeBandSet(BaseModel):
     age_band_effective_date = db.Column(db.Date, nullable=False)
     age_band_expiration_date = db.Column(db.Date, nullable=False)
 
-    age_bands = db.relationship('Model_ConfigAgeBands')
+    age_bands = db.relationship('Model_ConfigAgeBand')
     state = db.relationship("Model_RefStates")
     product_variation = db.relationship(
-        "Model_ConfigProductVariations", back_populates="age_band_sets")
+        "Model_ConfigProductVariation", back_populates="age_band_sets")
 
     @classmethod
     def find_by_variation(cls, id):

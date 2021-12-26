@@ -1,4 +1,3 @@
-
 ENUM_ComponentTypes = [
     "INPUT",
     "SELECT",

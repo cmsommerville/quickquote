@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 CONFIG_PROVISION_STATE_AVAILABILITY = TBL_NAMES['CONFIG_PROVISION_STATE_AVAILABILITY']
 CONFIG_PROVISION = TBL_NAMES['CONFIG_PROVISION']

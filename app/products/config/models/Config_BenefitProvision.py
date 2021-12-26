@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .constants import TBL_NAMES
+from .__constants__ import TBL_NAMES
 
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_PROVISION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PROVISION_APPLICABILITY']
@@ -22,7 +22,7 @@ class Model_ConfigBenefitProvision(BaseModel):
         f'{CONFIG_PROVISION}.provision_id'), nullable=False)
 
     benefit = db.relationship("Model_ConfigBenefit")
-    provisions = db.relationship("Model_ConfigProvisions")
+    provisions = db.relationship("Model_ConfigProvision")
 
     @classmethod
     def find_provisions(cls, benefit_id):
