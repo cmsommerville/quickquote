@@ -44,8 +44,12 @@
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="saveProvisions">
-        Save Changes
+      <v-btn
+        color="primary"
+        class="mx-4"
+        @click="routeTo('config-product', { product_id })"
+      >
+        Back to Product
       </v-btn>
     </div>
   </div>

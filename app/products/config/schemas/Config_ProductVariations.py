@@ -1,6 +1,7 @@
 from app.extensions import ma
 from ..models import Model_ConfigProductVariations, Model_RefRatingAlgorithm, \
     Model_ConfigAgeBands, Model_ConfigAgeBandsSet
+from .Config_States import Schema_RefStates
 
 
 class Schema_ConfigProductVariations(ma.SQLAlchemyAutoSchema):
@@ -10,12 +11,6 @@ class Schema_ConfigProductVariations(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
 
-class Schema_ConfigAgeBandsSet(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Model_ConfigAgeBandsSet
-        load_instance = True
-        include_relationships = True
-        include_fk = True
 
 class Schema_ConfigAgeBands(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -23,6 +18,17 @@ class Schema_ConfigAgeBands(ma.SQLAlchemyAutoSchema):
         load_instance = True
         include_relationships = True
         include_fk = True
+
+
+class Schema_ConfigAgeBandsSet(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Model_ConfigAgeBandsSet
+        load_instance = True
+        include_relationships = True
+        include_fk = True
+
+    age_bands = ma.List(ma.Nested(Schema_ConfigAgeBands))
+    state = ma.Nested(Schema_RefStates)
 
 class Schema_RefRatingAlgorithm(ma.SQLAlchemyAutoSchema):
     class Meta:

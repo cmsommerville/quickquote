@@ -42,7 +42,7 @@
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
       <v-btn color="primary" class="mx-4" @click="save"> Save </v-btn>
-      <v-btn color="secondary" class="mx-4" @click="addStateInput">
+      <v-btn color="primary" class="mx-4" outlined @click="addStateInput">
         Add State
       </v-btn>
     </div>

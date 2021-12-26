@@ -47,7 +47,7 @@ def create_app(config):
     from .products.selections.resources import routes as selection_routes
 
     from .products.config.data.initialize import Resource_InitializeData
-
+    
     bindRoutes(api, config_routes)
     bindRoutes(api, selection_routes)
 

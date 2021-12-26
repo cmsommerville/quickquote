@@ -15,6 +15,8 @@ from .Query_ProductVariations import *
 from .Query_RateGroup import *
 from .Query_Factor import *
 
+# from ..models.models.Ref_Benefit import RF_Ref_Benefit
+
 routes = [
     {
         "class": CRUD_ProductConfig, 
@@ -53,6 +55,14 @@ routes = [
     {
         "class": CRUD_BenefitStateAvailabilityConfig, 
         "endpoints": ['/config/benefit-state/<int:id>']
+    }, 
+    {
+        "class": CRUD_BenefitProductVariationConfig, 
+        "endpoints": ['/config/benefit-product-variations']
+    }, 
+    {
+        "class": CRUD_BenefitProvisionConfig, 
+        "endpoints": ['/config/benefit-provisions']
     }, 
     {
         "class": CRUD_BenefitDurationConfig, 
@@ -100,6 +110,10 @@ routes = [
         "class": CRUD_RefStates, 
         "endpoints": ['/config/ref-states/<string:code>', '/config/ref-states']
     }, 
+    # {
+    #     "class": RF_Ref_Benefit.generate_class(), 
+    #     "endpoints": ['/config/ref-benefit/<id>', '/config/ref-benefit']
+    # }, 
     {
         "class": CRUD_RefRatingAlgorithm, 
         "endpoints": ['/config/ref-rating-algorithm/<string:code>', '/config/ref-rating-algorithm']
@@ -137,6 +151,10 @@ routes = [
     {
         "class": Query_AllProductVariations, 
         "endpoints": ['/qry-config/all-product-variations']
+    }, 
+    {
+        "class": Query_AllAgeBands, 
+        "endpoints": ['/qry-config/all-age-bands']
     }, 
     {
         "class": Query_AllCoverages,  

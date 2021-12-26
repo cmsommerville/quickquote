@@ -78,6 +78,14 @@
       >
         Save
       </v-btn>
+      <v-btn
+        color="primary"
+        class="mx-4"
+        outlined
+        @click="routeTo('config-provision-list')"
+      >
+        Back to Provision List
+      </v-btn>
     </div>
   </div>
 </template>

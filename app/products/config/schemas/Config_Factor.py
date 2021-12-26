@@ -2,7 +2,7 @@ import decimal
 from app.extensions import ma
 from marshmallow import validate, post_dump
 from ..models import Model_ConfigFactor, Model_RefInterpolationRule, Model_RefComparisonOperator, \
-    Model_ConfigFactorRule, Model_ConfigBenefitFactorApplicability
+    Model_ConfigFactorRule
 
 class Schema_RefInterpolationRule(ma.SQLAlchemyAutoSchema): 
     class Meta:
@@ -22,12 +22,6 @@ class Schema_ConfigFactorRule(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
     
-class Schema_ConfigBenefitFactorApplicability(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Model_ConfigBenefitFactorApplicability
-        load_instance = True
-        include_relationships = True
-        include_fk = True
     
 class Schema_ConfigFactor(ma.SQLAlchemyAutoSchema): 
     class Meta:

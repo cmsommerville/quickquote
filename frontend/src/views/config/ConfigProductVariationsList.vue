@@ -57,7 +57,13 @@
     </v-fab-transition>
     <v-divider></v-divider>
     <div class="call-to-action d-flex justify-center align-center mt-4">
-      <v-btn color="primary" class="mx-4" @click="save"> Save Changes </v-btn>
+      <v-btn
+        color="primary"
+        class="mx-4"
+        @click="routeTo('config-product', { product_id })"
+      >
+        Back to Product
+      </v-btn>
     </div>
   </div>
 </template>
@@ -88,9 +94,6 @@ export default {
     this.loaded = true;
   },
   methods: {
-    save() {
-      this.routeTo("config-product", { product_id: this.product_id });
-    },
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,

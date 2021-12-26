@@ -16,10 +16,12 @@ CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_DURATION = TBL_NAMES['CONFIG_BENEFIT_DURATION']
 CONFIG_BENEFIT_DURATION_ITEMS = TBL_NAMES['CONFIG_BENEFIT_DURATION_ITEMS']
 CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PRODUCT_VARIATION_APPLICABILITY']
+CONFIG_BENEFIT_PROVISION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PROVISION_APPLICABILITY']
 CONFIG_BENEFIT_STATE_AVAILABILITY = TBL_NAMES['CONFIG_BENEFIT_STATE_AVAILABILITY']
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
+CONFIG_PROVISION = TBL_NAMES['CONFIG_PROVISION']
 CONFIG_RATE_GROUP = TBL_NAMES['CONFIG_RATE_GROUP']
 
 
@@ -184,6 +186,12 @@ class Model_ConfigBenefitProductVariation(BaseModel):
 
     def __repr__(self):
         return f"<Benefit Id: {self.benefit_id} - Variation ID: {self.product_variation_id}>"
+    
+    @classmethod
+    def find(cls, benefit_id, product_variation_id):
+        return cls.query.filter(
+            cls.benefit_id == benefit_id, 
+            cls.product_variation_id == product_variation_id).first()
 
     @classmethod
     def find_benefits(cls, id):
@@ -192,6 +200,30 @@ class Model_ConfigBenefitProductVariation(BaseModel):
     @classmethod
     def find_product_variations(cls, id):
         return cls.query.filter(cls.product_variation_id == id).all()
+
+
+
+class Model_ConfigBenefitProvisionApplicability(BaseModel):
+    __tablename__ = CONFIG_BENEFIT_PROVISION_APPLICABILITY
+
+    benefit_id = db.Column(db.ForeignKey(
+        f'{CONFIG_BENEFIT}.benefit_id'), primary_key=True)
+    provision_id = db.Column(db.ForeignKey(
+        f'{CONFIG_PROVISION}.provision_id'), primary_key=True)
+
+    @classmethod
+    def find(cls, benefit_id, provision_id):
+        return cls.query.filter(
+            cls.benefit_id == benefit_id, 
+            cls.provision_id == provision_id).first()
+
+    @classmethod
+    def find_provisions(cls, benefit_id):
+        return cls.query.filter(cls.benefit_id == benefit_id).all()
+
+    @classmethod
+    def find_benefits(cls, provision_id):
+        return cls.query.filter(cls.provision_id == provision_id).all()
 
 
 class Model_ConfigBenefitDuration(BaseModel):

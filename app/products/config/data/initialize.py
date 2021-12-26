@@ -1,6 +1,4 @@
 import requests
-import json
-from app.products.config.models.Config_Provision import REF_TEXT_FIELD_TYPES
 from flask_restful import Resource
 from .constants import *
 from app.extensions import db
@@ -29,6 +27,8 @@ class Resource_InitializeData(Resource):
         # # text field types
         requests.post('http://localhost:5000/config/ref-text-field-types', json=REF_INPUT_TYPES)
 
+        # comparison operators
+        requests.post('http://localhost:5000/config/ref-comparison-operator', json=REF_COMPARISON_OPERATORS)
 
         for alg in REF_RATING_ALGORITHMS: 
             requests.post('http://localhost:5000/config/ref-rating-algorithm', json=alg)

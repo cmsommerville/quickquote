@@ -83,27 +83,12 @@
       </div>
       <div class="section-configure">
         <app-dashboard-card
-          title="States"
+          title="Age Bands"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configureStates"
+          @click:configure="configureAgeBands"
+          :disabled="!is_age_rated"
         >
-          {{
-            config && config.states
-              ? `${config.states.length} states configured`
-              : "Setup States!"
-          }}
-        </app-dashboard-card>
-
-        <app-dashboard-card
-          title="Coverages"
-          img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configureCoverages"
-        >
-          {{
-            config && config.benefits
-              ? `${config.benefits.length} coverages configured`
-              : "Setup Coverages!"
-          }}
+          Configure Age Bands
         </app-dashboard-card>
       </div>
     </div>
@@ -114,18 +99,22 @@
       </v-btn>
       <v-btn
         v-if="!!product_id"
-        color="secondary"
+        color="pink lighten-2"
         class="mx-4"
+        outlined
         @click="editable = true"
       >
         Edit
       </v-btn>
       <v-btn
-        color="accent"
+        color="primary"
         class="mx-4"
-        @click="routeTo('config-product', { product_id: product_id })"
+        outlined
+        @click="
+          routeTo('config-product-variation-list', { product_id: product_id })
+        "
       >
-        Back
+        Back to Product Variations
       </v-btn>
     </div>
 
@@ -246,7 +235,10 @@ export default {
     routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id },
+        params: {
+          product_id: this.product_id,
+          product_variation_id: this.product_variation_id,
+        },
         query: {
           ...params,
         },
@@ -272,18 +264,9 @@ export default {
       this.snackbar_message = "Saved to DB";
       this.snackbar = true;
     },
-    configureCoverages() {
-      if (this.product_variation_id) {
-        this.routeTo("config-coverage-list", {
-          product_variation_id: this.product_variation_id,
-        });
-      } else {
-        this.routeTo("config-coverage-list");
-      }
-    },
-    configureStates() {
-      this.saveProduct();
-      this.routeTo("config-product-states");
+    configureAgeBands() {
+      this.save();
+      this.routeTo("config-age-bands-list");
     },
   },
 };

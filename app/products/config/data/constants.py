@@ -91,6 +91,16 @@ REF_INPUT_TYPES = [
 ]
 
 
+REF_COMPARISON_OPERATORS = [
+    {"comparison_operator_code": "gt", "comparison_operator_label": "Greater Than", "comparison_operator_symbol": ">"}, 
+    {"comparison_operator_code": "lt", "comparison_operator_label": "Less Than", "comparison_operator_symbol": "<"}, 
+    {"comparison_operator_code": "ge", "comparison_operator_label": "Greater Than or Equal", "comparison_operator_symbol": ">="}, 
+    {"comparison_operator_code": "le", "comparison_operator_label": "Less Than or Equal", "comparison_operator_symbol": "<="}, 
+    {"comparison_operator_code": "eq", "comparison_operator_label": "Equal", "comparison_operator_symbol": "="}, 
+    {"comparison_operator_code": "ne", "comparison_operator_label": "Not Equal", "comparison_operator_symbol": "!="}, 
+]
+
+
 CONFIG_PRODUCT = {
     "product_code": "AC", 
     "product_label": "Accident", 

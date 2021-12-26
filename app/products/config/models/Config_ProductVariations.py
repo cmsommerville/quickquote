@@ -96,6 +96,14 @@ class Model_ConfigAgeBandsSet(BaseModel):
         return f"<Age Band Set: {self.age_band_set_id}>"
     
     @classmethod
+    def find(cls, id: int):
+        return cls.query.filter(cls.age_band_set_id == id).first()
+
+    @classmethod
+    def find_by_variation(cls, id):
+        return cls.query.filter(cls.product_variation_id == id).all()
+
+    @classmethod
     def find_by_state(
         cls, 
         state: str, 
@@ -124,8 +132,8 @@ class Model_ConfigAgeBands(BaseModel):
     )
 
     age_band_id = db.Column(db.Integer, primary_key=True)
-    age_band_set_id = db.Column(db.ForeignKey(f"{CONFIG_AGE_BANDS_SET}.age_band_set_id"),nullable=False)
-    age_band_lower = db.Column(db.Integer, primary_key=True)
+    age_band_set_id = db.Column(db.ForeignKey(f"{CONFIG_AGE_BANDS_SET}.age_band_set_id"))
+    age_band_lower = db.Column(db.Integer, nullable=False)
     age_band_upper = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

@@ -8,7 +8,6 @@ REF_INTERPOLATION_RULE = TBL_NAMES['REF_INTERPOLATION_RULE']
 REF_PROVISION = TBL_NAMES['REF_PROVISION']
 REF_STATE = TBL_NAMES['REF_STATE']
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
-CONFIG_BENEFIT_FACTOR_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_FACTOR_APPLICABILITY']
 CONFIG_FACTOR = TBL_NAMES['CONFIG_FACTOR']
 CONFIG_FACTOR_RULE = TBL_NAMES['CONFIG_FACTOR_RULE']
 CONFIG_PROVISION = TBL_NAMES['CONFIG_PROVISION']
@@ -32,6 +31,7 @@ class Model_ConfigFactor(BaseModel):
 
     factor_id = db.Column(db.Integer, primary_key=True)
     provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"), nullable=False)
+    factor_priority = db.Column(db.Integer, nullable=False)
     factor_value = db.Column(db.Numeric(
         FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION), nullable=False)
     factor_interpolation_low_value = db.Column(
@@ -44,7 +44,7 @@ class Model_ConfigFactor(BaseModel):
     factor_rules = db.relationship("Model_ConfigFactorRule", back_populates="factor")
 
     def __repr__(self):
-        return f"<Factor Id: {self.factor_id}: {self.factor_value}>"
+        return f"<Factor Id: {self.factor_id} - {self.factor_priority}: {self.factor_value}>"
 
     @classmethod
     def find(cls, id):
@@ -71,14 +71,10 @@ class Model_RefComparisonOperator(BaseModel):
 
 class Model_ConfigFactorRule(BaseModel):
     __tablename__ = CONFIG_FACTOR_RULE
-    __table_args__ = (
-        db.UniqueConstraint('factor_id', 'factor_rule_priority'),
-    )
 
     factor_rule_id = db.Column(db.Integer, primary_key=True)
     factor_id = db.Column(db.ForeignKey(f"{CONFIG_FACTOR}.factor_id"))
-    factor_rule_priority=db.Column(db.Integer, nullable=False)
-    class_name = db.Column(db.String(100), nullable=False)
+    class_name = db.Column(db.String(100))
     field_name = db.Column(db.String(100), nullable=False)
     comparison_operator_code = db.Column(db.String(10), db.ForeignKey(
         f"{REF_COMPARISON_OPERATOR}.comparison_operator_code"), nullable=False)
@@ -94,11 +90,3 @@ class Model_ConfigFactorRule(BaseModel):
     def find(cls, id: int):
         return cls.query.filter(cls.factor_rule_id == id).first()
 
-
-class Model_ConfigBenefitFactorApplicability(BaseModel):
-    __tablename__ = CONFIG_BENEFIT_FACTOR_APPLICABILITY
-
-    benefit_id = db.Column(db.ForeignKey(
-        f'{CONFIG_BENEFIT}.benefit_id'), primary_key=True)
-    factor_id = db.Column(db.ForeignKey(
-        f'{CONFIG_FACTOR}.factor_id'), primary_key=True)

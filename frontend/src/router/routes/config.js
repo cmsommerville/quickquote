@@ -3,16 +3,21 @@ import ConfigProduct from "../../views/config/ConfigProduct";
 import ConfigProductStates from "../../views/config/ConfigProductStates.vue";
 import ConfigProductVariations from "../../views/config/ConfigProductVariations.vue";
 import ConfigProductVariationsList from "../../views/config/ConfigProductVariationsList.vue";
+import ConfigAgeBandsList from "../../views/config/ConfigAgeBandsList.vue";
+import ConfigAgeBands from "../../views/config/ConfigAgeBands.vue";
 import ConfigCoverageList from "../../views/config/ConfigCoverageList.vue";
 import ConfigCoverage from "../../views/config/ConfigCoverage.vue";
 import ConfigProvision from "../../views/config/ConfigProvision.vue";
 import ConfigProvisionList from "../../views/config/ConfigProvisionList.vue";
 import ConfigProvisionUI from "../../views/config/ConfigProvisionUI.vue";
 import ConfigProvisionStates from "../../views/config/ConfigProvisionStates.vue";
-import ConfigProvisionFactors from "../../views/config/ConfigProvisionFactors.vue";
+import ConfigFactors from "../../views/config/ConfigFactors.vue";
+import ConfigFactorRules from "../../views/config/ConfigFactorRules.vue";
 import ConfigBenefitList from "../../views/config/ConfigBenefitList.vue";
 import ConfigBenefit from "../../views/config/ConfigBenefit.vue";
 import ConfigBenefitStates from "../../views/config/ConfigBenefitStates.vue";
+import ConfigBenefitProductVariations from "../../views/config/ConfigBenefitProductVariations.vue";
+import ConfigBenefitProvisions from "../../views/config/ConfigBenefitProvisions.vue";
 import ConfigBenefitDurations from "../../views/config/ConfigBenefitDurationList.vue";
 import ConfigBenefitDuration from "../../views/config/ConfigBenefitDuration.vue";
 import ConfigRateGroupList from "../../views/config/ConfigRateGroupList.vue";
@@ -50,6 +55,18 @@ const routesProductVariation = [
     component: ConfigProductVariations,
     props: true,
   },
+  {
+    path: "/config/product/:product_id/product-variation/:product_variation_id/age-bands-list",
+    name: "config-age-bands-list",
+    component: ConfigAgeBandsList,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/product-variation/:product_variation_id/age-bands",
+    name: "config-age-bands",
+    component: ConfigAgeBands,
+    props: true,
+  },
 ];
 
 const routesRateGroup = [
@@ -84,6 +101,18 @@ const routesBenefit = [
     path: "/config/product/:product_id/benefit/:benefit_id/states",
     name: "config-benefit-states",
     component: ConfigBenefitStates,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/benefit/:benefit_id/product-variations",
+    name: "config-benefit-product-variations",
+    component: ConfigBenefitProductVariations,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/benefit/:benefit_id/provisions",
+    name: "config-benefit-provisions",
+    component: ConfigBenefitProvisions,
     props: true,
   },
   {
@@ -138,9 +167,15 @@ const routesProvision = [
     props: true,
   },
   {
-    path: "/config/product/:product_id/provision/:provision_id/factors",
+    path: "/config/product/:product_id/provision/:provision_id/factor",
     name: "config-provision-factors",
-    component: ConfigProvisionFactors,
+    component: ConfigFactors,
+    props: true,
+  },
+  {
+    path: "/config/product/:product_id/provision/:provision_id/factor-rules",
+    name: "config-provision-factor-rules",
+    component: ConfigFactorRules,
     props: true,
   },
 ];

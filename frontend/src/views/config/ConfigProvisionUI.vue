@@ -73,7 +73,13 @@
       <v-btn color="primary" class="mx-4" @click="save" :disabled="!valid">
         Save
       </v-btn>
-      <v-btn color="accent" class="mx-4" @click="$router.go(-1)"> Back </v-btn>
+      <v-btn
+        color="accent"
+        class="mx-4"
+        @click="routeTo('config-provision', { provision_id })"
+      >
+        Back
+      </v-btn>
     </div>
   </div>
 </template>
@@ -111,8 +117,8 @@ export default {
       loaded: false,
       editable: true,
       modal: false,
-      provision_ui: null,
-      component_type_selection: null,
+      provision_ui: {},
+      component_type_selection: {},
       component_types: [],
       select_items: [],
     };
@@ -147,12 +153,16 @@ export default {
   },
   methods: {
     initializeData(config) {
-      this.provision_ui = { ...config };
+      if (config.provision_id) {
+        this.provision_ui = { ...config };
+      }
+      if (config.items) {
+        this.select_items = [...config.items];
+      }
       this.component_type_selection = {
         component_type_enum: config.component_type ?? null,
         component_type_code: config.component_type_code ?? null,
       };
-      this.select_items = [...config.items];
     },
     selectItemHandler(data) {
       this.select_items = [...data];

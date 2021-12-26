@@ -2,7 +2,12 @@
   <v-card class="elevation-4 rounded-sm d-flex justify-space-between">
     <div>
       <v-card-actions>
-        <v-btn text color="primary" @click="$emit('click:configure')">
+        <v-btn
+          text
+          color="primary"
+          @click="$emit('click:configure')"
+          :disabled="disabled"
+        >
           {{ title }}
         </v-btn>
       </v-card-actions>
@@ -27,6 +32,10 @@ export default {
     img: {
       required: true,
       type: String,
+    },
+    disabled: {
+      default: false,
+      type: Boolean,
     },
   },
 };

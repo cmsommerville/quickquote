@@ -1,11 +1,5 @@
 <template>
-  <v-dialog v-model="dialog">
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-        <slot> Add Variability</slot>
-      </v-btn>
-    </template>
-
+  <v-dialog v-model="show">
     <v-card>
       <v-card-title
         class="text-h5 grey lighten-2 d-flex justify-space-between mb-4"
@@ -14,7 +8,7 @@
       </v-card-title>
 
       <v-card-text>
-        <v-row v-for="(item, ix) in config" :key="ix">
+        <v-row v-for="(item, ix) in factor_rules" :key="ix">
           <v-col cols="12" sm="3">
             <v-select
               :items="variationOptions"
@@ -23,8 +17,7 @@
               item-text="label"
               item-value="code"
               label="Varies By"
-              v-model="item.item"
-              return-object
+              v-model="item.field_name"
             />
           </v-col>
           <v-col cols="12" sm="2">
@@ -35,23 +28,15 @@
               item-text="label"
               item-value="code"
               label="Operator"
-              v-model="item.comparison"
+              v-model="item.comparison_operator_code"
             />
           </v-col>
-          <v-col cols="12" :sm="item.comparison === 'range' ? 3 : 6">
+          <v-col cols="12" sm="6">
             <v-text-field
               filled
               outlined
-              :label="item.comparison === 'range' ? 'Lower Value' : 'Value'"
-              v-model="item.value"
-            />
-          </v-col>
-          <v-col cols="12" sm="3" v-if="item.comparison === 'range'">
-            <v-text-field
-              v-model="item.upper"
-              filled
-              outlined
-              label="Upper Value"
+              label="Value"
+              v-model="item.field_value"
             />
           </v-col>
           <v-col cols="12" sm="1" class="py-6">
@@ -88,11 +73,26 @@
 export default {
   name: "FactorConfigModal",
   inheritAttrs: true,
+  props: {
+    value: {
+      type: Boolean,
+    },
+    input_data: {
+      type: Object,
+    },
+  },
+  watch: {
+    input_data: function (newVal) {
+      this.factor_rules = [...newVal.factor_rules];
+      this.factor_value = newVal.factor_value;
+      this.factor_priority = newVal.factor_priority;
+    },
+  },
   data() {
     return {
-      dialog: false,
+      factor_priority: null,
       factor_value: null,
-      config: [{}],
+      factor_rules: [{}],
       variationOptions: [
         { label: "Rating State", code: "rating_state" },
         { label: "Group Size", code: "group_size" },
@@ -107,26 +107,32 @@ export default {
         { label: ">", code: "gt" },
         { label: ">=", code: "ge" },
         { label: "!=", code: "ne" },
-        { label: "Between", code: "range" },
-        { label: "Not Between", code: "nrange" },
       ],
     };
   },
   computed: {
+    show: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      },
+    },
     output() {
       return {
         factor_value: this.factor_value,
-        rules: this.config.map((rule, index) => {
-          let val;
-          if (!isNaN(rule.value)) {
-            val = +rule.value;
+        factor_priority: this.factor_priority,
+        factor_rules: this.factor_rules.map((rule) => {
+          let val = rule.field_value;
+          if (!isNaN(rule.field_value)) {
+            val = +rule.field_value;
           }
           return {
-            comparison_operator_code: rule.comparison,
+            comparison_operator_code: rule.comparison_operator_code,
             class_name: "test",
-            factor_rule_priority: index,
-            field_name: rule.item.code,
-            field_value: rule.value,
+            field_name: rule.field_name,
+            field_value: rule.field_value,
             field_value_data_type: typeof val,
           };
         }),
@@ -135,10 +141,10 @@ export default {
   },
   methods: {
     addCondition() {
-      this.config = [...this.config, {}];
+      this.factor_rules = [...this.factor_rules, {}];
     },
     initialize() {
-      this.config = [{}];
+      this.factor_rules = [{}];
       this.factor_value = null;
     },
     emitConfig() {

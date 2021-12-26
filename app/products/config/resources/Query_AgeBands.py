@@ -16,3 +16,11 @@ class Query_AgeBandsStateConfig(Resource):
         effective_date = request.args.get('effective_date')
         res = Model_ConfigAgeBandsSet.find_by_state(state, effective_date, product_variation_id)
         return config_schema_list.dump(res), 200
+
+class Query_AllAgeBands(Resource):
+
+    @classmethod
+    def get(cls):
+        product_variation_id = request.args.get('product_variation_id')
+        res = Model_ConfigAgeBandsSet.find_by_variation(product_variation_id)
+        return config_schema_list.dump(res), 200

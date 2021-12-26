@@ -105,6 +105,7 @@
           Setup States!
         </app-dashboard-card>
         <app-dashboard-card
+          :disabled="!benefit.is_durational"
           title="Duration"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configureDurations"
@@ -115,7 +116,7 @@
         <app-dashboard-card
           title="Product Variations"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configure"
+          @click:configure="configureVariations"
         >
           Attach Product Variations!
         </app-dashboard-card>
@@ -123,7 +124,7 @@
         <app-dashboard-card
           title="Provisions"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
-          @click:configure="configure"
+          @click:configure="configureProvisions"
         >
           Attach Provisions!
         </app-dashboard-card>
@@ -300,6 +301,14 @@ export default {
     configureStates() {
       this.save();
       this.routeTo("config-benefit-states");
+    },
+    configureVariations() {
+      this.save();
+      this.routeTo("config-benefit-product-variations");
+    },
+    configureProvisions() {
+      this.save();
+      this.routeTo("config-benefit-provisions");
     },
     configure() {
       console.log("woot");

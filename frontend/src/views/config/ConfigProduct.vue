@@ -109,8 +109,9 @@
       </v-btn>
       <v-btn
         v-if="!!product_id"
-        color="secondary"
+        color="primary"
         class="mx-4"
+        outlined
         @click="editable = true"
       >
         Edit

@@ -3,9 +3,9 @@ from marshmallow import post_dump, pre_dump
 from app.extensions import ma
 from .Config_States import Schema_RefStates
 from ..models import Model_ConfigBenefit, Model_ConfigBenefitDuration, \
-    Model_ConfigBenefitDurationItems, \
+    Model_ConfigBenefitDurationItems, Model_ConfigBenefitProvisionApplicability, \
     Model_RefBenefit, Model_RefBenefitDuration, Model_RefBenefitDurationItems, \
-    Model_RefUnitCode
+    Model_RefUnitCode, Model_ConfigBenefitProductVariation
 
 
 
@@ -126,3 +126,16 @@ class Schema_ConfigBenefitDuration(ma.SQLAlchemyAutoSchema):
             return new_data
 
 
+class Schema_ConfigBenefitProductVariation(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Model_ConfigBenefitProductVariation
+        load_instance = True
+        include_fk = True
+
+
+class Schema_ConfigBenefitProvisionApplicability(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Model_ConfigBenefitProvisionApplicability
+        load_instance = True
+        include_relationships = True
+        include_fk = True

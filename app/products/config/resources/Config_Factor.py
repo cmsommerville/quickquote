@@ -2,15 +2,14 @@ from flask import request
 from flask_restful import Resource
 
 from ..models import Model_ConfigFactor, Model_RefInterpolationRule, Model_RefComparisonOperator, \
-    Model_ConfigFactorRule, Model_ConfigBenefitFactorApplicability
+    Model_ConfigFactorRule
 from ..schemas import Schema_ConfigFactor, Schema_RefInterpolationRule, Schema_RefComparisonOperator, \
-    Schema_ConfigFactorRule, Schema_ConfigBenefitFactorApplicability
+    Schema_ConfigFactorRule
 
 schema_factor = Schema_ConfigFactor()
 schema_factor_rule = Schema_ConfigFactorRule(many=True)
 
 schema_factor_list = Schema_ConfigFactor(many=True)
-schema_benefit_factor_applicability = Schema_ConfigBenefitFactorApplicability(many=True)
 schema_factor_rule_list = Schema_ConfigFactorRule(many=True)
 
 
