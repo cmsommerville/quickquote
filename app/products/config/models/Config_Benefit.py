@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']

@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES, COVERAGE_SECTION_DEFAULT
+from ...__constants__ import TBL_NAMES, COVERAGE_SECTION_DEFAULT
 
 CONFIG_COVERAGE = TBL_NAMES['CONFIG_COVERAGE']
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']

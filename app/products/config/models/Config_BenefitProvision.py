@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_PROVISION_APPLICABILITY = TBL_NAMES['CONFIG_BENEFIT_PROVISION_APPLICABILITY']

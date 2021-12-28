@@ -1,11 +1,12 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_BENEFIT = TBL_NAMES['CONFIG_BENEFIT']
 CONFIG_BENEFIT_DURATION = TBL_NAMES['CONFIG_BENEFIT_DURATION']
 REF_BENEFIT_DURATION = TBL_NAMES['REF_BENEFIT_DURATION']
+
 
 class Model_ConfigBenefitDuration(BaseModel):
     __tablename__ = CONFIG_BENEFIT_DURATION

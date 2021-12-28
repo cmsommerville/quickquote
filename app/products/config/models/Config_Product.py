@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 

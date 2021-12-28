@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_PROVISION_UI_COMPONENT = TBL_NAMES['CONFIG_PROVISION_UI_COMPONENT']
 CONFIG_PROVISION = TBL_NAMES['CONFIG_PROVISION']

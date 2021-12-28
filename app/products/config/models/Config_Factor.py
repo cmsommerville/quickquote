@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES, FACTOR_DECIMAL_PRECISION
+from ...__constants__ import TBL_NAMES, FACTOR_DECIMAL_PRECISION
 
 REF_COMPARISON_OPERATOR = TBL_NAMES['REF_COMPARISON_OPERATOR']
 REF_INTERPOLATION_RULE = TBL_NAMES['REF_INTERPOLATION_RULE']

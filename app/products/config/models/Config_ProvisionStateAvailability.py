@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 CONFIG_PROVISION_STATE_AVAILABILITY = TBL_NAMES['CONFIG_PROVISION_STATE_AVAILABILITY']
 CONFIG_PROVISION = TBL_NAMES['CONFIG_PROVISION']
@@ -28,4 +28,5 @@ class Model_ConfigProvisionStateAvailability(BaseModel):
     @classmethod
     def find_by_provision(cls, id):
         return cls.query.filter(cls.provision_id == id).all()
+
 

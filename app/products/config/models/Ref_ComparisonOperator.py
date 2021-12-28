@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 
-from .__constants__ import TBL_NAMES
+from ...__constants__ import TBL_NAMES
 
 REF_COMPARISON_OPERATOR = TBL_NAMES['REF_COMPARISON_OPERATOR']
 
