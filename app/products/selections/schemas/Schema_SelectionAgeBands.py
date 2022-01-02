@@ -1,10 +1,10 @@
 from app.extensions import ma
 from app.shared import BaseSchema
-from ..models import Model_ConfigCoverage
+from ..models import Model_SelectionAgeBands
 
 
-class Schema_ConfigCoverage(BaseSchema):
+class Schema_SelectionAgeBands(BaseSchema):
     class Meta:
-        model = Model_ConfigCoverage
+        model = Model_SelectionAgeBands
         load_instance = True
         include_fk = True

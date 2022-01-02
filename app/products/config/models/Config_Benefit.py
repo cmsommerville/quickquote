@@ -21,6 +21,8 @@ class Model_ConfigBenefit(BaseModel):
     __table_args__ = (
         db.UniqueConstraint('benefit_code', 'product_id', 'state_id', 'benefit_effective_date'),
         db.CheckConstraint('benefit_effective_date <= benefit_expiration_date'),
+        db.CheckConstraint('default_value BETWEEN min_value AND max_value'),
+        db.CheckConstraint('default_value % step_value = 0'),
     )
 
     benefit_id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +43,7 @@ class Model_ConfigBenefit(BaseModel):
     min_value = db.Column(db.Numeric(12, 2))
     max_value = db.Column(db.Numeric(12, 2))
     step_value = db.Column(db.Numeric(12, 4))
+    default_value = db.Column(db.Numeric(12, 4))
     unit_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_UNIT_CODE}.unit_code"))
     is_durational = db.Column(db.Boolean)
@@ -60,6 +63,8 @@ class Model_ConfigBenefit(BaseModel):
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit")
     state = db.relationship("Model_RefStates")
+    selected_benefit = db.relationship(
+        "Model_SelectionBenefit", back_populates="config_benefit")
 
     @hybrid_property
     def benefit(self):

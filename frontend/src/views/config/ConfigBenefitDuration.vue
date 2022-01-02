@@ -49,6 +49,12 @@
             min="0"
             label="Duration Factor"
           />
+          <v-checkbox
+            v-model="duration_default_id"
+            :success="item._id === duration_default_id"
+            :value="item._id"
+            label="Is Default"
+          />
         </v-list-item>
       </div>
       <v-divider></v-divider>
@@ -105,36 +111,36 @@ export default {
       benefit_duration: {
         benefit_id: null,
         benefit_duration_code: null,
+        default_value: null,
         benefit: {},
         duration: {},
       },
       duration_items: [],
+      duration_default_id: null,
     };
   },
   computed: {
     valid() {
       return true;
     },
+    default_duration_item_code() {
+      const def =
+        this.duration_items.find(
+          (item) => item._id === this.duration_default_id
+        ) ?? this.duration_items[0];
+      return def.item_code;
+    },
     items() {
-      return this.duration_items
-        .filter((item) => !!item.item_code)
-        .map((i) => {
-          /* eslint-disable no-unused-vars */
-          const { _id, item_label, ...item } = i;
-          /* eslint-enable no-unused-vars */
-          return {
-            ...item,
-            benefit_duration_id: this.benefit_duration_id,
-            duration_item: {
-              item_code: item.item_code,
-              item_label: item_label,
-            },
-          };
-        });
+      return [
+        ...this.duration_items
+          .filter((item) => !!item.item_code)
+          .map((i) => this.formatDurationItems(i)),
+      ];
     },
     output() {
       const duration = {
         ...this.benefit_duration,
+        default_duration_item_code: this.default_duration_item_code,
         duration: {
           duration_code: this.benefit_duration.benefit_duration_code,
           duration_label: this.benefit_duration.duration.duration_label,
@@ -148,6 +154,19 @@ export default {
     },
   },
   methods: {
+    formatDurationItems(i) {
+      /* eslint-disable no-unused-vars */
+      const { _id, item_label, ...item } = i;
+      /* eslint-enable no-unused-vars */
+      return {
+        ...item,
+        benefit_duration_id: this.benefit_duration_id,
+        duration_item: {
+          item_code: item.item_code,
+          item_label: item_label,
+        },
+      };
+    },
     initializeData(config = {}) {
       this.benefit_duration = {
         benefit_duration_code: null,
@@ -161,7 +180,11 @@ export default {
       if (config.duration_items) {
         this.duration_items = [
           ...config.duration_items.map((item) => {
-            return { ...item, item_label: item.duration_item.item_label };
+            return {
+              ...item,
+              _id: Math.random(),
+              item_label: item.duration_item.item_label,
+            };
           }),
         ];
       }

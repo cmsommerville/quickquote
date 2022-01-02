@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="content" v-if="loaded">
-      <v-form class="form" @submit="onSubmit">
+      <v-form class="form" @submit="save">
         <coverage-selections-expansion-panel
           v-for="coverage in coverages"
-          :key="coverage.label"
+          :key="coverage.coverage_label"
           :coverage="coverage"
-          :label="coverage.label"
+          :label="coverage.coverage_label"
           @selections-change="selectionChangeHandler"
         />
 
@@ -32,61 +32,31 @@ export default {
   components: {
     CoverageSelectionsExpansionPanel,
   },
-  data() {
-    return {
-      loaded: false,
-      plan_config_id: null,
-      plan_id: null,
-      plan_config: {},
-      coverages: [],
-      plan: {},
-      selections: {},
-    };
-  },
-  computed: {
-    selectionFormatter() {
-      const selections = [];
-
-      for (const key in this.selections) {
-        const sel = {
-          plan_id: this.plan_id,
-          coverage_code: this.selections[key].coverage_code,
-          plan_rate_code: this.selections[key].plan_rate_code,
-          benefit_code: this.selections[key].code,
-          benefit_uuid: this.selections[key].uuid,
-          benefit_value: this.selections[key].selectedValue,
-        };
-        if (this.selections[key].durations) {
-          sel["durations"] = this.selections[key].durations.map((dur) => {
-            return {
-              plan_id: this.plan_id,
-              duration_code: dur.code,
-              duration_data_type:
-                dur.selectedDuration &&
-                (typeof dur.selectedDuration.value ?? null),
-              duration_value:
-                dur.selectedDuration && (dur.selectedDuration.value ?? null),
-              duration_factor:
-                dur.selectedDuration && (dur.selectedDuration.factor ?? null),
-            };
-          });
-        }
-        selections.push(sel);
-      }
-      return selections;
+  props: {
+    plan_id: {
+      type: [String, Number],
+      required: true,
     },
   },
   async mounted() {
     this.loaded = false;
-    this.plan_config_id = this.$route.query.plan_config_id;
-    this.plan_id = +this.$route.query.plan_id;
-    const res = await axios.get("/selections/benefits", {
-      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
-    });
+    const res = await axios.get(
+      `selections/plan/${this.plan_id}/benefit-product-variations`
+    );
     this.coverages = [...res.data.coverages];
-    this.plan_config = { ...res.data.plan_config };
-    this.plan = { ...res.data.plan };
     this.loaded = true;
+  },
+  data() {
+    return {
+      loaded: false,
+      coverages: {},
+      selections: {},
+    };
+  },
+  computed: {
+    output() {
+      return this.selections;
+    },
   },
   methods: {
     selectionChangeHandler(selections) {
@@ -96,6 +66,10 @@ export default {
         selections_obj[sel.code] = sel;
       }
       this.selections = { ...this.selections, ...selections_obj };
+    },
+    async save(event) {
+      event.preventDefault();
+      await axios.post("/selections/benefits", this.output);
     },
     async onSubmit(event) {
       event.preventDefault();

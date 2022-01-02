@@ -98,7 +98,7 @@ export default {
     this.loaded = false;
 
     const promise_bnft_state = axios.get(
-      `/config/benefit-state/${this.benefit_id}`
+      `/config/benefit-states/${this.benefit_id}`
     );
     const promise_states = axios.get("/config/ref-states");
     const promise_bnft = axios.get(`/config/benefit/${this.benefit_id}`);
@@ -150,7 +150,7 @@ export default {
     },
     async save() {
       try {
-        await axios.post("/config/benefit", this.output);
+        await axios.post("/config/benefits", this.output);
         this.snackbar_message = "Saved to DB!";
         this.snackbar = true;
       } catch (err) {

@@ -58,7 +58,7 @@
           bottom
           fab
           right
-          @click="routeTo('config-benefit')"
+          @click="routeTo('config-benefit-duration')"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>

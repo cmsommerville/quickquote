@@ -33,9 +33,9 @@ class ProvisionUIComponent_TextField extends ProvisionUIComponent {
   ) {
     super(provision_id, component_type, component_type_code, ui_label);
     this.input_type = input_type;
-    this.min_value = min_value;
-    this.max_value = max_value;
-    this.step_value = step_value;
+    this.min_value = min_value ?? null;
+    this.max_value = max_value ?? null;
+    this.step_value = step_value ?? null;
   }
   validate() {
     return (

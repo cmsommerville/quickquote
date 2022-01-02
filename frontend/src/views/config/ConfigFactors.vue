@@ -212,7 +212,7 @@ export default {
       this.dialog = true;
     },
     async save() {
-      await axios.post("/config/factor", this.output);
+      await axios.post("/config/factors", this.output);
       this.routeTo("config-provision", { provision_id: this.provision_id });
     },
   },

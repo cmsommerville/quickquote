@@ -127,7 +127,8 @@ CONFIG_PRODUCT_VARIATION = {
 CONFIG_COVERAGE = {
     "coverage_code": "base", 
     "coverage_label": "Base", 
-    "section_code": "main"
+    "section_code": "main", 
+    "default_value": True
 }
 
 

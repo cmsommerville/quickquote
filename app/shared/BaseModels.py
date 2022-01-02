@@ -30,7 +30,7 @@ class BaseModel(db.Model):
         return cls.query.filter(pk1 == id).first()
 
     @classmethod
-    def find_all(cls, limit=10, offset=1, *args, **kwargs):
+    def find_all(cls, limit=1000, offset=0, *args, **kwargs):
         pk1 = inspect(cls).primary_key[0]
         return cls.query.order_by(pk1).slice(offset, offset+limit).all()
 

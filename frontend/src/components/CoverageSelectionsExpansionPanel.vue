@@ -8,19 +8,17 @@
       </v-btn>
     </div>
     <div class="content-benefits ml-6 mb-6" v-if="!hidden">
-      <v-row v-for="benefit in benefits" :key="benefit.name">
+      <v-row v-for="benefit in benefits" :key="benefit.benefit_id">
         <v-col cols="12" sm="6">
-          <v-subheader>{{ benefit.label }}</v-subheader>
+          <v-subheader>{{ benefit.benefit_label }}</v-subheader>
         </v-col>
         <v-col cols="12" sm="3">
-          <component
-            :is="benefit.ui.component"
-            v-bind="{ ...benefit.ui }"
-            :name="benefit.code"
-            :label="benefit.label"
-            v-model="benefit.selectedValue"
-            :prefix="benefit.amounts.unit === 'dollar' ? '$' : ''"
-            :suffix="benefit.amounts.unit === 'percent' ? '%' : ''"
+          <v-text-field
+            :name="benefit.benefit_code"
+            :label="benefit.benefit_label"
+            v-model="benefit.ui_benefit_value"
+            :prefix="benefit.unit_code === 'Dollar' ? '$' : ''"
+            :suffix="benefit.unit_code === 'Percent' ? '%' : ''"
             @change="setValue"
             outlined
             dense
@@ -30,20 +28,18 @@
         </v-col>
         <v-col
           v-for="duration in benefit.durations"
-          :key="duration.code"
+          :key="duration.benefit_duration_id"
           cols="12"
           sm="3"
         >
-          <component
-            :is="duration.component"
-            v-bind="{ ...duration }"
-            :name="duration.code"
-            :label="duration.label"
-            v-model="duration.selectedDuration"
+          <v-select
+            :items="duration.duration_items"
+            :name="duration.duration_code"
+            :label="duration.duration_label"
+            v-model="duration.ui_duration_item_code"
             @change="setValue"
-            item-text="label"
-            item-value="value"
-            return-object
+            item-text="item_label"
+            item-value="item_code"
             outlined
             dense
             rounded
@@ -83,31 +79,25 @@ export default {
     };
   },
   mounted() {
-    this.selected = this.coverage.default;
-    this.benefits = this.coverage.benefits.map((bnft) => {
-      return {
-        ...bnft,
-        selectedValue: bnft.amounts.default,
-        durations: bnft.durations
-          ? bnft.durations.map((dur) => {
-              return {
-                ...dur,
-                selectedDuration: dur.selectedDuration ?? dur.default,
-              };
-            })
-          : 0,
-      };
-    });
-    this.toggleCoverage();
+    this.selected = this.coverage.default_value;
+    this.benefits = this.coverage.benefits;
+    // this.toggleCoverage();
   },
   methods: {
     toggleCoverage() {
       this.benefits.map((bnft) => {
-        bnft.selectedValue = this.selected ? bnft.amounts.default : 0;
+        bnft.ui_selection_value = this.selected
+          ? (bnft.selected_benefit && bnft.selected_benefit.benefit_value) ??
+            bnft.default_value
+          : 0;
         if (bnft.durations) {
           for (const dur of bnft.durations) {
-            const def = dur.items.find((item) => item.value === dur.default);
-            dur.selectedDuration = this.selected ? def : null;
+            const default_val = dur.duration_items.find((item) => {
+              return item.item_code === dur.default_duration_item_code;
+            });
+            dur.ui_selection_value = this.selected
+              ? default_val ?? dur.duration_items[0]
+              : null;
           }
         }
       });

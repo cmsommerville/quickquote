@@ -2,21 +2,18 @@ import decimal
 from app.extensions import ma
 from marshmallow import Schema, fields, post_dump
 
-from .AgeBandsSchema import AgeBandsSchema
-from .BenefitSchema import BenefitSchema
+from .Schema_SelectionAgeBands import Schema_SelectionAgeBands
 
 
-class PremiumByBenefitAgeBandRateSchema(Schema):
+class Schema_SelectionPremiumByRateGroup(Schema):
 
-    benefit_rate_id = fields.Integer()
     plan_id = fields.Integer()
-    benefit_id = fields.Integer()
-    age_band_id = fields.Integer()
-    smoker_status = fields.Str()
+    rate_group_summary_id = fields.Integer()
     family_code = fields.Str()
-    benefit_rate_premium = fields.Decimal()
-    age_band = fields.Nested(AgeBandsSchema)
-    benefit = fields.Nested(BenefitSchema)
+    smoker_status = fields.Str()
+    plan_rate_premium = fields.Decimal()
+
+    age_band = fields.Nested(Schema_SelectionAgeBands)
 
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):

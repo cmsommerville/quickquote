@@ -16,6 +16,7 @@ class Model_ConfigCoverage(BaseModel):
     product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"), nullable=False)
     coverage_code = db.Column(db.String(30), nullable=False)
     coverage_label = db.Column(db.String(100), nullable=False)
+    default_value = db.Column(db.Boolean, nullable=False)
     section_code = db.Column(db.String(30), default=COVERAGE_SECTION_DEFAULT)
 
     benefits = db.relationship("Model_ConfigBenefit", back_populates="coverage")

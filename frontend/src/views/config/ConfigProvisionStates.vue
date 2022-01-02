@@ -124,7 +124,7 @@ export default {
       });
     },
     async save() {
-      await axios.post(`/config/provision/state`, this.output);
+      await axios.post(`/config/provision/states`, this.output);
       this.routeTo("config-provision", { provision_id: this.provision_id });
     },
     addStateInput() {

@@ -19,16 +19,19 @@ class Resource_InitializeData(Resource):
         insertAllStatesRecord()
 
         # # unit codes
-        requests.post('http://localhost:5000/config/ref-unit-code', json=REF_UNIT_CODES)
+        requests.post('http://localhost:5000/config/ref-unit-codes', json=REF_UNIT_CODES)
 
         # # ui component types
-        requests.post('http://localhost:5000/config/ref-component-types', json=REF_UI_COMPONENT_TYPES)
+        for typ in REF_UI_COMPONENT_TYPES: 
+            requests.post('http://localhost:5000/config/ref-component-type', json=typ)
 
         # # text field types
-        requests.post('http://localhost:5000/config/ref-text-field-types', json=REF_INPUT_TYPES)
+        for typ in REF_INPUT_TYPES: 
+            requests.post('http://localhost:5000/config/ref-text-field-type', json=typ)
 
         # comparison operators
-        requests.post('http://localhost:5000/config/ref-comparison-operator', json=REF_COMPARISON_OPERATORS)
+        for op in REF_COMPARISON_OPERATORS:
+            requests.post('http://localhost:5000/config/ref-comparison-operator', json=op)
 
         for alg in REF_RATING_ALGORITHMS: 
             requests.post('http://localhost:5000/config/ref-rating-algorithm', json=alg)

@@ -14,7 +14,7 @@ class Model_ConfigBenefitDurationItem(BaseModel):
     )
 
     benefit_duration_item_id = db.Column(db.Integer, primary_key=True)
-    benefit_duration_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"), nullable=False)
+    benefit_duration_id = db.Column(db.ForeignKey(f"{CONFIG_BENEFIT_DURATION}.benefit_duration_id"))
     item_code = db.Column(db.ForeignKey(f"{REF_BENEFIT_DURATION_ITEMS}.item_code"), nullable=False)
     benefit_duration_factor = db.Column(
         db.Numeric(FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION), nullable=False)
@@ -23,4 +23,5 @@ class Model_ConfigBenefitDurationItem(BaseModel):
         "Model_ConfigBenefitDuration", back_populates="duration_items")
 
     duration_item = db.relationship("Model_RefBenefitDurationItem")
+    # selected_duration = db.relationship("Model_SelectionBenefitDuration", back_populates="config_benefit_duration_item")
    

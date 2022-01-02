@@ -1,33 +1,21 @@
 <template>
   <div class="container">
     <div class="form-rater my-6" v-if="loaded">
-      <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+      <v-form class="form" @submit="save" @reset="onReset" v-if="show">
         <tile-list-group
-          v-if="!existingQuote"
-          :config="all_config"
+          :config="products"
           @tile:selected="tileSelectionHandler"
         />
-
-        <v-text-field
-          v-if="existingQuote"
-          outlined
-          rounded
-          background-color="lightest"
-          disabled
-          v-model="selections.product_code"
-          label="Product"
-          class="my-3"
-        ></v-text-field>
 
         <v-select
           outlined
           rounded
           background-color="lightest"
-          :disabled="!selected_config"
-          :items="selected_config ? selected_config.variations : []"
-          v-model="selections.product_variation_code"
-          item-text="label"
-          item-value="code"
+          :disabled="!selection_product"
+          :items="selection_product ? selection_product.product_variations : []"
+          v-model="selection_product_variation"
+          item-text="product_variation_label"
+          item-value="product_variation_id"
           label="Product Variation"
           class="my-3"
         ></v-select>
@@ -36,11 +24,11 @@
           outlined
           rounded
           background-color="lightest"
-          :items="selected_config ? selected_config.states : []"
-          v-model="selections.rating_state"
+          :items="selection_product ? selection_product.states : []"
+          v-model="selection_rating_state"
           label="Rating State"
-          item-text="code"
-          item-value="code"
+          item-text="state_name"
+          item-value="state_id"
           class="my-3"
         >
         </v-select>
@@ -49,8 +37,8 @@
           outlined
           rounded
           background-color="lightest"
-          :disabled="!selections.rating_state"
-          v-model="selections.plan_effective_date"
+          :disabled="!selection_rating_state"
+          v-model="selection_plan_effective_date"
           label="Plan Effective Date"
           type="date"
           class="my-3"
@@ -77,26 +65,22 @@ export default {
     return {
       loaded: false,
       error: null,
-      existingQuote: false,
-      all_config: null,
-      selected_config: null,
-      selections: {
-        product_code: null,
-        product_variation_code: null,
-        rating_state: null,
-        plan_effective_date: null,
-      },
+      selection_product: null,
+      selection_product_variation: null,
+      selection_rating_state: null,
+      selection_plan_effective_date: null,
+      products: [],
       rules: {
         effective_date: (v) => {
-          if (this.selections.rating_state) {
-            const state_config = this.selected_config.states.find(
-              (item) => item.code === this.selections.rating_state
+          if (this.selection_rating_state) {
+            const state_config = this.selection_product.states.find(
+              (item) => item.state_id === this.selection_rating_state
             );
             const dt = new Date(v);
-            const min_eff_dt = new Date(state_config.effectiveDate);
+            const min_eff_dt = new Date(state_config.state_effective_date);
             return (
               dt >= min_eff_dt ||
-              `Must be greater than ${state_config.effectiveDate}`
+              `Must be greater than ${state_config.state_effective_date}`
             );
           }
           return "Please enter an effective date";
@@ -106,53 +90,50 @@ export default {
     };
   },
   async mounted() {
-    const plan_config_id = this.$route.query.plan_config_id;
-    const plan_id = +this.$route.query.plan_id;
-    const res = await axios.get("/selections/plan", {
-      params: { plan_config_id, plan_id },
-    });
-
-    console.log(res.data);
-    if (!res.data.plan) {
-      this.all_config = [...res.data.plan_config];
-    } else {
-      this.selected_config = res.data.plan_config;
-      this.existingQuote = true;
-      this.selections = {
-        ...res.data.plan,
-      };
-    }
+    this.loaded = false;
+    const prods = await axios.get("/qry-config/all-products");
+    this.products = [...prods.data];
     this.loaded = true;
   },
   computed: {
-    selections_formatted() {
+    output() {
       return {
-        ...this.selections,
-        plan_config_id: this.selected_config._id,
+        config_product_id: this.selection_product.product_id,
+        config_product_variation_id: this.selection_product_variation,
+        config_state_id: this.selection_rating_state,
+        plan_effective_date: this.selection_plan_effective_date,
       };
     },
   },
   methods: {
     tileSelectionHandler(selection) {
-      this.selected_config = selection;
-      this.selections.product_code = selection.code;
+      this.selection_product = {
+        ...selection,
+        states: [
+          ...selection.states.map((state) => {
+            return {
+              product_state_id: state.product_state_id,
+              state_effective_date: state.state_effective_date,
+              state_expiration_date: state.state_expiration_date,
+              ...state.state,
+            };
+          }),
+        ],
+      };
     },
 
-    async onSubmit(event) {
+    async save(event) {
       event.preventDefault();
-      const res = await axios.post(
-        "/selections/plan",
-        this.selections_formatted,
-        {
-          params: { plan_config_id: this.selected_config._id },
-        }
-      );
+      const res = await axios.post("/selections/plan", this.output, {
+        query: {
+          product_id: this.selection_product.product_id,
+        },
+      });
       if (res.status === 201) {
         this.$router.push({
-          name: "benefits",
-          query: {
-            plan_id: res.data.plan_id,
-            plan_config_id: this.selected_config._id,
+          name: "selections-benefits",
+          params: {
+            plan_id: res.data.selection_plan_id,
           },
         });
       }

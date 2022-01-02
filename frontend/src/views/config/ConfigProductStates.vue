@@ -72,7 +72,7 @@ export default {
   mounted() {
     this.loaded = false;
     Promise.all([
-      axios.get(`/config/product/state/${this.product_id}`),
+      axios.get(`/qry-config/all-product-states?product_id=${this.product_id}`),
       axios.get("/config/ref-states"),
       axios.get(`/config/product/${this.product_id}`),
     ])
@@ -114,7 +114,7 @@ export default {
       ];
     },
     async save() {
-      await axios.post("/config/product/state", this.output);
+      await axios.post("/config/product/states", this.output);
       this.routeTo("config-product", { product_id: this.product_id });
     },
   },

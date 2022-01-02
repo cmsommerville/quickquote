@@ -4,7 +4,8 @@ from ..models import Model_ConfigBenefit
 
 from .Ref_Benefit import Schema_RefBenefit
 from .Ref_States import Schema_RefStates
-
+from .Config_Coverage import Schema_ConfigCoverage
+from .Config_BenefitDuration import Schema_ConfigBenefitDuration
 
 
 class Schema_ConfigBenefit(BaseSchema):
@@ -17,3 +18,5 @@ class Schema_ConfigBenefit(BaseSchema):
     ref_benefit = ma.Nested(Schema_RefBenefit)
     state = ma.Nested(Schema_RefStates)
     child_states = ma.List(ma.Nested('self', exclude=('child_states',)))
+    coverage = ma.Nested(Schema_ConfigCoverage)
+    durations = ma.List(ma.Nested(Schema_ConfigBenefitDuration))

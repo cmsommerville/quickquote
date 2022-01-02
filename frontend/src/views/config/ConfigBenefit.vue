@@ -75,6 +75,13 @@
           outlined
           label="Step Size"
         />
+        <v-text-field
+          v-model="benefit.default_value"
+          type="number"
+          filled
+          outlined
+          label="Default Value"
+        />
         <v-select
           v-model="benefit.unit_code"
           :items="unit_code_types"
@@ -98,6 +105,7 @@
 
         <app-dashboard-card
           v-if="!vary_by_state"
+          :disabled="!valid"
           title="States"
           img="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg"
           @click:configure="configureStates"
@@ -236,11 +244,15 @@ export default {
         this.benefit.min_value !== null &&
         !!this.benefit.max_value &&
         !!this.benefit.step_value &&
+        !!this.benefit.default_value &&
         !!this.benefit.unit_code
       );
     },
     output() {
-      const { benefit_label, benefit_code, ...benefit } = this.benefit;
+      /* eslint-disable no-unused-vars */
+      const { benefit_label, benefit_code, child_states, ...benefit } =
+        this.benefit;
+      /* eslint-enable no-unused-vars */
       return {
         ...benefit,
         benefit_code,
@@ -265,6 +277,7 @@ export default {
         min_value: null,
         max_value: null,
         step_value: null,
+        default_value: null,
         unit_code: null,
         benefit_label: null,
         is_durational: false,
@@ -298,8 +311,8 @@ export default {
       this.save();
       this.routeTo("config-benefit-duration-list");
     },
-    configureStates() {
-      this.save();
+    async configureStates() {
+      await this.save();
       this.routeTo("config-benefit-states");
     },
     configureVariations() {
@@ -320,14 +333,17 @@ export default {
           ...this.output,
           benefit_id: this.benefit_id,
         });
+
+        this.initializeData(res.data);
+        this.snackbar = true;
       } else {
         res = await axios.post("/config/benefit", {
           ...this.output,
         });
-      }
 
-      this.initializeData(res.data);
-      this.snackbar = true;
+        this.initializeData(res.data);
+        this.snackbar = true;
+      }
     },
   },
 };

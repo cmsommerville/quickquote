@@ -22,10 +22,12 @@ schema = make_executable_schema(
 )
 
 
-def bindRoutes(api, routes):
+def bindRoutes(api, routes, prefix=None):
     for route in routes: 
-        api.add_resource(route['class'], *route['endpoints'])
-
+        api.add_resource(route['class'], *[
+            prefix + route if prefix else route for route in route['endpoints']
+        ])
+        
 
 def create_app(config):
     app = Flask(__name__)
@@ -42,18 +44,20 @@ def create_app(config):
     api = Api(app)
 
     from .products.admin import CreateTables, SessionData
-    from .products.selections import RateTableList
-    from .products.config.resources import routes as config_routes
+    # from .products.selections import RateTableList
+    # from .products.config.resources import routes as config_routes
+    from .products.config.routes import routes as config_routes
     from .products.selections.resources import routes as selection_routes
 
     from .products.config.data.initialize import Resource_InitializeData
     
+    # bindRoutes(api, config_routes)
     bindRoutes(api, config_routes)
     bindRoutes(api, selection_routes)
 
     api.add_resource(CreateTables, '/admin/create-tables')
     api.add_resource(SessionData, '/admin/session-data')
-    api.add_resource(RateTableList, '/config/rate-table')
+    # api.add_resource(RateTableList, '/config/rate-table')
     api.add_resource(Resource_InitializeData, '/config/initialize-data')
 
     @app.route("/graphql", methods=["GET"])

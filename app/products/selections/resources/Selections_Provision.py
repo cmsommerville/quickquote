@@ -2,10 +2,10 @@ import requests
 from flask import request, session
 from flask_restful import Resource
 
-from ..models.PlanModel import PlanModel
-from ..schemas.PlanSchema import PlanSchema
-from ..models.ProvisionModel import ProvisionModel
-from ..schemas.ProvisionSchema import ProvisionSchema
+from ..models.Model_SelectionPlan import PlanModel
+from ..schemas.Schema_SelectionPlan import PlanSchema
+from ..models.Model_SelectionProvision import ProvisionModel
+from ..schemas.Schema_SelectionProvision import ProvisionSchema
 
 provision_list_schema = ProvisionSchema(many=True)
 plan_schema = PlanSchema()

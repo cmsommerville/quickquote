@@ -92,15 +92,6 @@ benefit_routes = [
     }, 
     {
         "class": CRUD_ResourceFactory(
-            resource_name='CRUD_BenefitProductVariationConfig', 
-            model=Model_ConfigBenefitProductVariation, 
-            schema=Schema_ConfigBenefitProductVariation, 
-            primary_key='benefit_product_variation_id'
-        ).generate_class(), 
-        "endpoints": ['/config/benefit-product-variations']
-    }, 
-    {
-        "class": CRUD_ResourceFactory(
             resource_name='CRUD_BenefitProvisionConfig', 
             model=Model_ConfigBenefitProvision, 
             schema=Schema_ConfigBenefitProvision,
@@ -205,7 +196,7 @@ ref_data_routes = [
             schema=Schema_RefComponentTypes, 
             primary_key='component_type_code'
         ).generate_class(), 
-        "endpoints": ['/config/ref-unit-code/<string:id>', '/config/ref-component-type']
+        "endpoints": ['/config/ref-component-type/<string:id>', '/config/ref-component-type']
     }, 
     {
         "class": CRUD_ResourceFactory(
@@ -244,6 +235,10 @@ custom_crud_routes = [
     {
         "class": CRUD_BenefitStateAvailabilityConfig,
         "endpoints": ['/config/benefit-states/<int:id>']
+    }, 
+    {
+        "class": CRUD_BenefitProductVariationConfig,
+        "endpoints": ['/config/benefit-product-variations']
     }, 
 ]
 
@@ -305,5 +300,14 @@ ref_data_list_routes = [
             primary_key='state_id'
         ).generate_list_class(), 
         "endpoints": ['/config/ref-states']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_RefUnitCode_List', 
+            model=Model_RefUnitCode,
+            schema=Schema_RefUnitCode, 
+            primary_key='unit_code'
+        ).generate_list_class(), 
+        "endpoints": ['/config/ref-unit-codes']
     }, 
 ]
