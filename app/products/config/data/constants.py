@@ -109,6 +109,31 @@ CONFIG_PRODUCT = {
 }
 
 
+CONFIG_PRODUCT_STATES = [
+  {
+    "state_id": 1,
+    "state_effective_date": "1900-01-01",
+    "state_expiration_date": "9999-12-31"
+  },
+  {
+    "state_id": 2,
+    "state_effective_date": "1900-01-01",
+    "state_expiration_date": "9999-12-31"
+  },
+  {
+    "state_id": 3,
+    "state_effective_date": "1900-01-01",
+    "state_expiration_date": "9999-12-31"
+  },
+  {
+    "state_id": 4,
+    "state_effective_date": "1900-01-01",
+    "state_expiration_date": "9999-12-31"
+  }
+]
+
+
+
 CONFIG_PRODUCT_VARIATION = {
     "product_variation_code": "base", 
     "product_variation_label": "Base", 
@@ -143,5 +168,73 @@ CONFIG_RATE_GROUP = {
         "rate_group_code": "LS", 
         "rate_group_label": "Lump Sum"
     }
+}
+
+CONFIG_BENEFIT = {
+    "state_id":0,
+    "benefit_effective_date":"1900-01-01",
+    "benefit_expiration_date":"9999-12-31",
+    "min_value":"0",
+    "max_value":"10000",
+    "step_value":"1",
+    "default_value":"5000",
+    "unit_code":"Dollars",
+    "is_durational":True,
+    "benefit_code":"bnft1",
+    "ref_benefit":{
+        "benefit_code":"bnft1",
+        "benefit_label":"Benefit 1"
+    }
+}
+
+CONFIG_BENEFIT_STATES = [
+  {
+    "state_id": 1,
+    "benefit_effective_date": "1900-01-01",
+    "benefit_expiration_date": "9999-12-31",
+    "benefit_code": "bnft1"
+  },
+  {
+    "state_id": 2,
+    "benefit_effective_date": "1900-01-01",
+    "benefit_expiration_date": "9999-12-31",
+    "benefit_code": "bnft1"
+  },
+  {
+    "state_id": 3,
+    "benefit_effective_date": "1900-01-01",
+    "benefit_expiration_date": "9999-12-31",
+    "benefit_code": "bnft1"
+  },
+  {
+    "state_id": 4,
+    "benefit_effective_date": "2023-01-01",
+    "benefit_expiration_date": "9999-12-31",
+    "benefit_code": "bnft1"
+  }
+]
+
+
+CONFIG_BENEFIT_DURATION = {
+  "benefit_duration_code": "dur1",
+  "duration": { "duration_code": "dur1", "duration_label": "Duration 1" },
+  "default_duration_item_code": "item3",
+  "duration_items": [
+    {
+      "item_code": "item1",
+      "benefit_duration_factor": "1.1",
+      "duration_item": { "item_code": "item1", "item_label": "Item 1" }
+    },
+    {
+      "item_code": "item2",
+      "benefit_duration_factor": "1.2",
+      "duration_item": { "item_code": "item2", "item_label": "Item 2" }
+    },
+    {
+      "item_code": "item3",
+      "benefit_duration_factor": "1.3",
+      "duration_item": { "item_code": "item3", "item_label": "Item 3" }
+    }
+  ]
 }
 

@@ -40,17 +40,59 @@ class Resource_InitializeData(Resource):
         res = requests.post('http://localhost:5000/config/product', json=CONFIG_PRODUCT)
         product = res.json()
 
+        # product states
+        res = requests.post('http://localhost:5000/config/product/states', json=[
+            {
+                **state, 
+                "product_id": product['product_id']
+            } for state in CONFIG_PRODUCT_STATES
+        ])
+        
         # product variation
-        requests.post('http://localhost:5000/config/product-variations', json={
+        res = requests.post('http://localhost:5000/config/product-variations', json={
             **CONFIG_PRODUCT_VARIATION, "product_id": product['product_id']})
+        product_variation = res.json()
         
         # coverage
-        requests.post('http://localhost:5000/config/coverage', json={
+        res = requests.post('http://localhost:5000/config/coverage', json={
             **CONFIG_COVERAGE, "product_id": product['product_id']})
+        coverage = res.json()
 
         # rate group
-        requests.post('http://localhost:5000/config/rate-group', json={
+        res = requests.post('http://localhost:5000/config/rate-group', json={
             **CONFIG_RATE_GROUP, "product_id": product['product_id']
         })
+        rate_group = res.json()
+
+        # main benefit
+        res = requests.post('http://localhost:5000/config/benefit', json={
+            **CONFIG_BENEFIT, 
+            "product_id": product['product_id'], 
+            "rate_group_id": rate_group['rate_group_id'], 
+            "coverage_id": coverage['coverage_id']
+        })
+        parent_benefit = res.json()
+
+        # benefit states
+        res = requests.post('http://localhost:5000/config/benefits', json=[
+            {
+                **state, 
+                "parent_id": parent_benefit['benefit_id'], 
+                "product_id": product['product_id']
+            } for state in CONFIG_BENEFIT_STATES
+        ])
+
+        # benefit duration
+        res = requests.post('http://localhost:5000/config/benefit-duration', json={
+                **CONFIG_BENEFIT_DURATION, 
+                "benefit_id": parent_benefit['benefit_id']
+            }
+        )
+
+        # benefit product variation
+        res = requests.post('http://localhost:5000/config/benefit-product-variations', json=[{
+            "product_variation_id": product_variation['product_variation_id'], 
+            "benefit_id": parent_benefit['benefit_id']
+        }])
 
         return "Data loaded", 200
