@@ -1,5 +1,6 @@
 # expose all selections resources
 from .Resource_SelectionPlan import *
+from .Resource_SelectionBenefit import *
 from .Resource_BenefitProductVariation import *
 # from .Selections_Provision import ProvisionSelections
 # from .Selections_AgeBands import AgeBandsSelections
@@ -12,6 +13,10 @@ routes = [
     {
         "class": Resource_SelectionPlan, 
         "endpoints": ['/selections/plan/<int:plan_id>', '/selections/plan']
+    },
+    {
+        "class": Resource_SelectionBenefit, 
+        "endpoints": ['/selections/plan/<int:plan_id>/benefits']
     },
     {
         "class": Query_AllBenefitProductVariations, 

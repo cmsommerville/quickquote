@@ -18,12 +18,12 @@ class Schema_QueryBPV_SelectedDurationItem(ma.Schema):
     config_benefit_duration_item_id = ma.Integer()
     duration_data_type = ma.String()
     duration_value = ma.String()
-    duration_factor = ma.Float()
     
 class Schema_QueryBPV_DurationItem(ma.Schema): 
     benefit_duration_item_id = ma.Integer()
     item_code = ma.String()
     item_label = ma.Function(lambda obj: obj.duration_item.item_label)
+    benefit_duration_factor = ma.Float()
 
 class Schema_QueryBPV_Duration(ma.Schema): 
     benefit_duration_id = ma.Integer()

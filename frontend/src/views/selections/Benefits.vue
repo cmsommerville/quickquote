@@ -7,7 +7,6 @@
           :key="coverage.coverage_label"
           :coverage="coverage"
           :label="coverage.coverage_label"
-          @selections-change="selectionChangeHandler"
         />
 
         <div class="d-flex justify-center my-3">
@@ -49,27 +48,52 @@ export default {
   data() {
     return {
       loaded: false,
-      coverages: {},
-      selections: {},
+      coverages: [],
     };
   },
   computed: {
     output() {
-      return this.selections;
+      // reduce list of coverages to list of benefits
+      const bnfts_arr = this.coverages.reduce((prev, curr) => {
+        return [...prev, ...curr.benefits];
+      }, []);
+
+      // format to match the database model for selection benefits
+      const bnfts = bnfts_arr.map((bnft) => {
+        const dur_arr = bnft.durations ?? [];
+        return {
+          selection_plan_id: +this.plan_id,
+          config_benefit_id: bnft.config_benefit_id,
+          config_rate_group_id: bnft.config_rate_group_id,
+          benefit_value: bnft.ui_benefit_value,
+          durations: dur_arr.map((dur) => {
+            const selected_item = dur.duration_items.find((item) => {
+              return item.item_code === dur.ui_duration_item_code;
+            });
+
+            return {
+              selection_plan_id: +this.plan_id,
+              config_benefit_duration_id: dur.benefit_duration_id,
+              config_benefit_duration_item_id:
+                selected_item.benefit_duration_item_id ?? null,
+              duration_value: dur.ui_duration_item_code,
+              duration_data_type: typeof dur.ui_duration_item_code,
+              duration_factor: selected_item.benefit_duration_factor ?? 1,
+            };
+          }),
+        };
+      });
+
+      return bnfts;
     },
   },
   methods: {
-    selectionChangeHandler(selections) {
-      const selections_obj = {};
-      console.log(selections);
-      for (let sel of selections) {
-        selections_obj[sel.code] = sel;
-      }
-      this.selections = { ...this.selections, ...selections_obj };
-    },
     async save(event) {
       event.preventDefault();
-      await axios.post("/selections/benefits", this.output);
+      await axios.post(
+        `/selections/plan/${this.plan_id}/benefits`,
+        this.output
+      );
     },
     async onSubmit(event) {
       event.preventDefault();
