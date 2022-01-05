@@ -117,20 +117,6 @@
         Edit
       </v-btn>
     </div>
-
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="5000"
-      class="text-uppercase font-weight-black"
-    >
-      {{ snackbar_message }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn color="secondary" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -156,8 +142,6 @@ export default {
   },
   data() {
     return {
-      snackbar: false,
-      snackbar_message: null,
       editable: true,
       loaded: false,
       config: null,
@@ -213,19 +197,21 @@ export default {
         return;
       }
       let res;
-      if (this.product_id) {
-        res = await axios.put(`/config/product/${this.product_id}`, {
-          ...this.output,
-          product_id: this.product_id,
-        });
-      } else {
-        res = await axios.post("/config/product", { ...this.output });
+      try {
+        if (this.product_id) {
+          res = await axios.put(`/config/product/${this.product_id}`, {
+            ...this.output,
+            product_id: this.product_id,
+          });
+        } else {
+          res = await axios.post("/config/product", { ...this.output });
+        }
+        this.$store.commit("SHOW_SNACKBAR", "Saved to DB");
+        this.initializeData(res.data);
+        this.editable = false;
+      } catch (err) {
+        this.$store.commit("SHOW_SNACKBAR", err.message);
       }
-
-      this.initializeData(res.data);
-      this.snackbar_message = "Saved to DB";
-      this.snackbar = true;
-      this.editable = false;
     },
     configureProvisions() {
       this.routeTo("config-provision-list");

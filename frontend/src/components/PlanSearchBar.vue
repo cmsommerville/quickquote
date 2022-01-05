@@ -39,7 +39,7 @@ export default {
         return this.data.map((item) => {
           return {
             ...item,
-            plan_description: `Plan: ${item.plan_id}`,
+            plan_description: `Plan: ${item.selection_plan_id}`,
           };
         });
       }

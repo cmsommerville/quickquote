@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { config } from "./modules/config";
+import module_ui from "./modules/ui";
 
 Vue.use(Vuex);
 
@@ -9,5 +9,5 @@ export default new Vuex.Store({
   getters: {},
   mutations: {},
   actions: {},
-  modules: { config },
+  modules: { module_ui },
 });

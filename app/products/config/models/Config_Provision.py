@@ -27,6 +27,9 @@ class Model_ConfigProvision(BaseModel):
         "Model_ConfigProvisionStateAvailability", back_populates="provision")
     factors = db.relationship("Model_ConfigFactor")
 
+    ui_component = db.relationship("Model_ConfigProvisionUIComponent", uselist=False)
+    selected_provision = db.relationship("Model_SelectionProvision")
+
     @classmethod
     def find_by_product(cls, id):
         return cls.query.filter(cls.product_id == id).all()

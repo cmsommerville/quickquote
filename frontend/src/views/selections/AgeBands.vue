@@ -2,8 +2,8 @@
   <div class="container">
     <div class="form-rater d-flex flex-column" v-if="loaded">
       <h2 class="mx-auto mb-12 font-weight-light text-h4">Age Bands</h2>
-      <v-form class="form" @submit.prevent="onSubmit" @reset="onReset">
-        <div
+      <v-form class="form" @submit.prevent="save">
+        <!-- <div
           class="age-bands d-flex justify-space-around align-center"
           v-for="(band, index) in age_bands"
           :key="index"
@@ -55,7 +55,12 @@
               </v-btn>
             </v-fab-transition>
           </div>
-        </div>
+        </div> -->
+
+        <app-age-band-input
+          :input_data="age_bands"
+          @change:age-bands="handleAgeBands"
+        />
 
         <div class="d-flex justify-center my-3">
           <v-btn depressed color="primary" type="submit" class="mx-3">
@@ -71,14 +76,20 @@
 
 <script>
 import axios from "../../services/axios.js";
+import AppAgeBandInput from "../../components/AppAgeBandInput.vue";
 
 export default {
   name: "AgeBands",
+  components: { AppAgeBandInput },
+  props: {
+    plan_id: {
+      required: true,
+      type: [Number, String],
+    },
+  },
   data() {
     return {
       loaded: false,
-      plan_id: null,
-      plan_config_id: null,
       plan: null,
       plan_config: null,
       age_bands: [{ lower_age: 18, upper_age: 99 }],
@@ -86,80 +97,44 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    this.plan_config_id = this.$route.query.plan_config_id;
-    this.plan_id = +this.$route.query.plan_id;
-
-    const res = await axios.get("/selections/age-bands", {
-      params: { plan_config_id: this.plan_config_id, plan_id: this.plan_id },
-    });
-
-    this.plan_config = { ...res.data.plan_config };
-    this.plan = { ...res.data.plan };
-    // if plan variation is not age banded, then send default age bands
-    // then redirect to the next stage
-    const variation = this.plan_config.variations.find(
-      (variation) => variation.code === this.plan.product_variation_code
-    );
-
-    if (!variation.is_age_rated) {
-      await this.saveAgeBands();
+    try {
+      const res = await axios.get(`/selections/plan/${this.plan_id}/age-bands`);
+      this.age_bands = [...res.data.age_bands];
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      this.loaded = true;
     }
-
-    this.age_bands = [...res.data.age_bands];
-    this.loaded = true;
   },
-  computed: {},
+  computed: {
+    output() {
+      return this.age_bands.map((band) => {
+        /* eslint-disable no-unused-vars */
+        const { config_age_band_id, ...selection } = band;
+        /* eslint-enable no-unused-vars */
+        return {
+          ...selection,
+          selection_plan_id: this.plan_id,
+        };
+      });
+    },
+  },
   methods: {
-    async saveAgeBands() {
-      await axios.post("/selections/age-bands", {
-        age_bands: this.age_bands.map((ab) => {
-          return {
-            lower_age: ab.lower_age,
-            upper_age: ab.upper_age,
-          };
-        }),
-        plan_id: this.plan_id,
-        plan_config_id: this.plan_config_id,
-      });
+    handleAgeBands(data) {
+      this.age_bands = [...data];
+    },
+    routeTo(name) {
       this.$router.push({
-        name: "provisions",
-        query: { plan_id: this.plan_id, plan_config_id: this.plan_config_id },
+        name: name,
+        params: { plan_id: this.plan_id },
       });
     },
-    onSubmit(event) {
-      event.preventDefault();
-      this.saveAgeBands();
-    },
-    onReset() {
-      this.age_bands = [{ lower_age: 18, upper_age: 99 }];
-    },
-    ageBandCalculator() {
-      for (let i = 0; i < this.age_bands.length; i++) {
-        if (i === 0) {
-          this.age_bands[i].lower_age = 18;
-        } else if (
-          this.age_bands[i].lower_age <= this.age_bands[i - 1].lower_age
-        ) {
-          this.age_bands[i].lower_age = null;
-          this.age_bands[i - 1].upper_age = null;
-        }
-
-        if (i === this.age_bands.length - 1) {
-          this.age_bands[i].upper_age = 99;
-        } else if (!this.age_bands[i + 1].lower_age) {
-          this.age_bands[i].upper_age = null;
-        } else {
-          this.age_bands[i].upper_age = this.age_bands[i + 1].lower_age - 1;
-        }
-      }
-    },
-    addAgeBandHandler(index) {
-      this.age_bands.splice(index + 1, 0, { lower_age: null, upper_age: null });
-      this.ageBandCalculator();
-    },
-    removeAgeBandHandler(index) {
-      this.age_bands.splice(index, 1);
-      this.ageBandCalculator();
+    async save() {
+      await axios.post(
+        `/selections/plan/${this.plan_id}/age-bands`,
+        this.output
+      );
+      this.routeTo("provisions");
     },
   },
 };

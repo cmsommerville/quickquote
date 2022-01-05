@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="form-rater" v-if="loaded">
-      <v-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+      <v-form class="form" @submit="save" @reset="onReset" v-if="show">
         <component
-          v-for="provision in plan_config.provisions"
-          :key="provision.name"
-          :is="provision.ui.component"
-          v-bind="{ label: provision.label, ...provision.ui }"
-          :name="provision.name"
-          v-model="provision.selectedValue"
+          v-for="provision in provisions"
+          :key="provision.provision_id"
+          :is="provision.ui_component.component_type_code"
+          v-bind="{ ...provision.ui_component }"
+          :name="provision.provision_code"
+          v-model="provision.ui_provision_value"
         />
 
         <div class="d-flex justify-center my-3">
@@ -29,6 +29,12 @@ import { VTextField, VSelect, VSwitch } from "vuetify/lib";
 
 export default {
   name: "Provisions",
+  props: {
+    plan_id: {
+      type: [Number, String],
+      required: true,
+    },
+  },
   components: {
     VSelect,
     VTextField,
@@ -37,42 +43,58 @@ export default {
   data() {
     return {
       loaded: false,
-      plan_config_id: null,
-      plan_id: null,
-      plan_config: null,
-      provisions: null,
+      provisions: [],
       show: true,
     };
   },
   computed: {
-    selectionFormatter() {
+    output() {
       return this.provisions.map((item) => {
         return {
-          plan_id: this.plan_id,
-          provision_code: item.code,
-          provision_value: String(item.selectedValue),
-          provision_data_type: typeof item.selectedValue,
+          selection_plan_id: this.plan_id,
+          config_provision_id: item.config_provision_id,
+          provision_value: String(item.ui_provision_value),
+          provision_data_type: typeof item.ui_provision_value,
         };
       });
     },
   },
   async mounted() {
     this.loaded = false;
-    this.plan_config_id = this.$route.query.plan_config_id;
-    const res = await axios.get(`/config/plan/${this.plan_config_id}`);
-    this.plan_id = +this.$route.query.plan_id;
-    this.plan_config = { ...res.data };
-    this.provisions = [...res.data.provisions];
+    const res = await axios.get(`/selections/plan/${this.plan_id}/provisions`);
+    this.provisions = [...res.data];
     this.loaded = true;
   },
   methods: {
-    async onSubmit(event) {
-      event.preventDefault();
-      await axios.post("/selections/provisions", this.selectionFormatter);
+    routeTo(route_name, query = {}) {
       this.$router.push({
-        name: "premium",
-        query: { plan_id: this.plan_id },
+        name: route_name,
+        params: { plan_id: this.plan_id },
+        query: { ...query },
       });
+    },
+    async save(event) {
+      event.preventDefault();
+      const res = await axios.post(
+        `/selections/plan/${this.plan_id}/provisions`,
+        this.output
+      );
+      this.mergeSelections(res.data);
+      // this.routeTo("rating-premium");
+    },
+    mergeSelections(data) {
+      this.provisions = [
+        ...this.provisions.map((prov) => {
+          const sel_index = data.findIndex(
+            (item) => item.config_provision_id === prov.config_provision_id
+          );
+          return {
+            ...prov,
+            selection_provision_id:
+              sel_index < 0 ? null : data[sel_index].selection_provision_id,
+          };
+        }),
+      ];
     },
     onReset(event) {
       event.preventDefault();

@@ -1,12 +1,13 @@
 # expose all selections resources
 from .Resource_SelectionPlan import *
 from .Resource_SelectionBenefit import *
-from .Resource_BenefitProductVariation import *
+from .Resource_SelectionAgeBands import * 
+from .Resource_SelectionProvision import * 
 # from .Selections_Provision import ProvisionSelections
 # from .Selections_AgeBands import AgeBandsSelections
 # from .Calculator_Rating import RatingCalculatorResource
 # from .Config_RateTable import RateTableList
-# from .Search_Plan import PlanSearch
+from .Search_Plan import PlanSearch
 
 
 routes = [
@@ -19,9 +20,13 @@ routes = [
         "endpoints": ['/selections/plan/<int:plan_id>/benefits']
     },
     {
-        "class": Query_AllBenefitProductVariations, 
-        "endpoints": ['/selections/plan/<int:plan_id>/benefit-product-variations']
-    }, 
+        "class": Resource_SelectionAgeBands, 
+        "endpoints": ['/selections/plan/<int:plan_id>/age-bands']
+    },
+    {
+        "class": Resource_SelectionProvision, 
+        "endpoints": ['/selections/plan/<int:plan_id>/provisions']
+    },
     # {
     #     "class": AgeBandsSelections, 
     #     "endpoints": ['/selections/age-bands']
@@ -34,8 +39,8 @@ routes = [
     #     "class": RatingCalculatorResource, 
     #     "endpoints": ['/selections/rating-calculator']
     # },
-    # {
-    #     "class": PlanSearch, 
-    #     "endpoints": ['/search/plan']
-    # },
+    {
+        "class": PlanSearch, 
+        "endpoints": ['/search/plan']
+    },
 ]

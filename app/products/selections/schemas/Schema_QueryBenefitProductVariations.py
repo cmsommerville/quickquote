@@ -43,7 +43,9 @@ class Schema_QueryBPV_Duration(ma.Schema):
             return None
 
     def calc_ui_selection_duration(self, obj):
-        return self.get_selected_duration(obj) or obj.default_duration_item_code
+        if self.context['has_plan_benefits']: 
+            return self.get_selected_duration(obj) or obj.default_duration_item_code
+        return obj.default_duration_item_code
         
 
 
@@ -72,7 +74,9 @@ class Schema_QueryBPV_Benefit(ma.Schema):
             return None
 
     def calc_ui_selection_benefit(self, obj):
-        return self.get_selected_benefit(obj) or float(obj.default_value)
+        if self.context.get('has_plan_benefits', False): 
+            return self.get_selected_benefit(obj) or 0
+        return float(obj.default_value)
         
 
 class Schema_QueryBPV(ma.Schema):

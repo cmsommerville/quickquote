@@ -37,10 +37,9 @@ export default {
     searchHandler(model) {
       // handle input event for search bar
       this.$router.push({
-        name: "plan",
+        name: "selections-plan",
         query: {
-          plan_id: model.plan_id,
-          plan_config_id: model.plan_config_id,
+          plan_id: model.selection_plan_id,
         },
       });
     },

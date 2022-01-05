@@ -14,7 +14,7 @@ class CRUD_ProvisionUIComponentConfig(Resource):
 
     @classmethod
     def get(cls, id):
-        config = Model_ConfigProvisionUIComponent.find(id)
+        config = Model_ConfigProvisionUIComponent.find_one(id)
         if config is None:
             return [], 200
         if config.component_type == "INPUT":
@@ -74,7 +74,7 @@ class CRUD_ProvisionUIComponentConfig(Resource):
 
     @classmethod
     def delete(cls, id):
-        config = Model_ConfigProvisionUIComponent.find(id)
+        config = Model_ConfigProvisionUIComponent.find_one(id)
         config.delete()
         return "Deleted", 204
         

@@ -11,3 +11,5 @@ from .Schema_SelectionAgeBands import *
 from .RateTableSchema import *
 from .Schema_SelectionRateGroupSummary import *
 from .Schema_QueryBenefitProductVariations import *
+from .Schema_QueryAgeBands import *
+from .Schema_QueryProvision import *

@@ -39,10 +39,8 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    const res = await axios.get(
-      `selections/plan/${this.plan_id}/benefit-product-variations`
-    );
-    this.coverages = [...res.data.coverages];
+    const res = await axios.get(`selections/plan/${this.plan_id}/benefits`);
+    this.coverages = [...res.data];
     this.loaded = true;
   },
   data() {
@@ -90,10 +88,18 @@ export default {
   methods: {
     async save(event) {
       event.preventDefault();
-      await axios.post(
-        `/selections/plan/${this.plan_id}/benefits`,
-        this.output
-      );
+      try {
+        await axios.post(
+          `/selections/plan/${this.plan_id}/benefits`,
+          this.output
+        );
+        this.$router.push({
+          name: "selections-age-bands",
+          params: { plan_id: this.plan_id },
+        });
+      } catch (err) {
+        this.$store.commit("SHOW_SNACKBAR", err.message);
+      }
     },
     async onSubmit(event) {
       event.preventDefault();

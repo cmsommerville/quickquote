@@ -4,6 +4,10 @@
     <the-sidebar :drawer="drawer" @toggle="toggleDrawer" />
     <v-main class="app-container">
       <router-view :key="$route.fullPath" class="app-content" />
+      <the-snackbar
+        :snackbar="$store.getters.get_snackbar"
+        :snackbar_message="$store.getters.get_snackbar_message"
+      />
     </v-main>
   </v-app>
 </template>
@@ -11,12 +15,14 @@
 <script>
 import TheSidebar from "./components/TheSidebar.vue";
 import TheHeader from "./components/TheHeader.vue";
+import TheSnackbar from "./components/TheSnackbar.vue";
 
 export default {
   name: "App",
   components: {
     TheSidebar,
     TheHeader,
+    TheSnackbar,
   },
   data() {
     return {

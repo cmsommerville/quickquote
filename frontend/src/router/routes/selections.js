@@ -23,9 +23,10 @@ export default [
     component: Plan,
   },
   {
-    path: "/selections/provisions",
+    path: "/selections/provisions/:plan_id",
     name: "selections-provisions",
     component: Provisions,
+    props: true,
   },
   {
     path: "/selections/benefits/:plan_id",
@@ -39,8 +40,9 @@ export default [
     component: Premium,
   },
   {
-    path: "/selections/age-bands",
+    path: "/selections/age-bands/:plan_id",
     name: "selections-age-bands",
     component: AgeBands,
+    props: true,
   },
 ];
