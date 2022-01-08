@@ -17,7 +17,7 @@ class Model_ConfigFactor(BaseModel):
     __tablename__ = CONFIG_FACTOR
 
     factor_id = db.Column(db.Integer, primary_key=True)
-    provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"), nullable=False)
+    provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id", onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     factor_priority = db.Column(db.Integer, nullable=False)
     factor_value = db.Column(db.Numeric(
         FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION), nullable=False)
@@ -26,7 +26,7 @@ class Model_ConfigFactor(BaseModel):
     factor_interpolation_high_value = db.Column(
         db.Numeric(FACTOR_DECIMAL_PRECISION + 3, FACTOR_DECIMAL_PRECISION))
     factor_interpolation_rule_code = db.Column(db.String(30), db.ForeignKey(
-        f"{REF_INTERPOLATION_RULE}.interpolation_rule_code"))
+        f"{REF_INTERPOLATION_RULE}.interpolation_rule_code", onupdate="CASCADE"))
 
     factor_rules = db.relationship("Model_ConfigFactorRule", back_populates="factor")
 

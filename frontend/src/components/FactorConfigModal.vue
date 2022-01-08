@@ -8,10 +8,19 @@
       </v-card-title>
 
       <v-card-text>
-        <v-row v-for="(item, ix) in factor_rules" :key="ix">
-          <v-col cols="12" sm="3">
+        <ul>
+          <li class="factor-rule" v-for="(item, ix) in factor_rules" :key="ix">
             <v-select
-              :items="variationOptions"
+              :items="classes"
+              filled
+              outlined
+              item-text="label"
+              item-value="code"
+              label="Class Name"
+              v-model="item.class_name"
+            />
+            <v-select
+              :items="getClassAttributes(item.class_name)"
               filled
               outlined
               item-text="label"
@@ -19,8 +28,6 @@
               label="Varies By"
               v-model="item.field_name"
             />
-          </v-col>
-          <v-col cols="12" sm="2">
             <v-select
               :items="comparisonOperators"
               filled
@@ -30,33 +37,27 @@
               label="Operator"
               v-model="item.comparison_operator_code"
             />
-          </v-col>
-          <v-col cols="12" sm="6">
             <v-text-field
               filled
               outlined
               label="Value"
               v-model="item.field_value"
             />
-          </v-col>
-          <v-col cols="12" sm="1" class="py-6">
             <v-icon large color="pink lighten-2" @click="addCondition">
               mdi-plus-circle
             </v-icon>
-          </v-col>
-        </v-row>
+          </li>
+        </ul>
 
-        <v-row class="py-4">
-          <v-col></v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model.number="factor_value"
-              filled
-              outlined
-              label="Factor"
-            />
-          </v-col>
-        </v-row>
+        <div class="factor-value">
+          <v-text-field
+            class="factor-field"
+            v-model.number="factor_value"
+            filled
+            outlined
+            label="Factor"
+          />
+        </div>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -70,6 +71,7 @@
 </template>
 
 <script>
+import { FACTOR_RULE_FIELDS } from "../data/lookups.js";
 export default {
   name: "FactorConfigModal",
   inheritAttrs: true,
@@ -93,6 +95,7 @@ export default {
       factor_priority: null,
       factor_value: null,
       factor_rules: [{}],
+      fields: [...FACTOR_RULE_FIELDS],
       variationOptions: [
         { label: "Rating State", code: "rating_state" },
         { label: "Group Size", code: "group_size" },
@@ -119,6 +122,11 @@ export default {
         this.$emit("input", value);
       },
     },
+    classes() {
+      return this.fields.map((item) => {
+        return { label: item.class_label, code: item.class_code };
+      });
+    },
     output() {
       return {
         factor_value: this.factor_value,
@@ -130,7 +138,7 @@ export default {
           }
           return {
             comparison_operator_code: rule.comparison_operator_code,
-            class_name: "test",
+            class_name: rule.class_name,
             field_name: rule.field_name,
             field_value: rule.field_value,
             field_value_data_type: typeof val,
@@ -147,6 +155,15 @@ export default {
       this.factor_rules = [{}];
       this.factor_value = null;
     },
+    getClassAttributes(class_code) {
+      if (class_code) {
+        const class_obj = this.fields.find(
+          (item) => item.class_code === class_code
+        );
+        return class_obj.attributes;
+      }
+      return [];
+    },
     emitConfig() {
       this.$emit("submit:factor-config", this.output);
       this.initialize();
@@ -157,3 +174,21 @@ export default {
 </script>
 
 <style></style>
+
+<style scoped>
+.factor-rule {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 2fr 50px;
+  grid-gap: 10px;
+}
+
+.factor-value {
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+}
+
+.factor-field {
+  grid-column-start: 2;
+}
+</style>

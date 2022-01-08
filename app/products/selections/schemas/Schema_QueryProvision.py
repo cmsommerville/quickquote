@@ -45,11 +45,18 @@ class Schema_QueryProvision(ma.Schema):
 
     states = ma.List(ma.Nested(Schema_QueryProvision_States))
     ui_component = ma.Nested(Schema_QueryProvision_UIComponent)
+    selection_provision_id = ma.Method('get_selected_provision_id')
     selected_provision_value = ma.Method('get_selected_provision')
     selected_provision_data_type = ma.Method('get_selected_provision_data_type')
 
     ui_provision_value = ma.Method('get_selected_provision')
     ui_provision_data_type = ma.Method('get_selected_provision_data_type')
+
+    def get_selected_provision_id(self, obj): 
+        try: 
+            return obj.selected_provision[0].selection_provision_id
+        except: 
+            return None
 
     def get_selected_provision(self, obj): 
         try: 

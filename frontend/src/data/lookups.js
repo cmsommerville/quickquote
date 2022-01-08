@@ -1,12 +1,3 @@
-export const STATES = [
-  { code: "AL", label: "Alabama" },
-  { code: "AK", label: "Alaska" },
-  { code: "AR", label: "Arkansas" },
-  { code: "AZ", label: "Arizona" },
-  { code: "NC", label: "North Carolina" },
-  { code: "SC", label: "South Carolina" },
-];
-
 export const BENEFIT_UNITS = [
   {
     value: "dollar",
@@ -25,22 +16,32 @@ export const OPERATORS = {
   gt: ">",
   ge: ">=",
   ne: "!=",
-  range: "between",
-  nrange: "not between",
 };
 
-export const COMPONENT_TYPES = [
-  { code: "v-text-field", label: "Input" },
-  { code: "v-select", label: "Select" },
-  { code: "v-checkbox", label: "Checkbox" },
-  { code: "v-radio", label: "Radio" },
-  { code: "v-switch", label: "Switch" },
-];
-
-export const INPUT_TYPES = [
-  { code: "text", label: "Text" },
-  { code: "number", label: "Number" },
-  { code: "date", label: "Date" },
-  { code: "email", label: "Email" },
-  { code: "password", label: "Password" },
+export const FACTOR_RULE_FIELDS = [
+  {
+    class_code: "Model_SelectionPlan",
+    class_label: "Plan",
+    attributes: [
+      { label: "Product Variation Code", code: "product_variation_code" },
+      { label: "Rating State", code: "state_code" },
+      { label: "Plan Effective Date", code: "plan_effective_date" },
+      { label: "Broker ID", code: "broker_id" },
+    ],
+  },
+  {
+    class_code: "Model_ConfigRateTable",
+    class_label: "Rate Table",
+    attributes: [
+      { label: "Family Tier Code", code: "family_code" },
+      { label: "Tobacco Status Code", code: "tobacco_status" },
+      { label: "Age", code: "age" },
+      { label: "Gender Code", code: "gender" },
+    ],
+  },
+  {
+    class_code: "Model_ConfigProvision",
+    class_label: "Provision",
+    attributes: [{ label: "Provision Value", code: "provision_value" }],
+  },
 ];

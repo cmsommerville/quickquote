@@ -1,6 +1,7 @@
 from app.extensions import db
 from app.shared import BaseModel
 from sqlalchemy import cast 
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from ...__constants__ import TBL_NAMES
 from ..utils.helpers import stateValidator
@@ -30,6 +31,18 @@ class Model_SelectionPlan(BaseModel):
     benefits = db.relationship("Model_SelectionBenefit", back_populates="plan")
     provisions = db.relationship("Model_SelectionProvision", back_populates="plan")
     age_bands = db.relationship("Model_SelectionAgeBands", back_populates="plan")
+    state = db.relationship("Model_RefStates")
+    product_variation = db.relationship("Model_ConfigProductVariation")
+
+    @hybrid_property
+    def state_code(self):
+        return self.state.state_code
+
+    @hybrid_property
+    def product_variation_code(self): 
+        return self.product_variation.product_variation_code
+
+        
 
     @classmethod
     def search_by_id(cls, id):

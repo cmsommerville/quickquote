@@ -18,6 +18,7 @@ class Model_SelectionProvision(BaseModel):
     provision_data_type = db.Column(db.String(20), nullable=False)
 
     plan = db.relationship("Model_SelectionPlan", back_populates="provisions")
+    config_provision = db.relationship("Model_ConfigProvision", viewonly=True)
 
     def getValue(self):
         if self.provision_data_type == 'number':

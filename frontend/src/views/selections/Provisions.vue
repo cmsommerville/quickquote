@@ -50,12 +50,17 @@ export default {
   computed: {
     output() {
       return this.provisions.map((item) => {
-        return {
+        const val = this.convertDataType(item.ui_provision_value);
+        const data = {
           selection_plan_id: this.plan_id,
           config_provision_id: item.config_provision_id,
-          provision_value: String(item.ui_provision_value),
-          provision_data_type: typeof item.ui_provision_value,
+          provision_value: String(val),
+          provision_data_type: typeof val,
         };
+        if (item.selection_provision_id) {
+          data.selection_provision_id = item.selection_provision_id;
+        }
+        return data;
       });
     },
   },
@@ -66,6 +71,15 @@ export default {
     this.loaded = true;
   },
   methods: {
+    convertDataType(val) {
+      if (["true", "false"].includes(val.toLowerCase())) {
+        return val.toLowerCase() === "true";
+      }
+      if (!isNaN(+val)) {
+        return +val;
+      }
+      return val;
+    },
     routeTo(route_name, query = {}) {
       this.$router.push({
         name: route_name,

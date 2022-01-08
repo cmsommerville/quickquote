@@ -7,7 +7,38 @@
     </v-card-title>
 
     <v-card-text>
-      <v-row v-for="(item, ix) in config" :key="ix">
+      <ul>
+        <li class="rule" v-for="(item, ix) in config" :key="ix">
+          <v-select
+            :items="variationOptions"
+            filled
+            outlined
+            item-text="label"
+            item-value="code"
+            label="Varies By"
+            v-model="item.field_name"
+          />
+          <v-select
+            :items="comparisonOperators"
+            filled
+            outlined
+            item-text="label"
+            item-value="code"
+            label="Operator"
+            v-model="item.comparison_operator_code"
+          />
+          <v-text-field
+            filled
+            outlined
+            label="Value"
+            v-model="item.field_value"
+          />
+          <v-icon large color="pink lighten-2" @click="addCondition">
+            mdi-plus-circle
+          </v-icon>
+        </li>
+      </ul>
+      <!-- <v-row v-for="(item, ix) in config" :key="ix">
         <v-col cols="12" sm="3">
           <v-select
             :items="variationOptions"
@@ -43,7 +74,7 @@
             mdi-plus-circle
           </v-icon>
         </v-col>
-      </v-row>
+      </v-row> -->
 
       <v-row class="py-4">
         <v-col></v-col>
@@ -71,6 +102,8 @@
 </template>
 
 <script>
+import { FACTOR_RULE_FIELDS } from "../../data/lookups.js";
+
 export default {
   props: {
     product_id: {
@@ -90,6 +123,7 @@ export default {
       loaded: false,
       config: [{}],
       factor_value: null,
+      fields: [...FACTOR_RULE_FIELDS],
       variationOptions: [
         { label: "Rating State", code: "rating_state" },
         { label: "Group Size", code: "group_size" },
@@ -149,3 +183,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.rule {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 2fr;
+  grid-gap: 10px;
+}
+</style>
