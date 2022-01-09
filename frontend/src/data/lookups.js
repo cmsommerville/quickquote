@@ -20,7 +20,7 @@ export const OPERATORS = {
 
 export const FACTOR_RULE_FIELDS = [
   {
-    class_code: "Model_SelectionPlan",
+    class_code: "plan",
     class_label: "Plan",
     attributes: [
       { label: "Product Variation Code", code: "product_variation_code" },
@@ -30,7 +30,7 @@ export const FACTOR_RULE_FIELDS = [
     ],
   },
   {
-    class_code: "Model_ConfigRateTable",
+    class_code: "rate_table",
     class_label: "Rate Table",
     attributes: [
       { label: "Family Tier Code", code: "family_code" },
@@ -40,7 +40,7 @@ export const FACTOR_RULE_FIELDS = [
     ],
   },
   {
-    class_code: "Model_ConfigProvision",
+    class_code: "provision",
     class_label: "Provision",
     attributes: [{ label: "Provision Value", code: "provision_value" }],
   },

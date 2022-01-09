@@ -16,18 +16,19 @@ from .Rating_BenefitFactors import Rating_BenefitFactorList
 
 class Rating_Main:
 
-    def __init__(self, plan, benefits, age_bands, provisions,
-                 config, product_code, product_variation_code,
-                 policy, *args, **kwargs):
+    def __init__(self, 
+        plan, 
+        benefits, 
+        age_bands, 
+        provisions,
+        *args, **kwargs):
 
         self.plan = plan
         self.benefits = benefits
         self.age_bands = age_bands
         self.provisions = provisions
-        self.config = config
-        self.product_code = product_code
-        self.product_variation_code = product_variation_code
-        self.policy = policy
+        self.product_id = plan.config_product_id
+        self.product_variation_id = plan.config_product_variation_id
 
         self.plan_rates = []
         # a dictionary keyed by the benefit_rates natural key, containing a list of benefit_age_rates

@@ -1,67 +1,40 @@
-from typing import List, Union, Tuple
+from typing import List
 from decimal import Decimal
-from ..models import BenefitFactorModel, PlanModel, BenefitModel, RateTableModel, ProvisionModel
 
+from ..models import Model_SelectionBenefitFactor, Model_SelectionPlan, \
+    Model_SelectionBenefit, RateTableModel, Model_SelectionProvision
+from ...config.models import Model_ConfigFactor
 
 class Rating_BenefitFactorList:
 
     def __init__(self,
-                 config: dict,
-                 plan: PlanModel,
-                 benefit: BenefitModel,
+                 plan: Model_SelectionPlan,
+                 benefit: Model_SelectionBenefit,
                  rate_table: RateTableModel,
-                 provisions: List[ProvisionModel]
+                 provisions: List[Model_SelectionProvision]
                  ):
 
-        self.config = config
         self.plan = plan
         self.benefit = benefit
         self.rate_table = rate_table
         self.provisions = provisions
         self.benefit_factors = []
 
-        self.factor_data = self._factor_config_formatter()
-
-    def _factor_config_formatter(self) -> dict:
-        """
-        Combine configuration and selections into a single dictionary. 
-        Configuration under the `config` key.
-        Selections under the `selection` key. 
-        """
-        config = {fctr['code']: fctr for fctr in self.config}
-        try:
-            output = {
-                prov.provision_code: {
-                    'config': config[prov.provision_code],
-                    'selection': prov
-                }
-                for prov in self.provisions
-            }
-        except Exception as e:
-            raise
-        return output
-
-    def calculate(self) -> List[BenefitFactorModel]:
+    def calculate(self) -> List[Model_SelectionBenefitFactor]:
         """
         Loop over all the factor data and create factor objects.
         """
 
-        for name, data in self.factor_data.items():
+        for provision in self.provisions:
 
             # this instantiates a benefit factor object
-            factor_calc = Rating_BenefitFactor(
-                factor_name=name,
-                factor_type="benefit",
-                factor_config=data['config'],
+            factor = Rating_BenefitFactor(
                 plan=self.plan,
                 benefit=self.benefit,
                 rate_table=self.rate_table,
-                provision=data['selection']
+                provision=provision
             )
-
-            factor_calc.calculate()
-            # this outputs a database benefit factor model
-            factor = factor_calc.returnModel()
+            
             self.benefit_factors.append(factor)
 
         return self.benefit_factors
@@ -70,148 +43,79 @@ class Rating_BenefitFactorList:
 class Rating_BenefitFactor:
 
     def __init__(self,
-                 factor_name: str,
-                 factor_type: str,
-                 factor_config: dict,
-                 plan: PlanModel,
-                 benefit: BenefitModel,
+                 plan: Model_SelectionPlan,
+                 benefit: Model_SelectionBenefit,
                  rate_table: RateTableModel,
-                 provision: ProvisionModel
+                 provision: Model_SelectionProvision
                  ):
 
-        self.__config = factor_config
-        self.__factor_name = factor_name
-        self.__factor_type = factor_type
-
-        self.__provision = provision
-        self.__benefit = benefit
-        self.__rate_table = rate_table
-        self.__plan = plan
-        self.__attributes = {}
-
-        self.set_attributes(plan)
-        self.set_attributes(benefit)
-        self.set_attributes(rate_table)
-        self.set_attributes(provision)
-
-        self.__provision_value = self.__provision.getValue()
+        self.provision = provision
+        self.config_factors = provision.config_provision.factors
+        self.benefit = benefit
+        self.rate_table = rate_table
+        self.plan = plan
+        self.selected_factor = None
 
         # set value, selection, and selection_type
         self.calculate()
 
-    def __repr__(self) -> str:
-        return f"<Factor: {self.__factor_name}>"
-
-    def set_attributes(self, instance) -> None:
-        for k, v in instance.__dict__.items():
-            setattr(self, k, v)
-
-    def returnModel(self) -> BenefitFactorModel:
+    def return_model(self, selected_factor: Model_ConfigFactor) -> Model_SelectionBenefitFactor:
         """
         Create a factor database model after all the 
         calculations have completed
         """
-        self.__factor = BenefitFactorModel(
-            plan_id=self.plan_id,
-            provision_id=self.provision_id,
-            factor_type=self.__factor_type,
-            factor_name=self.__factor_name,
-            factor_selection=self.__factor_selection,
-            factor_selection_type=self.__factor_selection_type,
-            factor_value=self.__factor_value
+        return Model_SelectionBenefitFactor(
+            selection_plan_id=self.plan.selection_plan_id,
+            selection_provision_id=self.provision.selection_provision_id,
+            config_factor_id=selected_factor.factor_id if selected_factor is not None else None, 
+            factor_value=selected_factor.factor_value if selected_factor is not None else 1
         )
-        return self.__factor
 
-    def calculate(self) -> BenefitFactorModel:
+    def calculate(self) -> Model_SelectionBenefitFactor:
         """
         Calculate the factor value and selection.
         This function mostly calls other functions to do the processing.
 
-        If `variability` is a key in the provision configuration, then that
-        subroutine is called. 
-
-        If `function` is a key in the provision configuration, then that 
-        subroutine is called. 
-
-        Otherwise, the default factor value is returned. 
+        Call the factor handler method
         """
-        val = self.__config.get('default_factor_value', 1)
-        uuid = self.__config.get('uuid')
-        variability = self.__config.get('variability')
-        functional = self.__config.get('function')
+        selected_factor = self._factor_handler()
+        self.selected_factor = self.return_model(selected_factor)
+        
 
-        # if there is factor variability, process it
-        if variability:
-            selection, sel_value = self._variabilityHandler(
-                variability, self, val, uuid)
+    def _cast(self, attr, data_type): 
+        if data_type == 'number':
+            attr = float(attr)
+        elif data_type == 'boolean':
+            attr = attr.lower() == 'true'
+        return attr
 
-            self.__factor_selection = selection
-            self.__factor_selection_type = 'uuid'
-            self.__factor_value = sel_value
-        # if there is a custom factor function, process it
-        elif functional:
-            pass
-        # otherwise, return the default factor
-        else:
-            self.__factor_selection = 'default'
-            self.__factor_selection_type = 'uuid'
-            self.__factor_value = val
-
-    def _variabilityHandler(
-        self,
-        variability: dict,
-        factor_attributes,
-        default_value: float,
-        default_uuid: str
-    ) -> Tuple[str, float]:
+    def _factor_handler(self) -> Model_ConfigFactor:
         """
         Process each rule in the factor variability object. The first rule 
         that is true is returned.
 
-        Each rule should be an object. Each key in the object should correspond
-        to an attribute from either the plan, provision, benefit, or rate_table
-        objects. The values can be a string, boolean, list, or object. 
         """
-        for item in variability:
+        for item in self.config_factors:
             applyRule = True
-            for k, v in item['rules'].items():
-                if k in ['factor_value', '_id', 'uuid']:
-                    continue
+            for rule in item.factor_rules:
+                # get instance 
+                instance = getattr(self, rule.class_name)
 
-                attr = getattr(factor_attributes, k, '__DUMMY__')
-                if type(v) == list:
-                    applyRule = (attr in v) and applyRule
-                elif type(v) == dict:
-                    if v['comparison'] == "range":
-                        applyRule = (float(attr) >= v['lower'] and
-                                     float(attr) <= v['upper'] and
-                                     applyRule)
+                # get attribute
+                attr = getattr(instance, rule.field_name)
+                if rule.field_name == 'provision_value':
+                    attr = self._cast(attr, self.provision.provision_data_type)
 
-                    elif v['comparison'] == "nlist":
-                        applyRule = attr in v['value'] and applyRule
-                    elif v['comparison'] == "nrange":
-                        applyRule = not (float(attr) >= v['lower'] and
-                                         float(attr) <= v['upper']) and applyRule
-                    elif v['comparison'] == 'lt':
-                        applyRule = float(attr) < v['value'] and applyRule
-                    elif v['comparison'] == 'le':
-                        applyRule = float(attr) <= v['value'] and applyRule
-                    elif v['comparison'] == 'gt':
-                        applyRule = float(attr) > v['value'] and applyRule
-                    elif v['comparison'] == 'ge':
-                        applyRule = float(attr) >= v['value'] and applyRule
-                elif type(v) == bool:
-                    attr = (str(attr).lower().strip() == 'true')
-                    applyRule = (attr == v) and applyRule
-                else:
-                    applyRule = (attr == v) and applyRule
+                # get rule value to compare to
+                rule_value = self._cast(rule.field_value, rule.field_value_data_type)
 
+                # apply comparison
+                applyRule = getattr(attr, rule.comparison_operator_code)(rule_value) and applyRule
+                    
             if applyRule:
-                val = item['factor_value']
-                uuid = item.get('uuid')
-                return uuid, val
+                return item
 
-        return default_uuid, default_value
+        return None
 
     def _functionalHandler(self):
         return

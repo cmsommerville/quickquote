@@ -10,6 +10,7 @@ routes = [
     *provision_routes, 
     *factor_routes, 
     *ref_data_routes,
+    *rating_routes, 
     *custom_crud_routes,  
 
     *product_list_routes, 
@@ -17,7 +18,6 @@ routes = [
     *provision_list_routes,
     *factor_list_routes, 
     *ref_data_list_routes, 
-    *rating_list_routes, 
 
     *custom_routes
 ]

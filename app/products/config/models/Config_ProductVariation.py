@@ -1,10 +1,13 @@
 from app.extensions import db
+from app.products.config.models.Config_AgeDistributionSet import CONFIG_AGE_DISTRIBUTION_SET
 from app.shared import BaseModel
 
 from ...__constants__ import TBL_NAMES
 
 CONFIG_PRODUCT = TBL_NAMES['CONFIG_PRODUCT']
 CONFIG_PRODUCT_VARIATIONS = TBL_NAMES['CONFIG_PRODUCT_VARIATIONS']
+CONFIG_AGE_DISTRIBUTION_SET = TBL_NAMES['CONFIG_AGE_DISTRIBUTION_SET']
+CONFIG_ATTRIBUTE_DISTRIBUTION_SET = TBL_NAMES['CONFIG_ATTRIBUTE_DISTRIBUTION_SET']
 REF_RATING_ALGORITHM = TBL_NAMES['REF_RATING_ALGORITHM']
 
 
@@ -26,6 +29,10 @@ class Model_ConfigProductVariation(BaseModel):
     is_age_rated = db.Column(db.Boolean, nullable=False)
     is_tobacco_rated = db.Column(db.Boolean, nullable=False)
     is_family_code_rated = db.Column(db.Boolean, nullable=False)
+
+    age_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_AGE_DISTRIBUTION_SET}.age_distribution_set_id"))
+    unisex_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
+    unismoker_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
     family_code_rating_algorithm_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_RATING_ALGORITHM}.rating_algorithm_code"))
     min_issue_age = db.Column(db.Integer)
@@ -38,6 +45,12 @@ class Model_ConfigProductVariation(BaseModel):
         "Model_ConfigAgeBandSet", back_populates="product_variation")
     benefits = db.relationship(
         "Model_ConfigBenefitProductVariation", back_populates="product_variation")
+
+    age_distribution = db.relationship("Model_ConfigAgeDistributionSet")
+    unisex_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
+        primaryjoin="Model_ConfigProductVariation.unisex_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
+    unismoker_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
+        primaryjoin="Model_ConfigProductVariation.unismoker_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
 
     @classmethod
     def find_by_product(cls, id: int):

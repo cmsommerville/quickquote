@@ -227,6 +227,27 @@ ref_data_routes = [
     }, 
 ]
 
+rating_routes = [
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigAgeDistributionSet', 
+            model=Model_ConfigAgeDistributionSet,
+            schema=Schema_ConfigAgeDistributionSet, 
+            primary_key='age_distribution_set_id'
+        ).generate_class(), 
+        "endpoints": ['/config/age-distribution-set/<int:id>', '/config/age-distribution-set']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigSmokerDistributionSet', 
+            model=Model_ConfigAttributeDistributionSet,
+            schema=Schema_ConfigAttributeDistributionSet, 
+            primary_key='attr_distribution_set_id'
+        ).generate_class(), 
+        "endpoints": ['/config/attr-distribution-set/<int:id>', '/config/attr-distribution-set']
+    }, 
+]
+
 custom_crud_routes = [
     {
         "class": CRUD_ProvisionUIComponentConfig, 
@@ -308,35 +329,5 @@ ref_data_list_routes = [
             primary_key='unit_code'
         ).generate_list_class(), 
         "endpoints": ['/config/ref-unit-codes']
-    }, 
-]
-
-rating_list_routes = [
-    {
-        "class": CRUD_ResourceFactory(
-            resource_name='CRUD_ConfigAgeDistribution', 
-            model=Model_ConfigAgeDistribution,
-            schema=Schema_ConfigAgeDistribution, 
-            primary_key='age_distribution_id'
-        ).generate_list_class(), 
-        "endpoints": ['/config/age-distribution']
-    }, 
-    {
-        "class": CRUD_ResourceFactory(
-            resource_name='CRUD_ConfigGenderDistribution', 
-            model=Model_ConfigGenderDistribution,
-            schema=Schema_ConfigGenderDistribution, 
-            primary_key='gender_distribution_id'
-        ).generate_list_class(), 
-        "endpoints": ['/config/gender-distribution']
-    }, 
-    {
-        "class": CRUD_ResourceFactory(
-            resource_name='CRUD_ConfigSmokerDistribution', 
-            model=Model_ConfigSmokerDistribution,
-            schema=Schema_ConfigSmokerDistribution, 
-            primary_key='smoker_distribution_id'
-        ).generate_list_class(), 
-        "endpoints": ['/config/smoker-distribution']
     }, 
 ]

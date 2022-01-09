@@ -4,6 +4,7 @@ import datetime
 
 from ...__constants__ import TBL_NAMES
 
+CONFIG_FACTOR = TBL_NAMES['CONFIG_FACTOR']
 SELECTION_BENEFIT_AGE_RATE = TBL_NAMES['SELECTION_BENEFIT_AGE_RATE']
 SELECTION_BENEFIT_FACTOR = TBL_NAMES['SELECTION_BENEFIT_FACTOR']
 SELECTION_PROVISION = TBL_NAMES['SELECTION_PROVISION']
@@ -17,10 +18,7 @@ class Model_SelectionBenefitFactor(BaseModel):
         f"{SELECTION_BENEFIT_AGE_RATE}.selection_benefit_age_rate_id"))
     selection_plan_id = db.Column(db.ForeignKey(F'{SELECTION_PLAN}.selection_plan_id'))
     selection_provision_id = db.Column(db.ForeignKey(F'{SELECTION_PROVISION}.selection_provision_id'))
-    factor_type = db.Column(db.String(10), nullable=False)
-    factor_name = db.Column(db.String(50), nullable=False)
-    factor_selection = db.Column(db.String(36), nullable=False)
-    factor_selection_type = db.Column(db.String(10), nullable=False)
+    config_factor_id = db.Column(db.ForeignKey(F'{CONFIG_FACTOR}.factor_id'))
     factor_value = db.Column(db.Float, nullable=False)
 
     benefit_age_rate = db.relationship(

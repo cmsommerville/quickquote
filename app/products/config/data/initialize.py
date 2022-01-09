@@ -49,32 +49,25 @@ class Resource_InitializeData(Resource):
         ])
 
         # age distribution
-        res = requests.post('http://localhost:5000/config/age-distribution', json=[
-            {
-                **x, 
-                "product_id": product['product_id']
-            } for x in CONFIG_AGE_DISTRIBUTION
-        ])
+        res = requests.post('http://localhost:5000/config/age-distribution-set', json=AGE_DISTRIBUTION)
+        age_distribution_set = res.json()
 
-        # gender distribution
-        res = requests.post('http://localhost:5000/config/gender-distribution', json=[
-            {
-                **x, 
-                "product_id": product['product_id']
-            } for x in CONFIG_GENDER_DISTRIBUTION
-        ])
+        # unisex distribution
+        res = requests.post('http://localhost:5000/config/attr-distribution-set', json=UNISEX_DISTRIBUTION)
+        unisex_distribution_set = res.json()
 
-        # smooker distribution
-        res = requests.post('http://localhost:5000/config/smoker-distribution', json=[
-            {
-                **x, 
-                "product_id": product['product_id']
-            } for x in CONFIG_SMOKER_DISTRIBUTION
-        ])
+        # unismoker distribution
+        res = requests.post('http://localhost:5000/config/attr-distribution-set', json=UNISMOKER_DISTRIBUTION)
+        unismoker_distribution_set = res.json()
         
         # product variation
         res = requests.post('http://localhost:5000/config/product-variations', json={
-            **CONFIG_PRODUCT_VARIATION, "product_id": product['product_id']})
+            **CONFIG_PRODUCT_VARIATION, 
+            "age_distribution_set_id": age_distribution_set['age_distribution_set_id'], 
+            "unisex_distribution_set_id": unisex_distribution_set['attr_distribution_set_id'], 
+            "unismoker_distribution_set_id": unismoker_distribution_set['attr_distribution_set_id'], 
+            "product_id": product['product_id']
+        })
         product_variation = res.json()
         
         # coverage

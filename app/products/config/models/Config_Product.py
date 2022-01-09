@@ -25,4 +25,3 @@ class Model_ConfigProduct(BaseModel):
         "Model_ConfigProvision", back_populates="product")
     states = db.relationship(
         "Model_ConfigProductStateAvailability", back_populates="product")
-
