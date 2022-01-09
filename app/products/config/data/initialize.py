@@ -47,6 +47,30 @@ class Resource_InitializeData(Resource):
                 "product_id": product['product_id']
             } for state in CONFIG_PRODUCT_STATES
         ])
+
+        # age distribution
+        res = requests.post('http://localhost:5000/config/age-distribution', json=[
+            {
+                **x, 
+                "product_id": product['product_id']
+            } for x in CONFIG_AGE_DISTRIBUTION
+        ])
+
+        # gender distribution
+        res = requests.post('http://localhost:5000/config/gender-distribution', json=[
+            {
+                **x, 
+                "product_id": product['product_id']
+            } for x in CONFIG_GENDER_DISTRIBUTION
+        ])
+
+        # smooker distribution
+        res = requests.post('http://localhost:5000/config/smoker-distribution', json=[
+            {
+                **x, 
+                "product_id": product['product_id']
+            } for x in CONFIG_SMOKER_DISTRIBUTION
+        ])
         
         # product variation
         res = requests.post('http://localhost:5000/config/product-variations', json={
