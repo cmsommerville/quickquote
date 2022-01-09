@@ -1,5 +1,6 @@
 from .Config_AgeBand import *
 from .Config_AgeBandSet import *
+from .Config_AgeDistribution import *
 from .Config_Benefit import *
 from .Config_BenefitDuration import *
 from .Config_BenefitDurationItem import *
@@ -8,6 +9,7 @@ from .Config_BenefitProvision import *
 from .Config_Coverage import *
 from .Config_Factor import *
 from .Config_FactorRule import *
+from .Config_GenderDistribution import *
 from .Config_Product import *
 from .Config_ProductStateAvailability import *
 from .Config_ProductVariation import *
@@ -15,6 +17,7 @@ from .Config_Provision import *
 from .Config_ProvisionUIComponent import *
 from .Config_ProvisionStateAvailability import *
 from .Config_RateGroup import *
+from .Config_SmokerDistribution import *
 from .Ref_Benefit import *
 from .Ref_BenefitDuration import *
 from .Ref_BenefitDurationItem import *

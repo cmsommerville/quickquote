@@ -1,6 +1,7 @@
 TBL_NAMES = {
     "CONFIG_AGE_BANDS_SET": "config_age_bands_set",
     "CONFIG_AGE_BANDS": "config_age_bands",
+    "CONFIG_AGE_DISTRIBUTION": "config_age_distribution", 
     "CONFIG_BENEFIT": "config_benefit",
     "CONFIG_BENEFIT_DURATION": "config_benefit_duration",
     "CONFIG_BENEFIT_DURATION_ITEM_STATE_AVAILABILITY": "config_benefit_duration_item_state_availability",
@@ -12,6 +13,7 @@ TBL_NAMES = {
     "CONFIG_COVERAGE_STATE_AVAILABILITY": "config_coverage_state_availability",
     "CONFIG_FACTOR": "config_factor",
     "CONFIG_FACTOR_RULE": "config_factor_rule",
+    "CONFIG_GENDER_DISTRIBUTION": "config_gender_distribution", 
     "CONFIG_PRODUCT": "config_product",
     "CONFIG_PRODUCT_STATE_AVAILABILITY": "config_product_state_availability",
     "CONFIG_PRODUCT_VARIATIONS": "config_product_variations",
@@ -19,6 +21,7 @@ TBL_NAMES = {
     "CONFIG_PROVISION_STATE_AVAILABILITY": "config_provision_state_availability",
     "CONFIG_PROVISION_UI_COMPONENT": "config_provision_ui_component",
     "CONFIG_RATE_GROUP": "config_rate_group", 
+    "CONFIG_SMOKER_DISTRIBUTION": "config_smoker_distribution", 
     "REF_BENEFIT": "ref_benefit",
     "REF_BENEFIT_DURATION": "ref_benefit_duration",
     "REF_BENEFIT_DURATION_ITEMS": "ref_benefit_duration_items",

@@ -254,7 +254,6 @@ product_list_routes = [
     }, 
 ]
 
-
 benefit_list_routes = [
     {
         "class": CRUD_ResourceFactory(
@@ -279,7 +278,6 @@ provision_list_routes = [
     }, 
 ]
 
-
 factor_list_routes = [
     {
         "class": CRUD_ResourceFactory(
@@ -291,6 +289,7 @@ factor_list_routes = [
         "endpoints": ['/config/factors']
     }, 
 ]
+
 ref_data_list_routes = [
     {
         "class": CRUD_ResourceFactory(
@@ -309,5 +308,35 @@ ref_data_list_routes = [
             primary_key='unit_code'
         ).generate_list_class(), 
         "endpoints": ['/config/ref-unit-codes']
+    }, 
+]
+
+rating_list_routes = [
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigAgeDistribution', 
+            model=Model_ConfigAgeDistribution,
+            schema=Schema_ConfigAgeDistribution, 
+            primary_key='age_distribution_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/age-distribution']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigGenderDistribution', 
+            model=Model_ConfigGenderDistribution,
+            schema=Schema_ConfigGenderDistribution, 
+            primary_key='gender_distribution_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/gender-distribution']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigSmokerDistribution', 
+            model=Model_ConfigSmokerDistribution,
+            schema=Schema_ConfigSmokerDistribution, 
+            primary_key='smoker_distribution_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/smoker-distribution']
     }, 
 ]
