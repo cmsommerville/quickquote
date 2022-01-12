@@ -1,30 +1,39 @@
 from typing import List
 from decimal import Decimal
-from itertools import product
+from sqlalchemy.orm import aliased
+from sqlalchemy import literal
+from app.extensions import db
 
-from ..models import Model_SelectionPlan, Model_SelectionBenefit, Model_SelectionAgeBands,\
-    RateTableModel, Model_SelectionBenefitRate, Model_SelectionBenefitFactor, \
-    Model_SelectionProvision, Model_SelectionBenefitAgeRate
+from ..models import Model_SelectionPlan
+from ...config.models import Model_ConfigProductVariation
+from ...queries.Selection_WeightDistribution import query_config_weight_distribution
+from ..schemas import Schema_QueryWeightDistribution
 
+_config_schema_list = Schema_QueryWeightDistribution(many=True)
 
 class Rating_BenefitAgeRateWeights:
 
     def __init__(
             self,
-            plan: Model_SelectionPlan = None,
-            weights: dict = None,
+            plan: Model_SelectionPlan,
+            weights: list = None,
             *args, **kwargs):
         
-        if plan is None and weights is None:
-            raise Exception("Must pass either a plan or weights to Benefit Age Rate Weights")
+        self.plan = plan
+        self.product_variation = plan.product_variation
+        if weights:
+            self.weights = {**self._formatter(**weights)}
+        else:
+            self.weights = {**self._formatter(self.default_weights())}
 
-        self._plan = plan
-        self._weights = weights
+    def _formatter(self, weights: list, *args, **kwargs): 
+        return {(w['age'], w['smoker_status'], w['gender'],): w['weight'] for w in weights}
 
-    def default_weights(self) -> dict:
+    def default_weights(self) -> list:
         """
-        Calculates the base rate
+        Calculates the default weight distribution
         """
-        pass
+        return query_config_weight_distribution(self.plan, self.product_variation).all()
 
-
+    def get(self, age, smoker_status, gender, *args, **kwargs): 
+        return self.weights.get((age, smoker_status, gender,))

@@ -20,15 +20,14 @@ class Model_SelectionBenefitAgeRate(BaseModel):
     selection_plan_id = db.Column(db.ForeignKey(F'{SELECTION_PLAN}.selection_plan_id'))
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
-    smoker_status_weight = db.Column(db.Numeric(12,5), nullable=False)
     gender = db.Column(db.String(1), nullable=False)
-    gender_weight=db.Column(db.Numeric(12,5))
     age = db.Column(db.Integer, nullable=False)
-    age_weight = db.Column(db.Numeric(12, 5))
-    benefit_age_rate_base_premium = db.Column(db.Numeric(12, 5))
-    benefit_age_rate_product_factor = db.Column(db.Numeric(12, 5))
-    benefit_age_rate_benefit_factor = db.Column(db.Numeric(12, 5))
-    benefit_age_rate_final_premium = db.Column(db.Numeric(12, 5))
+    weight = db.Column(db.Numeric(12, 5))
+    base_premium = db.Column(db.Numeric(12, 5))
+    provision_factor = db.Column(db.Numeric(12, 5))
+    duration_factor = db.Column(db.Numeric(12, 5))
+    discretionary_factor = db.Column(db.Numeric(12, 5))
+    final_premium = db.Column(db.Numeric(12, 5))
 
     plan = db.relationship("Model_SelectionPlan")
     benefit = db.relationship("Model_SelectionBenefit")
@@ -40,3 +39,12 @@ class Model_SelectionBenefitAgeRate(BaseModel):
     @classmethod
     def find_by_plan(cls, plan_id):
         return cls.query.filter(cls.selection_plan_id == plan_id).all()
+        
+    @classmethod
+    def delete_by_plan(cls, plan_id):
+        try: 
+            cls.query.filter(cls.selection_plan_id == plan_id).delete()
+            db.session.commit()
+        except Exception as e: 
+            db.session.rollback()
+            raise e

@@ -14,3 +14,4 @@ from .Schema_QueryBenefitProductVariations import *
 from .Schema_QueryAgeBands import *
 from .Schema_QueryProvision import *
 from .Schema_QueryFactors import *
+from .Schema_QueryWeightDistribution import *

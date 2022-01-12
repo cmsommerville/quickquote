@@ -16,9 +16,30 @@
           v-model="selection_product_variation"
           item-text="product_variation_label"
           item-value="product_variation_id"
+          return-object
           label="Product Variation"
           class="my-3"
         ></v-select>
+
+        <v-switch
+          v-if="
+            selection_product_variation &&
+            selection_product_variation.vary_by_tobacco
+          "
+          label="Smoker Distinct"
+          v-model="selection_is_smoker_distinct"
+          class="my-3"
+        />
+
+        <v-switch
+          v-if="
+            selection_product_variation &&
+            selection_product_variation.vary_by_gender
+          "
+          v-model="selection_is_gender_distinct"
+          label="Gender Distinct"
+          class="my-3"
+        />
 
         <v-select
           outlined
@@ -69,6 +90,8 @@ export default {
       selection_product_variation: null,
       selection_rating_state: null,
       selection_plan_effective_date: null,
+      selection_is_gender_distinct: false,
+      selection_is_smoker_distinct: false,
       products: [],
       rules: {
         effective_date: (v) => {
@@ -99,9 +122,12 @@ export default {
     output() {
       return {
         config_product_id: this.selection_product.product_id,
-        config_product_variation_id: this.selection_product_variation,
+        config_product_variation_id:
+          this.selection_product_variation.product_variation_id,
         config_state_id: this.selection_rating_state,
         plan_effective_date: this.selection_plan_effective_date,
+        is_gender_distinct: this.selection_is_gender_distinct,
+        is_smoker_distinct: this.selection_is_smoker_distinct,
       };
     },
   },

@@ -104,12 +104,12 @@ export default {
         { label: "Provision Value", code: "provision_value" },
       ],
       comparisonOperators: [
-        { label: "=", code: "eq" },
-        { label: "<", code: "lt" },
-        { label: "<=", code: "le" },
-        { label: ">", code: "gt" },
-        { label: ">=", code: "ge" },
-        { label: "!=", code: "ne" },
+        { label: "=", code: "__eq__" },
+        { label: "<", code: "__lt__" },
+        { label: "<=", code: "__le__" },
+        { label: ">", code: "__gt__" },
+        { label: ">=", code: "__ge__" },
+        { label: "!=", code: "__ne__" },
       ],
     };
   },

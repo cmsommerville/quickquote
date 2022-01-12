@@ -52,10 +52,18 @@ class Resource_InitializeData(Resource):
         res = requests.post('http://localhost:5000/config/age-distribution-set', json=AGE_DISTRIBUTION)
         age_distribution_set = res.json()
 
+        # sex distinct distribution
+        res = requests.post('http://localhost:5000/config/attr-distribution-set', json=SEX_DISTINCT_DISTRIBUTION)
+        sex_distinct_distribution_set = res.json()
+
         # unisex distribution
         res = requests.post('http://localhost:5000/config/attr-distribution-set', json=UNISEX_DISTRIBUTION)
         unisex_distribution_set = res.json()
 
+        # unismoker distribution
+        res = requests.post('http://localhost:5000/config/attr-distribution-set', json=SMOKER_DISTINCT_DISTRIBUTION)
+        smoker_distinct_distribution_set = res.json()
+        
         # unismoker distribution
         res = requests.post('http://localhost:5000/config/attr-distribution-set', json=UNISMOKER_DISTRIBUTION)
         unismoker_distribution_set = res.json()
@@ -64,6 +72,8 @@ class Resource_InitializeData(Resource):
         res = requests.post('http://localhost:5000/config/product-variations', json={
             **CONFIG_PRODUCT_VARIATION, 
             "age_distribution_set_id": age_distribution_set['age_distribution_set_id'], 
+            "sex_distinct_distribution_set_id": sex_distinct_distribution_set['attr_distribution_set_id'], 
+            "smoker_distinct_distribution_set_id": smoker_distinct_distribution_set['attr_distribution_set_id'], 
             "unisex_distribution_set_id": unisex_distribution_set['attr_distribution_set_id'], 
             "unismoker_distribution_set_id": unismoker_distribution_set['attr_distribution_set_id'], 
             "product_id": product['product_id']
@@ -81,35 +91,61 @@ class Resource_InitializeData(Resource):
         })
         rate_group = res.json()
 
-        # main benefit
-        res = requests.post('http://localhost:5000/config/benefit', json={
-            **CONFIG_BENEFIT, 
-            "product_id": product['product_id'], 
-            "rate_group_id": rate_group['rate_group_id'], 
-            "coverage_id": coverage['coverage_id']
-        })
-        parent_benefit = res.json()
+        # benefits
+        benefits = []
+        for bnft in CONFIG_BENEFIT: 
+            res = requests.post('http://localhost:5000/config/benefit', json={
+                **bnft, 
+                "child_states": [{**child, "product_id": product['product_id']} for child in bnft['child_states']], 
+                "product_id": product['product_id'], 
+                "rate_group_id": rate_group['rate_group_id'], 
+                "coverage_id": coverage['coverage_id']
+            })
+            benefits.append(res.json())
 
-        # benefit states
-        res = requests.post('http://localhost:5000/config/benefits', json=[
-            {
-                **state, 
-                "parent_id": parent_benefit['benefit_id'], 
-                "product_id": product['product_id']
-            } for state in CONFIG_BENEFIT_STATES
-        ])
 
-        # benefit duration
-        res = requests.post('http://localhost:5000/config/benefit-duration', json={
-                **CONFIG_BENEFIT_DURATION, 
-                "benefit_id": parent_benefit['benefit_id']
-            }
-        )
+        # provisions
+        provisions = []
+        for prov in CONFIG_PROVISION: 
+            res = requests.post('http://localhost:5000/config/provision', json={
+                **prov, 
+                "product_id": product['product_id'], 
+            })
+            provisions.append(res.json())
+
+        # provision ui
+        for prov_code, ui in CONFIG_PROVISION_UI.items(): 
+            res = requests.post('http://localhost:5000/config/provision-ui-component', json={
+                **ui, 
+                "provision_id": [prov['provision_id'] for prov in provisions if prov['provision_code'] == prov_code][0], 
+            })
+            
+
+        # factors
+        for prov_code, factors in CONFIG_FACTORS.items(): 
+            res = requests.post('http://localhost:5000/config/factors', json=[
+                {
+                    **factor, 
+                    "provision_id": [prov['provision_id'] for prov in provisions if prov['provision_code'] == prov_code][0], 
+                } for factor in factors]
+            )
+            
+
 
         # benefit product variation
-        res = requests.post('http://localhost:5000/config/benefit-product-variations', json=[{
-            "product_variation_id": product_variation['product_variation_id'], 
-            "benefit_id": parent_benefit['benefit_id']
-        }])
+        for bnft in benefits: 
+            res = requests.post('http://localhost:5000/config/benefit-product-variations', json=[{
+                "product_variation_id": product_variation['product_variation_id'], 
+                "benefit_id": bnft['benefit_id']
+            }])
+
+        
+        # benefit provision
+        for bnft in benefits: 
+            for prov in provisions: 
+                res = requests.post('http://localhost:5000/config/benefit-provisions', json={
+                    "provision_id": prov['provision_id'], 
+                    "benefit_id": bnft['benefit_id']
+                })
 
         return "Data loaded", 200

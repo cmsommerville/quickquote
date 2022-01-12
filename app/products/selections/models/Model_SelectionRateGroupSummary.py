@@ -17,7 +17,8 @@ class Model_SelectionRateGroupSummary(BaseModel):
     config_rate_group_id = db.Column(db.ForeignKey(f'{CONFIG_RATE_GROUP}.rate_group_id'), nullable=False)
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
-    rate_group_premium = db.Column(db.Numeric(12, 5))
+    gender=db.Column(db.String(1), nullable=False)
+    rate_group_premium = db.Column(db.Numeric(12, 5), nullable=False)
 
     plan = db.relationship("Model_SelectionPlan")
     age_band = db.relationship("Model_SelectionAgeBands")
@@ -27,3 +28,12 @@ class Model_SelectionRateGroupSummary(BaseModel):
     @classmethod
     def find_by_plan(cls, plan_id):
         return cls.query.filter(cls.selection_plan_id == plan_id).all()
+
+    @classmethod
+    def delete_by_plan(cls, plan_id):
+        try: 
+            cls.query.filter(cls.selection_plan_id == plan_id).delete()
+            db.session.commit()
+        except Exception as e: 
+            db.session.rollback()
+            raise e

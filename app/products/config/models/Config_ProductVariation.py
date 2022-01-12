@@ -29,9 +29,13 @@ class Model_ConfigProductVariation(BaseModel):
     is_age_rated = db.Column(db.Boolean, nullable=False)
     is_tobacco_rated = db.Column(db.Boolean, nullable=False)
     is_family_code_rated = db.Column(db.Boolean, nullable=False)
+    vary_by_gender = db.Column(db.Boolean, nullable=False)
+    vary_by_tobacco = db.Column(db.Boolean, nullable=False)
 
     age_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_AGE_DISTRIBUTION_SET}.age_distribution_set_id"))
+    sex_distinct_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
     unisex_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
+    smoker_distinct_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
     unismoker_distribution_set_id = db.Column(db.ForeignKey(F"{CONFIG_ATTRIBUTE_DISTRIBUTION_SET}.attr_distribution_set_id"))
     family_code_rating_algorithm_code = db.Column(db.String(30), db.ForeignKey(
         f"{REF_RATING_ALGORITHM}.rating_algorithm_code"))
@@ -47,8 +51,12 @@ class Model_ConfigProductVariation(BaseModel):
         "Model_ConfigBenefitProductVariation", back_populates="product_variation")
 
     age_distribution = db.relationship("Model_ConfigAgeDistributionSet")
+    sex_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
+        primaryjoin="Model_ConfigProductVariation.sex_distinct_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
     unisex_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
         primaryjoin="Model_ConfigProductVariation.unisex_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
+    smoker_distinct_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
+        primaryjoin="Model_ConfigProductVariation.smoker_distinct_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
     unismoker_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
         primaryjoin="Model_ConfigProductVariation.unismoker_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
 

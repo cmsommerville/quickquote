@@ -22,7 +22,8 @@ class Model_SelectionBenefitRate(BaseModel):
     selection_age_band_id = db.Column(db.ForeignKey(f'{SELECTION_AGE_BANDS}.selection_age_band_id'))
     family_code = db.Column(db.String(3), nullable=False)
     smoker_status = db.Column(db.String(1), nullable=False)
-    benefit_rate_premium = db.Column(db.Numeric(12, 5))
+    gender = db.Column(db.String(1), nullable=False)
+    benefit_rate_premium = db.Column(db.Numeric(12, 5), nullable=False)
 
     plan = db.relationship("Model_SelectionPlan")
     benefit = db.relationship("Model_SelectionBenefit", back_populates="benefit_rates")
@@ -63,6 +64,16 @@ class Model_SelectionBenefitRate(BaseModel):
         else:
             if commit:
                 db.session.commit()
+
+    @classmethod
+    def delete_by_plan(cls, plan_id):
+        try: 
+            cls.query.filter(cls.selection_plan_id == plan_id).delete()
+            db.session.commit()
+        except Exception as e: 
+            db.session.rollback()
+            raise e
+
 
     # @classmethod
     # def delete_by_plan_id(cls, plan_id):

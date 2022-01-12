@@ -5,53 +5,56 @@ from functools import reduce
 from collections import defaultdict
 
 
-from ..models import PlanModel, BenefitModel, AgeBandsModel, RateTableModel, \
-    BenefitRateModel, BenefitFactorModel, ProvisionModel, BenefitAgeRateModel, \
-    PlanRateModel
+from ..models import Model_SelectionPlan, Model_SelectionBenefit, Model_SelectionAgeBands, \
+    RateTableModel, Model_SelectionBenefitRate, Model_SelectionBenefitFactor, \
+    Model_SelectionProvision, Model_SelectionBenefitAgeRate, \
+    Model_SelectionRateGroupSummary
 from .Rating_BenefitAgeRates import Rating_BenefitAgeRates
 from .Rating_BenefitRates import Rating_BenefitRates
 from .Rating_PlanRates import Rating_PlanRates
 from .Rating_BenefitFactors import Rating_BenefitFactorList
+from .Rating_BenefitAgeRateWeights import Rating_BenefitAgeRateWeights
 
 
 class Rating_Main:
 
     def __init__(self, 
-        plan, 
-        benefits, 
-        age_bands, 
-        provisions,
+        plan: Model_SelectionPlan, 
+        weights: list = None, 
         *args, **kwargs):
 
         self.plan = plan
-        self.benefits = benefits
-        self.age_bands = age_bands
-        self.provisions = provisions
+        self.benefits = plan.benefits
+        self.age_bands = plan.age_bands
+        self.provisions = plan.provisions
         self.product_id = plan.config_product_id
+        self.product_variation = plan.product_variation
         self.product_variation_id = plan.config_product_variation_id
+        
+        self.product_code = plan.product.product_code
+        self.product_variation_code = plan.product_variation.product_variation_code
 
-        self.plan_rates = []
+        self.weights = Rating_BenefitAgeRateWeights(plan, weights)
+
+        self.rate_groups = []
         # a dictionary keyed by the benefit_rates natural key, containing a list of benefit_age_rates
         self._benefit_age_rates_dict = defaultdict(list)
         # a dictionary keyed by the plan_rates natural key, containing a list of benefit_rates
         self._benefit_rates_dict = defaultdict(list)
         # a dictionary keyed by the benefit_code, containing the corresponding benefit object
         self._benefits_dict = {
-            bnft.benefit_code: bnft for bnft in self.benefits}
+            bnft.config_benefit.benefit_code: bnft for bnft in self.benefits}
         # a dictionary keyed by every distinct age, with each age containing its corresponding age band object
         self._age_band_dict = self.defineAgeBandDictionary()
         self.rate_table = self.initRateTables()
-        self.age_distribution = self.initAgeDistribution()
+        # self.age_distribution = self.initAgeDistribution()
 
     def initRateTables(self) -> List[RateTableModel]:
         return RateTableModel.find_many_benefit_ratesets(
             self.product_code,
             self.product_variation_code,
-            [*self._benefits_dict.keys()]
+            [bnft.config_benefit.benefit_code for bnft in self.benefits]
         )
-
-    def initAgeDistribution(self) -> dict:
-        return {age: 1 for age in range(0, 100)}
 
     def defineAgeBandDictionary(self):
         return {
@@ -71,23 +74,17 @@ class Rating_Main:
         """
 
         # expire the old benefit age rate and factor records
-        BenefitFactorModel.delete_by_plan_id(self.plan.plan_id)
-        BenefitAgeRateModel.delete_by_plan_id(self.plan.plan_id)
+        Model_SelectionBenefitFactor.delete_by_plan(self.plan.selection_plan_id)
+        Model_SelectionBenefitAgeRate.delete_by_plan(self.plan.selection_plan_id)
 
         for rate in self.rate_table:
             # look up age band
-            if not self._age_band_dict.get(rate.age):
+            age_band = self._age_band_dict.get(rate.age)
+            if not age_band:
                 continue
 
-            age_band = self._age_band_dict[rate.age]
-
-            # make a tuple of the rate table natural key, but by AGE BAND
-            # not keyed by age
-            age_band_rate_key = (rate.product_code, rate.product_variation_code, age_band.age_band_id,
-                                 rate.family_code, rate.smoker_status, rate.benefit_code)
-
             # calculate the benefit factors for this rate key
-            benefit_factors = Rating_BenefitFactorList(
+            factors = Rating_BenefitFactorList(
                 config=self.config['provisions'],
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
@@ -95,17 +92,26 @@ class Rating_Main:
                 provisions=self.provisions
             ).calculate()
 
+            # get age weight 
+            weight = self.weights.get(age=rate.age, smoker_status=rate.smoker_status, gender=rate.gender)
+
+            # create the benefit age rate
             benefit_age_rate = Rating_BenefitAgeRates(
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
                 rate_table=rate,
-                benefit_factors=benefit_factors,
-                product_factors=[],
-                age_weight=self.age_distribution[rate.age]
+                factors=factors,
+                weight=weight
             ).calculate()
 
-            self._benefit_age_rates_dict[age_band_rate_key].append(
-                benefit_age_rate)
+            # a list of the rate table natural key, but by AGE BAND
+            age_band_rate_key = [rate.product_code, rate.product_variation_code, age_band.age_band_id,
+                                 rate.family_code, rate.benefit_code]
+
+            age_band.rate_key.append(rate.smoker_status if self.plan.is_smoker_distinct else 'U')                     
+            age_band.rate_key.append(rate.gender if self.plan.is_gender_distinct else 'U')                     
+
+            self._benefit_age_rates_dict[tuple(age_band_rate_key)].append(benefit_age_rate)
 
     def calcBenefitRates(self) -> None:
         """
@@ -113,12 +119,13 @@ class Rating_Main:
         """
 
         # expire the old benefit rate records
-        BenefitRateModel.delete_by_plan_id(self.plan.plan_id)
+        Model_SelectionBenefitRate.delete_by_plan(self.plan.selection_plan_id)
 
         for age_band_rate_key, benefit_age_rates in self._benefit_age_rates_dict.items():
             # unpack the age_band_rate_key tuple
+
             (product_code, product_variation_code, age_band_id,
-                family_code, smoker_status, benefit_code) = age_band_rate_key
+                family_code, benefit_code, smoker_status, gender) = age_band_rate_key
 
             # build the benefit rate object
             benefit_rate = Rating_BenefitRates(
@@ -128,29 +135,30 @@ class Rating_Main:
                 age_band_id=age_band_id,
                 family_code=family_code,
                 smoker_status=smoker_status,
-                benefit_code=benefit_code
+                benefit_code=benefit_code, 
+                gender=gender
             ).calculate()
 
             # lookup the plan rate code
-            plan_rate_code = self._benefits_dict[benefit_code].plan_rate_code
+            rate_group_id = self._benefits_dict[benefit_code].config_rate_group_id
 
             # create plan rate key by removing benefit code and adding plan rate code
-            plan_rate_key = (product_code, product_variation_code, age_band_id,
-                             family_code, smoker_status, plan_rate_code)
+            rate_group_key = (product_code, product_variation_code, age_band_id,
+                             family_code, smoker_status, gender, rate_group_id)
 
-            self._benefit_rates_dict[plan_rate_key].append(benefit_rate)
+            self._benefit_rates_dict[rate_group_key].append(benefit_rate)
 
-    def calcPlanRates(self) -> None:
+    def calcRateGroups(self) -> None:
         """
-        Calculate the plan rates
+        Calculate the rate group rates
         """
 
         # expire the old plan rate records
-        PlanRateModel.delete_by_plan_id(self.plan.plan_id)
+        Model_SelectionRateGroupSummary.delete_by_plan(self.plan.selection_plan_id)
 
         for plan_rate_key, benefit_rates in self._benefit_rates_dict.items():
             (product_code, product_variation_code, age_band_id,
-             family_code, smoker_status, plan_rate_code) = plan_rate_key
+             family_code, smoker_status, gender, rate_group_id) = plan_rate_key
 
             plan_rate = Rating_PlanRates(
                 plan=self.plan,
@@ -158,10 +166,11 @@ class Rating_Main:
                 age_band_id=age_band_id,
                 family_code=family_code,
                 smoker_status=smoker_status,
-                plan_rate_code=plan_rate_code
+                gender=gender, 
+                rate_group_id=rate_group_id
             ).calculate()
 
-            self.plan_rates.append(plan_rate)
+            self.rate_groups.append(plan_rate)
 
     def calculate(self) -> None:
         # calculate benefit age rates and benefit factors
@@ -169,7 +178,7 @@ class Rating_Main:
         # calculate benefit rates
         self.calcBenefitRates()
         # calculate plan rates
-        self.calcPlanRates()
+        self.calcRateGroups()
 
-        PlanRateModel.save_all_to_db(self.plan_rates)
-        return self.plan_rates
+        Model_SelectionRateGroupSummary.save_all_to_db(self.rate_groups)
+        return self.rate_groups

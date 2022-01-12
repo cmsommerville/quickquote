@@ -102,8 +102,8 @@ REF_COMPARISON_OPERATORS = [
 
 
 CONFIG_PRODUCT = {
-    "product_code": "AC", 
-    "product_label": "Accident", 
+    "product_code": "CI", 
+    "product_label": "Critical Illness", 
     "product_effective_date": '1900-01-01',
     "product_expiration_date": '9999-12-31'
 }
@@ -135,14 +135,16 @@ CONFIG_PRODUCT_STATES = [
 
 
 CONFIG_PRODUCT_VARIATION = {
-    "product_variation_code": "base", 
-    "product_variation_label": "Base", 
+    "product_variation_code": "issue_age", 
+    "product_variation_label": "Issue Age", 
     "product_variation_effective_date": '1900-01-01', 
     "product_variation_expiration_date": '9999-12-31', 
     "is_gender_rated": False, 
     "is_age_rated": True, 
     "is_tobacco_rated": True, 
     "is_family_code_rated": True, 
+    "vary_by_gender": False, 
+    "vary_by_tobacco": True, 
     "family_code_rating_algorithm_code": "TIER4", 
     "min_issue_age": 18, 
     "max_issue_age": 99
@@ -170,73 +172,519 @@ CONFIG_RATE_GROUP = {
     }
 }
 
-CONFIG_BENEFIT = {
-    "state_id":0,
-    "benefit_effective_date":"1900-01-01",
-    "benefit_expiration_date":"9999-12-31",
-    "min_value":"0",
-    "max_value":"10000",
-    "step_value":"1",
-    "default_value":"5000",
-    "unit_code":"Dollars",
-    "is_durational":True,
-    "benefit_code":"bnft1",
-    "ref_benefit":{
-        "benefit_code":"bnft1",
-        "benefit_label":"Benefit 1"
-    }
-}
-
-CONFIG_BENEFIT_STATES = [
+CONFIG_BENEFIT = [
   {
-    "state_id": 1,
-    "benefit_effective_date": "1900-01-01",
-    "benefit_expiration_date": "9999-12-31",
-    "benefit_code": "bnft1"
-  },
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"cancer",
+      "ref_benefit":{
+          "benefit_code":"cancer",
+          "benefit_label":"Internal Cancer"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "cancer"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "cancer"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "cancer"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "cancer"
+        }
+      ]
+  }, 
   {
-    "state_id": 2,
-    "benefit_effective_date": "1900-01-01",
-    "benefit_expiration_date": "9999-12-31",
-    "benefit_code": "bnft1"
-  },
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"heart_attack",
+      "ref_benefit":{
+          "benefit_code":"heart_attack",
+          "benefit_label":"Heart Attack"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "heart_attack"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "heart_attack"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "heart_attack"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "heart_attack"
+        }
+      ]
+  }, 
   {
-    "state_id": 3,
-    "benefit_effective_date": "1900-01-01",
-    "benefit_expiration_date": "9999-12-31",
-    "benefit_code": "bnft1"
-  },
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"stroke",
+      "ref_benefit":{
+          "benefit_code":"stroke",
+          "benefit_label":"Stroke"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "stroke"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "stroke"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "stroke"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "stroke"
+        }
+      ]
+  }, 
   {
-    "state_id": 4,
-    "benefit_effective_date": "2023-01-01",
-    "benefit_expiration_date": "9999-12-31",
-    "benefit_code": "bnft1"
-  }
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"transplant",
+      "ref_benefit":{
+          "benefit_code":"transplant",
+          "benefit_label":"Major Organ Transplant"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "transplant"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "transplant"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "transplant"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "transplant"
+        }
+      ]
+  }, 
+  {
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"renal_failure",
+      "ref_benefit":{
+          "benefit_code":"renal_failure",
+          "benefit_label":"End Stage Renal Failure"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "renal_failure"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "renal_failure"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "renal_failure"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "renal_failure"
+        }
+      ]
+  }, 
+  {
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"25",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"alzheimers",
+      "ref_benefit":{
+          "benefit_code":"alzheimers",
+          "benefit_label":"Advanced Alzheimer's"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "alzheimers"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "alzheimers"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "alzheimers"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "alzheimers"
+        }
+      ]
+  }, 
+  {
+      "state_id":0,
+      "benefit_effective_date":"1900-01-01",
+      "benefit_expiration_date":"9999-12-31",
+      "min_value":"0",
+      "max_value":"100",
+      "step_value":"2.5",
+      "default_value":"100",
+      "unit_code":"Percent",
+      "is_durational":False,
+      "benefit_code":"parkinsons",
+      "ref_benefit":{
+          "benefit_code":"parkinsons",
+          "benefit_label":"Parkinson's Disease"
+      }, 
+      "child_states": [
+        {
+          "state_id": 1,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "parkinsons"
+        },
+        {
+          "state_id": 2,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "parkinsons"
+        },
+        {
+          "state_id": 3,
+          "benefit_effective_date": "1900-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "parkinsons"
+        },
+        {
+          "state_id": 4,
+          "benefit_effective_date": "2023-01-01",
+          "benefit_expiration_date": "9999-12-31",
+          "benefit_code": "parkinsons"
+        }
+      ]
+  }, 
 ]
 
 
-CONFIG_BENEFIT_DURATION = {
-  "benefit_duration_code": "dur1",
-  "duration": { "duration_code": "dur1", "duration_label": "Duration 1" },
-  "default_duration_item_code": "item3",
-  "duration_items": [
-    {
-      "item_code": "item1",
-      "benefit_duration_factor": "1.1",
-      "duration_item": { "item_code": "item1", "item_label": "Item 1" }
+
+CONFIG_PROVISION = [
+  {
+    "provision_code": "group_size",
+    "provision_effective_date": "1900-01-01",
+    "provision_expiration_date": "9999-12-31",
+    "provision": {
+        "provision_label": "Group Size",
+        "provision_code": "group_size",
     },
-    {
-      "item_code": "item2",
-      "benefit_duration_factor": "1.2",
-      "duration_item": { "item_code": "item2", "item_label": "Item 2" }
+    "states": [
+        {
+            "state_id": 1,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 2,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 3,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 4,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+    ],
+  }, 
+  {
+    "provision_code": "prex",
+    "provision_effective_date": "1900-01-01",
+    "provision_expiration_date": "9999-12-31",
+    "provision": {
+        "provision_label": "Pre-Existing Condition Limitation",
+        "provision_code": "prex",
     },
-    {
-      "item_code": "item3",
-      "benefit_duration_factor": "1.3",
-      "duration_item": { "item_code": "item3", "item_label": "Item 3" }
-    }
-  ]
+    "states": [
+        {
+            "state_id": 1,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 2,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 3,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+        {
+            "state_id": 4,
+            "state_effective_date": "1900-01-01",
+            "state_expiration_date": "9999-12-31",
+        }, 
+    ],
+  }, 
+]
+
+
+CONFIG_PROVISION_UI = {
+  "group_size": {
+        "ui_label": "Group Size",
+        "component_type": "INPUT",
+        "input_type": "number",
+        "min_value": 0.0,
+        "step_value": 1.0,
+        "max_value": 9999999.0,
+        "component_type_code": "v-text-field"
+  }, 
+  "prex": {
+        "ui_label": "Pre-Existing Condition Limitation",
+        "component_type": "SELECT",
+        "component_type_code": "v-select", 
+        "item_text": "item_label", 
+        "item_value": "item_code", 
+        "items": [
+          {"item_label": "No Pre-Ex", "item_code": "none"}, 
+          {"item_label": "12/12", "item_code": "12-12"}, 
+          {"item_label": "3/12", "item_code": "3-12"}, 
+          {"item_label": "6/12", "item_code": "6-12"},
+        ]
+    },
 }
+
+CONFIG_FACTORS = {
+  "group_size": [
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__lt__",
+                  "field_value": "1000",
+                  "field_value_data_type": "number",
+              }
+          ],
+          "factor_priority": 0,
+          "factor_value": 1.2,
+      }, 
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__lt__",
+                  "field_value": "5000",
+                  "field_value_data_type": "number",
+              }
+          ],
+          "factor_priority": 1,
+          "factor_value": 0.91,
+      }, 
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__ge__",
+                  "field_value": "5000",
+                  "field_value_data_type": "number",
+              }
+          ],
+          "factor_priority": 2,
+          "factor_value": 0.83,
+      }, 
+    ], 
+    "prex": [
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__eq__",
+                  "field_value": "none",
+                  "field_value_data_type": "string",
+              }
+          ],
+          "factor_priority": 0,
+          "factor_value": 1,
+      }, 
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__eq__",
+                  "field_value": "12-12",
+                  "field_value_data_type": "string",
+              }
+          ],
+          "factor_priority": 1,
+          "factor_value": 0.87,
+      }, 
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__eq__",
+                  "field_value": "3-12",
+                  "field_value_data_type": "string",
+              }
+          ],
+          "factor_priority": 2,
+          "factor_value": 0.95,
+      }, 
+      {
+          "factor_rules": [
+              {
+                  "class_name": "provision",
+                  "field_name": "provision_code",
+                  "comparison_operator_code": "__eq__",
+                  "field_value": "6-12",
+                  "field_value_data_type": "string",
+              }
+          ],
+          "factor_priority": 3,
+          "factor_value": 0.93,
+      }, 
+    ]
+}
+
+
+
+
+# CONFIG_BENEFIT_DURATION = {
+#   "benefit_duration_code": "dur1",
+#   "duration": { "duration_code": "dur1", "duration_label": "Duration 1" },
+#   "default_duration_item_code": "item3",
+#   "duration_items": [
+#     {
+#       "item_code": "item1",
+#       "benefit_duration_factor": "1.1",
+#       "duration_item": { "item_code": "item1", "item_label": "Item 1" }
+#     },
+#     {
+#       "item_code": "item2",
+#       "benefit_duration_factor": "1.2",
+#       "duration_item": { "item_code": "item2", "item_label": "Item 2" }
+#     },
+#     {
+#       "item_code": "item3",
+#       "benefit_duration_factor": "1.3",
+#       "duration_item": { "item_code": "item3", "item_label": "Item 3" }
+#     }
+#   ]
+# }
 
 
 
@@ -309,15 +757,32 @@ AGE_DISTRIBUTION =  {
 };
 
 
-UNISEX_DISTRIBUTION = {
+SEX_DISTINCT_DISTRIBUTION = {
   "attr_type_code": "gender", 
-  "attr_distribution_set_label": "50/50 Male/Female", 
+  "attr_distribution_set_label": "Male/Female", 
   "attr_distribution": [
     {"attr_value": "M", "weight": 1}, 
     {"attr_value": "F", "weight": 1}, 
   ]
 }
 
+UNISEX_DISTRIBUTION = {
+  "attr_type_code": "gender", 
+  "attr_distribution_set_label": "50/50 Male/Female", 
+  "attr_distribution": [
+    {"attr_value": "M", "weight": 0.5}, 
+    {"attr_value": "F", "weight": 0.5}, 
+  ]
+}
+
+SMOKER_DISTINCT_DISTRIBUTION =  {
+  "attr_type_code": "smoker_status", 
+  "attr_distribution_set_label": "Non-Smoker/Smoker", 
+  "attr_distribution": [
+    {"attr_value": "N", "weight": 1}, 
+    {"attr_value": "T", "weight": 1},
+  ]
+}
 UNISMOKER_DISTRIBUTION =  {
   "attr_type_code": "smoker_status", 
   "attr_distribution_set_label": "85/15 Non-Smoker/Smoker", 

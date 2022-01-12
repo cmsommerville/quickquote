@@ -35,9 +35,10 @@ export default [
     props: true,
   },
   {
-    path: "/selections/premium",
+    path: "/selections/premium/:plan_id",
     name: "selections-premium",
     component: Premium,
+    props: true,
   },
   {
     path: "/selections/age-bands/:plan_id",

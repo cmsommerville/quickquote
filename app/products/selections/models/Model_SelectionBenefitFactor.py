@@ -27,3 +27,12 @@ class Model_SelectionBenefitFactor(BaseModel):
     @classmethod
     def find_by_plan(cls, plan_id):
         return cls.query.filter(cls.selection_plan_id == plan_id).all()
+
+    @classmethod
+    def delete_by_plan(cls, plan_id):
+        try: 
+            cls.query.filter(cls.selection_plan_id == plan_id).delete()
+            db.session.commit()
+        except Exception as e: 
+            db.session.rollback()
+            raise e

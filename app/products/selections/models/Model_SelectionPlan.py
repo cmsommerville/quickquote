@@ -26,12 +26,15 @@ class Model_SelectionPlan(BaseModel):
     cloned_plan_id = db.Column(db.Integer, db.ForeignKey(f'{SELECTION_PLAN}.selection_plan_id'))
     group_id = db.Column(db.Integer)
     broker_id = db.Column(db.Integer)
+    is_smoker_distinct = db.Column(db.Boolean)
+    is_gender_distinct = db.Column(db.Boolean)
 
     cloned_plan = db.relationship("Model_SelectionPlan", remote_side=[selection_plan_id])
     benefits = db.relationship("Model_SelectionBenefit", back_populates="plan")
     provisions = db.relationship("Model_SelectionProvision", back_populates="plan")
     age_bands = db.relationship("Model_SelectionAgeBands", back_populates="plan")
     state = db.relationship("Model_RefStates")
+    product = db.relationship("Model_ConfigProduct")
     product_variation = db.relationship("Model_ConfigProductVariation")
 
     @hybrid_property

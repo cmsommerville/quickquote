@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from ..models import Model_SelectionPlan, Model_SelectionBenefit, Model_SelectionAgeBands, RateTableModel, \
     Model_SelectionBenefitRate, Model_SelectionBenefitFactor, Model_SelectionProvision, \
-    Model_SelectionBenefitAgeRate, PlanRateModel
+    Model_SelectionBenefitAgeRate
 
 RATE_ROUNDING_PRECISION = os.getenv("RATE_ROUNDING_PRECISION", 5)
 

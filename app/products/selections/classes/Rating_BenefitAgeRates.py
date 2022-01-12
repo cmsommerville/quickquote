@@ -8,6 +8,7 @@ from app.products.selections.models.Model_SelectionBenefitAgeRate import Model_S
 from ..models import Model_SelectionPlan, Model_SelectionBenefit, Model_SelectionAgeBands,\
     RateTableModel, Model_SelectionBenefitRate, Model_SelectionBenefitFactor, \
     Model_SelectionProvision, Model_SelectionBenefitAgeRate
+from .Rating_BenefitAgeRateWeights import Rating_BenefitAgeRateWeights
 from .Rating_BenefitFactors import Rating_BenefitFactorList
 
 
@@ -19,13 +20,16 @@ class Rating_BenefitAgeRates:
             benefit: Model_SelectionBenefit,
             rate_table: RateTableModel,
             factors: List[Model_SelectionBenefitFactor],
-            weights: dict = {},
+            weight: Decimal = 0,
             *args, **kwargs):
         self.plan = plan
         self.benefit = benefit
         self.rate_table = rate_table
         self.factors = factors
-        self.weights = weights
+        self.weight = weight
+        self.discretionary_factor = kwargs.get('discretionary_factor', 1)
+        self.durations = self.benefit.durations or None
+
 
     def calculateBaseRate(self) -> Decimal:
         """
@@ -35,10 +39,17 @@ class Rating_BenefitAgeRates:
                 Decimal(self.rate_table.annual_rate_per_unit) /
                 Decimal(self.rate_table.unit_value))
 
+    def accumulateDurationalFactors(self):
+        cumulative_factor = 1
+        if self.durations:
+            cumulative_factor = reduce(
+                lambda x, y: x * y, [dur.duration_factor for dur in self.durations])
+        return Decimal(cumulative_factor) 
+
     def accumulateFactors(self, factors: List[Model_SelectionBenefitFactor]) -> Decimal:
         cumulative_factor = 1
         if factors:
-            cumulative_product_factor = reduce(
+            cumulative_factor = reduce(
                 lambda x, y: x * y, [factor.factor_value for factor in factors])
         return Decimal(cumulative_factor)
 
@@ -46,6 +57,7 @@ class Rating_BenefitAgeRates:
         self,
         base_rate: Decimal,
         cumulative_provision_factor: Decimal = 1,
+        cumulative_duration_factor: Decimal = 1, 
         discretionary_factor: Decimal = 1
     ) -> Decimal:
         """
@@ -53,13 +65,10 @@ class Rating_BenefitAgeRates:
         Sets the cumululative factors on the benefit rate model.
         Calculates the final premium. 
         """
-        return Decimal(base_rate * cumulative_provision_factor * discretionary_factor)
+        return Decimal(base_rate * cumulative_provision_factor * 
+            cumulative_duration_factor * discretionary_factor)
 
     def return_model(self) -> Model_SelectionBenefitAgeRate:
-        weight_key = (
-            self.rate_table.age, 
-            self.rate_table.smoker_status, 
-            self.rate_table.gender, )
 
         benefit_age_rate = Model_SelectionBenefitAgeRate(
             selection_benefit_id=self.benefit.selection_benefit_id,
@@ -68,11 +77,12 @@ class Rating_BenefitAgeRates:
             smoker_status=self.rate_table.smoker_status,
             gender=self.rate_table.gender, 
             age=self.rate_table.age,
-            weight=self.weights.get(weight_key, 0),
-            benefit_age_rate_base_premium=self.base_rate,
-            benefit_age_rate_product_factor=self.cumulative_product_factor,
-            benefit_age_rate_benefit_factor=self.cumulative_benefit_factor,
-            benefit_age_rate_final_premium=self.final_premium
+            weight=self.weight or 0, 
+            base_premium=self.base_rate,
+            provision_factor=self.provision_factor,
+            duration_factor=self.duration_factor,
+            discretionary_factor=self.discretionary_factor, 
+            final_premium=self.final_premium
         )
         benefit_age_rate.benefit_factors = self.benefit_factors
         return benefit_age_rate
@@ -84,13 +94,18 @@ class Rating_BenefitAgeRates:
         # set base rate
         self.base_rate = self.calculateBaseRate()
 
-        # accumulate factors
-        self.cumulative_factor = self.accumulateFactors(
-            self.factors)
+        # accumulate provision factors
+        self.provision_factor = self.accumulateFactors(self.factors)
+
+        # accumulate provision factors
+        self.duration_factor = self.accumulateDurationalFactors()
 
         # calculate final premium
         self.final_premium = self.calculateFinalPremium(
-            self.base_rate, self.cumulative_factor)
+            self.base_rate, 
+            self.provision_factor, 
+            self.duration_factor, 
+            self.discretionary_factor
+        )
 
-        benefit_age_rate = self.returnModel()
-        return benefit_age_rate
+        return self.return_model()

@@ -19,6 +19,7 @@ class CRUD_ResourceFactory:
                 "get": self._get_method_generator(), 
                 "post": self._post_method_generator(),
                 "put": self._put_method_generator(),
+                "patch": self._patch_method_generator(), 
                 "delete": self._delete_method_generator()
             }, 
         )
@@ -74,6 +75,25 @@ class CRUD_ResourceFactory:
             return self.schema_instance.dump(obj), 201
         
         return put
+
+    def _patch_method_generator(self):
+        """
+        This method returns a new method called `patch`. 
+        """
+        @classmethod
+        def patch(cls, id): 
+            req = request.get_json()
+            # get existing data 
+            orig_obj = self.model.find_one(id)
+            # dump existing data to json 
+            data = self.schema_instance.dump(orig_obj)
+            # add the modified data and load to object
+            obj = self.schema_instance.load({**data, **req, self.primary_key: id})
+            # save object to database 
+            obj.save_to_db()
+            return self.schema_instance.dump(obj), 201
+        
+        return patch
 
     def _delete_method_generator(self):
         """

@@ -10,12 +10,12 @@ export const BENEFIT_UNITS = [
 ];
 
 export const OPERATORS = {
-  eq: "=",
-  lt: "<",
-  le: "<=",
-  gt: ">",
-  ge: ">=",
-  ne: "!=",
+  __eq__: "=",
+  __lt__: "<",
+  __le__: "<=",
+  __gt__: ">",
+  __ge__: ">=",
+  __ne__: "!=",
 };
 
 export const FACTOR_RULE_FIELDS = [
