@@ -3,7 +3,7 @@ from sqlalchemy import and_, between
 from app.extensions import db
 
 from ..config.models import Model_ConfigProduct, Model_ConfigProvision, \
-    Model_ConfigProvisionStateAvailability
+    Model_ConfigProvisionStateAvailability, Model_ConfigProvisionUIComponent
 from ..selections.models import Model_SelectionPlan, Model_SelectionProvision
 
 def query_config_provisions(plan: Model_SelectionPlan) -> Query: 
@@ -12,8 +12,11 @@ def query_config_provisions(plan: Model_SelectionPlan) -> Query:
     # base query
     qry = db.session.query(Model_ConfigProvision)
 
-    # join to age bands
+    # join to provision state availability
     qry = qry.join(Model_ConfigProvisionStateAvailability)
+
+    # join to provision state availability
+    qry = qry.join(Model_ConfigProvisionUIComponent)
 
     # filter on state
     qry = qry.filter(

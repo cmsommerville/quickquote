@@ -22,7 +22,7 @@ class Model_SelectionBenefitFactor(BaseModel):
     factor_value = db.Column(db.Float, nullable=False)
 
     benefit_age_rate = db.relationship(
-        "Model_SelectionBenefitAgeRate", back_populates="benefit_factors")
+        "Model_SelectionBenefitAgeRate", back_populates="provision_factors")
 
     @classmethod
     def find_by_plan(cls, plan_id):

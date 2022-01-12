@@ -19,13 +19,13 @@ class Rating_BenefitAgeRates:
             plan: Model_SelectionPlan,
             benefit: Model_SelectionBenefit,
             rate_table: RateTableModel,
-            factors: List[Model_SelectionBenefitFactor],
+            provision_factors: List[Model_SelectionBenefitFactor],
             weight: Decimal = 0,
             *args, **kwargs):
         self.plan = plan
         self.benefit = benefit
         self.rate_table = rate_table
-        self.factors = factors
+        self.provision_factors = provision_factors
         self.weight = weight
         self.discretionary_factor = kwargs.get('discretionary_factor', 1)
         self.durations = self.benefit.durations or None
@@ -84,7 +84,7 @@ class Rating_BenefitAgeRates:
             discretionary_factor=self.discretionary_factor, 
             final_premium=self.final_premium
         )
-        benefit_age_rate.benefit_factors = self.benefit_factors
+        benefit_age_rate.provision_factors = self.provision_factors
         return benefit_age_rate
 
     def calculate(self) -> None:
@@ -95,7 +95,7 @@ class Rating_BenefitAgeRates:
         self.base_rate = self.calculateBaseRate()
 
         # accumulate provision factors
-        self.provision_factor = self.accumulateFactors(self.factors)
+        self.provision_factor = self.accumulateFactors(self.provision_factors)
 
         # accumulate provision factors
         self.duration_factor = self.accumulateDurationalFactors()

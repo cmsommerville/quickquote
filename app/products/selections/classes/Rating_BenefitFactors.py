@@ -18,7 +18,7 @@ class Rating_BenefitFactorList:
         self.benefit = benefit
         self.rate_table = rate_table
         self.provisions = provisions
-        self.benefit_factors = []
+        self.factors = []
 
     def calculate(self) -> List[Model_SelectionBenefitFactor]:
         """
@@ -35,9 +35,9 @@ class Rating_BenefitFactorList:
                 provision=provision
             )
             
-            self.benefit_factors.append(factor)
+            self.factors.append(factor.selected_factor)
 
-        return self.benefit_factors
+        return self.factors
 
 
 class Rating_BenefitFactor:
@@ -102,9 +102,11 @@ class Rating_BenefitFactor:
                 instance = getattr(self, rule.class_name)
 
                 # get attribute
-                attr = getattr(instance, rule.field_name)
-                if rule.field_name == 'provision_value':
+                if rule.field_name == 'provision_code':
+                    attr = instance.provision_value
                     attr = self._cast(attr, self.provision.provision_data_type)
+                else: 
+                    attr = getattr(instance, rule.field_name)
 
                 # get rule value to compare to
                 rule_value = self._cast(rule.field_value, rule.field_value_data_type)

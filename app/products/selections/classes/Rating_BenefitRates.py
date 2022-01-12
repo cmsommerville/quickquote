@@ -17,7 +17,7 @@ class Rating_BenefitRates:
             self,
             plan: Model_SelectionPlan,
             benefit: Model_SelectionBenefit,
-            age_band: Model_SelectionAgeBands,
+            age_band_id: int,
             family_code: str,
             smoker_status: str,
             gender: str, 
@@ -25,7 +25,7 @@ class Rating_BenefitRates:
             *args, **kwargs):
         self.plan = plan
         self.benefit = benefit
-        self.age_band = age_band
+        self.age_band_id = age_band_id
         self.family_code = family_code
         self.smoker_status = smoker_status
         self.gender = gender
@@ -40,7 +40,7 @@ class Rating_BenefitRates:
         denom = 0
         prem = 0
         for rate in self.benefit_age_rates:
-            prem += rate.weight * rate.benefit_age_rate_final_premium
+            prem += rate.weight * rate.final_premium
             denom += rate.weight
         return Decimal(round(prem / denom, int(RATE_ROUNDING_PRECISION))) if denom > 0 else 0
 
@@ -54,7 +54,7 @@ class Rating_BenefitRates:
         benefit_rate = Model_SelectionBenefitRate(
             selection_plan_id=self.plan.selection_plan_id,
             selection_benefit_id=self.benefit.selection_benefit_id,
-            selection_age_band_id=self.age_band.selection_age_band_id,
+            selection_age_band_id=self.age_band_id,
             family_code=self.family_code,
             smoker_status=self.smoker_status,
             gender=self.gender, 

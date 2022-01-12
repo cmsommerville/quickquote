@@ -33,7 +33,7 @@ class Model_SelectionBenefitAgeRate(BaseModel):
     benefit = db.relationship("Model_SelectionBenefit")
     benefit_rate = db.relationship(
         "Model_SelectionBenefitRate", back_populates="benefit_age_rates")
-    benefit_factors = db.relationship(
+    provision_factors = db.relationship(
         "Model_SelectionBenefitFactor", back_populates="benefit_age_rate")
 
     @classmethod

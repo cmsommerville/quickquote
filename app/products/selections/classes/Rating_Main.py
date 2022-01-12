@@ -84,13 +84,13 @@ class Rating_Main:
                 continue
 
             # calculate the benefit factors for this rate key
-            factors = Rating_BenefitFactorList(
-                config=self.config['provisions'],
+            provision_factors = Rating_BenefitFactorList(
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
                 rate_table=rate,
                 provisions=self.provisions
             ).calculate()
+
 
             # get age weight 
             weight = self.weights.get(age=rate.age, smoker_status=rate.smoker_status, gender=rate.gender)
@@ -100,16 +100,16 @@ class Rating_Main:
                 plan=self.plan,
                 benefit=self._benefits_dict[rate.benefit_code],
                 rate_table=rate,
-                factors=factors,
+                provision_factors=provision_factors,
                 weight=weight
             ).calculate()
 
             # a list of the rate table natural key, but by AGE BAND
-            age_band_rate_key = [rate.product_code, rate.product_variation_code, age_band.age_band_id,
+            age_band_rate_key = [rate.product_code, rate.product_variation_code, age_band.selection_age_band_id,
                                  rate.family_code, rate.benefit_code]
 
-            age_band.rate_key.append(rate.smoker_status if self.plan.is_smoker_distinct else 'U')                     
-            age_band.rate_key.append(rate.gender if self.plan.is_gender_distinct else 'U')                     
+            age_band_rate_key.append(rate.smoker_status if self.plan.is_smoker_distinct else 'U')                     
+            age_band_rate_key.append(rate.gender if self.plan.is_gender_distinct else 'U')                     
 
             self._benefit_age_rates_dict[tuple(age_band_rate_key)].append(benefit_age_rate)
 
