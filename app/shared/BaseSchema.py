@@ -3,6 +3,8 @@ from app.extensions import ma
 from marshmallow import post_dump
 
 class BaseSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        load_instance = True
     
     @post_dump(pass_many=True)
     def formatDecimal(self, data, many, **kwargs):

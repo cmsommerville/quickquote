@@ -23,6 +23,7 @@ TBL_NAMES = {
     "CONFIG_PROVISION_STATE_AVAILABILITY": "config_provision_state_availability",
     "CONFIG_PROVISION_UI_COMPONENT": "config_provision_ui_component",
     "CONFIG_RATE_GROUP": "config_rate_group", 
+    "CONFIG_RATE_TABLE": "rate_table", 
     "REF_BENEFIT": "ref_benefit",
     "REF_BENEFIT_DURATION": "ref_benefit_duration",
     "REF_BENEFIT_DURATION_ITEMS": "ref_benefit_duration_items",

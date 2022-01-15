@@ -22,8 +22,12 @@ class Model_SelectionRateGroupSummary(BaseModel):
 
     plan = db.relationship("Model_SelectionPlan")
     age_band = db.relationship("Model_SelectionAgeBands")
-    benefit_rates = db.relationship(
-        "Model_SelectionBenefitRate", back_populates="rate_group_summary")
+    rate_group = db.relationship("Model_ConfigRateGroup")
+
+    @classmethod
+    def calculate(cls, plan_id: int):
+        db.session.execute(f"EXEC sp_rating_calculate_rates {plan_id}")
+        return cls.query.filter(cls.selection_plan_id == plan_id).all()
 
     @classmethod
     def find_by_plan(cls, plan_id):

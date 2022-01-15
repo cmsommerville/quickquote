@@ -568,7 +568,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__lt__",
                   "field_value": "1000",
                   "field_value_data_type": "number",
@@ -581,7 +581,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__lt__",
                   "field_value": "5000",
                   "field_value_data_type": "number",
@@ -594,7 +594,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__ge__",
                   "field_value": "5000",
                   "field_value_data_type": "number",
@@ -609,7 +609,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__eq__",
                   "field_value": "none",
                   "field_value_data_type": "string",
@@ -622,7 +622,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__eq__",
                   "field_value": "12-12",
                   "field_value_data_type": "string",
@@ -635,7 +635,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__eq__",
                   "field_value": "3-12",
                   "field_value_data_type": "string",
@@ -648,7 +648,7 @@ CONFIG_FACTORS = {
           "factor_rules": [
               {
                   "class_name": "provision",
-                  "field_name": "provision_code",
+                  "field_name": "provision_value",
                   "comparison_operator_code": "__eq__",
                   "field_value": "6-12",
                   "field_value_data_type": "string",

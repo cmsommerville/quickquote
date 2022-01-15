@@ -4,10 +4,7 @@ from .Resource_SelectionBenefit import *
 from .Resource_SelectionAgeBands import * 
 from .Resource_SelectionProvision import * 
 from .Resource_SelectionFactors import *
-from .test import Resource_SelectionWeights
-# from .Selections_Provision import ProvisionSelections
-# from .Selections_AgeBands import AgeBandsSelections
-from .Calculator_Rating import RatingCalculatorResource
+from .Resource_RatingMain import *
 from .Config_RateTable import RateTableList
 from .Search_Plan import PlanSearch
 
@@ -34,23 +31,19 @@ routes = [
         "endpoints": ['/selections/plan/<int:plan_id>/factors']
     },
     {
-        "class": Resource_SelectionWeights, 
-        "endpoints": ['/test']
-    },
-    # {
-    #     "class": AgeBandsSelections, 
-    #     "endpoints": ['/selections/age-bands']
-    # },
-    {
         "class": RateTableList, 
         "endpoints": ['/config/rate-table']
     },
     {
-        "class": RatingCalculatorResource, 
-        "endpoints": ['/selections/rating-calculator']
+        "class": Resource_SelectionRateGroupSummary, 
+        "endpoints": ['/selections/plan/<int:plan_id>/rates']
     },
     {
         "class": PlanSearch, 
         "endpoints": ['/search/plan']
     },
+    # {
+    #     "class": Resource_Test, 
+    #     "endpoints": ['/test']
+    # },
 ]

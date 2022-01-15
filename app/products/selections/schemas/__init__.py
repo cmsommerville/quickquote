@@ -4,9 +4,6 @@ from .Schema_SelectionBenefitDuration import *
 from .Schema_SelectionPlan import *
 from .Schema_SelectionProvision import *
 from .Schema_SelectionBenefitRate import *
-from .Schema_SelectionPremiumByRateGroup import *
-from .Schema_SelectionPremiumByBenefitAgeBandRate import *
-from .Schema_SelectionPremiumByBenefitRate import *
 from .Schema_SelectionAgeBands import *
 from .RateTableSchema import *
 from .Schema_SelectionRateGroupSummary import *

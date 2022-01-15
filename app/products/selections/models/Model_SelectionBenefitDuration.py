@@ -24,7 +24,6 @@ class Model_SelectionBenefitDuration(BaseModel):
 
     plan = db.relationship("Model_SelectionPlan")
     benefit = db.relationship("Model_SelectionBenefit", back_populates="durations")
-    # config_benefit_duration_item = db.relationship("Model_ConfigBenefitDurationItem", back_populates="selected_duration")
     
     @classmethod
     def find_by_plan(cls, plan_id):
