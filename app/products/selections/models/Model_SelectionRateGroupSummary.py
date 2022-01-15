@@ -26,8 +26,11 @@ class Model_SelectionRateGroupSummary(BaseModel):
 
     @classmethod
     def calculate(cls, plan_id: int):
-        db.session.execute(f"EXEC sp_rating_calculate_rates {plan_id}")
-        return cls.query.filter(cls.selection_plan_id == plan_id).all()
+        try: 
+            db.session.execute(f"EXEC sp_rating_calculate_rates {plan_id}")
+            db.session.commit()
+        except: 
+            db.session.rollback()
 
     @classmethod
     def find_by_plan(cls, plan_id):

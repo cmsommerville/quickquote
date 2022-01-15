@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="content">
-      <div class="rate-table-grid" v-if="plan_rates && loaded">
-        <v-card class="rate-table" v-for="(tbl, key) in table_data2" :key="key">
+      <div class="rate-table-grid" v-if="rate_group_summary && loaded">
+        <v-card class="rate-table" v-for="(tbl, key) in table_data" :key="key">
           <v-card-title> Rates: {{ key }} </v-card-title>
           <v-data-table
             :headers="headers"
@@ -24,45 +24,38 @@ import axios from "../../services/axios.js";
 
 export default {
   name: "Premium",
+  props: {
+    plan_id: {
+      required: true,
+      type: [String, Number],
+    },
+  },
   data() {
     return {
       loaded: false,
-      plan_rates: null,
+      rate_group_summary: [],
       headers: [
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
-        { text: "Age Band", value: "age_band" },
-        { text: "Rate", value: "plan_rate_premium" },
+        { text: "Age Band", value: "_age_band" },
+        { text: "Rate", value: "rate_group_premium" },
       ],
-      plan_id: null,
-      show: true,
     };
   },
   computed: {
     table_data() {
-      return this.plan_rates.map((br) => {
-        return {
-          ...br,
-        };
-      });
-    },
-    table_data2() {
-      return _.groupBy(this.plan_rates, (obj) => {
+      return _.groupBy(this.rate_group_summary, (obj) => {
         return obj.family_code + "-" + obj.smoker_status;
       });
     },
   },
   async mounted() {
-    this.plan_id = this.$route.query.plan_id;
-    const res = await axios.post(
-      `/rating-calculator?plan_id=${this.plan_id}`,
-      {}
-    );
-    this.plan_rates = [
-      ...res.data.map((pr) => {
+    const res = await axios.get(`/selections/plan/${this.plan_id}/rates`, {});
+    this.rate_group_summary = [
+      ...res.data.map((item) => {
         return {
-          ...pr,
-          age_band: pr.age_band.lower_age + " - " + pr.age_band.upper_age,
+          ...item,
+          _age_band: `${item.age_band.age_band_lower}-${item.age_band.age_band_upper}`,
         };
       }),
     ];

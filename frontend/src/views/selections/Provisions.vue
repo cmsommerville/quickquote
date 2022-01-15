@@ -94,7 +94,9 @@ export default {
         this.output
       );
       this.mergeSelections(res.data);
-      // this.routeTo("rating-premium");
+
+      await axios.post(`/selections/plan/${this.plan_id}/rates`);
+      this.routeTo("rating-premium");
     },
     mergeSelections(data) {
       this.provisions = [

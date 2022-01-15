@@ -36,7 +36,7 @@ export default [
   },
   {
     path: "/selections/premium/:plan_id",
-    name: "selections-premium",
+    name: "rating-premium",
     component: Premium,
     props: true,
   },
