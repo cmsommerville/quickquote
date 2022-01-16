@@ -47,7 +47,7 @@ TBL_NAMES = {
     "SELECTION_BENEFIT_DURATION": "selection_benefit_duration", 
     "SELECTION_BENEFIT_FACTOR": "selection_benefit_factor", 
     "SELECTION_BENEFIT_RATE": "selection_benefit_rate", 
-    "SELECTION_COVERAGE": "selection_coverage", 
+    "SELECTION_DISTRIBUTION": "selection_distribution", 
     "SELECTION_PLAN": "selection_plan", 
     "SELECTION_PROVISION": "selection_provision", 
     "SELECTION_RATE_GROUP_SUMMARY": "selection_rate_group_summary", 

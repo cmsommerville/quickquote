@@ -12,3 +12,4 @@ from .Schema_QueryAgeBands import *
 from .Schema_QueryProvision import *
 from .Schema_QueryFactors import *
 from .Schema_QueryWeightDistribution import *
+from .Schema_SelectionDistribution import *

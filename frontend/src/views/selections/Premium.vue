@@ -1,6 +1,31 @@
 <template>
   <div class="container">
     <div class="content">
+      <div class="distributions mb-6 d-flex justify-space-between">
+        <v-slider
+          v-model="weightNonSmoker"
+          :min="0"
+          :max="100"
+          :thumb-size="24"
+          thumb-label="always"
+          label="% Non-Smoker"
+          class="align-center mr-6"
+          @mouseup="setSmokerStatus"
+        >
+        </v-slider>
+
+        <v-slider
+          v-model="weightMale"
+          :min="0"
+          :max="100"
+          :thumb-size="24"
+          thumb-label="always"
+          label="% Male"
+          class="align-center"
+          @mouseup="setGender"
+        >
+        </v-slider>
+      </div>
       <div class="rate-table-grid" v-if="rate_group_summary && loaded">
         <v-card class="rate-table" v-for="(tbl, key) in table_data" :key="key">
           <v-card-title> Rates: {{ key }} </v-card-title>
@@ -34,6 +59,8 @@ export default {
     return {
       loaded: false,
       rate_group_summary: [],
+      weightNonSmoker: null,
+      weightMale: null,
       headers: [
         { text: "Family Code", value: "family_code" },
         { text: "Smoker Status", value: "smoker_status" },
@@ -50,9 +77,9 @@ export default {
     },
   },
   async mounted() {
-    const res = await axios.get(`/selections/plan/${this.plan_id}/rates`, {});
+    const p_rates = await axios.get(`/selections/plan/${this.plan_id}/rates`);
     this.rate_group_summary = [
-      ...res.data.map((item) => {
+      ...p_rates.data.map((item) => {
         return {
           ...item,
           _age_band: `${item.age_band.age_band_lower}-${item.age_band.age_band_upper}`,
@@ -62,6 +89,16 @@ export default {
     this.loaded = true;
   },
   methods: {
+    async setSmokerStatus() {
+      await axios.post(
+        `/selections/plan/${this.plan_id}/dist?pct_ns=${this.weightNonSmoker}`
+      );
+    },
+    async setGender() {
+      await axios.post(
+        `/selections/plan/${this.plan_id}/dist?pct_m=${this.weightMale}`
+      );
+    },
     async onSubmit(event) {
       event.preventDefault();
       console.log("clicked");
