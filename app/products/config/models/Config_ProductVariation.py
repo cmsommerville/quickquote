@@ -51,7 +51,7 @@ class Model_ConfigProductVariation(BaseModel):
         "Model_ConfigBenefitProductVariation", back_populates="product_variation")
 
     age_distribution = db.relationship("Model_ConfigAgeDistributionSet")
-    sex_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
+    sex_distinct_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
         primaryjoin="Model_ConfigProductVariation.sex_distinct_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")
     unisex_distribution = db.relationship("Model_ConfigAttributeDistributionSet", 
         primaryjoin="Model_ConfigProductVariation.unisex_distribution_set_id == Model_ConfigAttributeDistributionSet.attr_distribution_set_id")

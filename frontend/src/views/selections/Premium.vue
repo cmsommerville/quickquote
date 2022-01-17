@@ -39,6 +39,9 @@
           ></v-data-table>
         </v-card>
       </div>
+      <div class="action-buttons mt-6 d-flex justify-center align-center">
+        <v-btn @click="calculateRates" color="primary">Calculate</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -76,19 +79,49 @@ export default {
       });
     },
   },
-  async mounted() {
-    const p_rates = await axios.get(`/selections/plan/${this.plan_id}/rates`);
-    this.rate_group_summary = [
-      ...p_rates.data.map((item) => {
-        return {
-          ...item,
-          _age_band: `${item.age_band.age_band_lower}-${item.age_band.age_band_upper}`,
-        };
-      }),
-    ];
-    this.loaded = true;
+  mounted() {
+    const p_rates = axios.get(`/selections/plan/${this.plan_id}/rates`);
+    const p_dist = axios.get(`/selections/plan/${this.plan_id}/dist`);
+
+    Promise.all([p_rates, p_dist]).then(([rates, dist]) => {
+      this.rate_group_summary = [
+        ...rates.data.map((item) => {
+          return {
+            ...item,
+            _age_band: `${item.age_band.age_band_lower}-${item.age_band.age_band_upper}`,
+          };
+        }),
+      ];
+      this.loaded = true;
+
+      this.weightNonSmoker = this.distributionHandler(
+        dist.data,
+        "smoker_status",
+        "N"
+      );
+      this.weightMale = this.distributionHandler(dist.data, "gender", "M");
+    });
   },
   methods: {
+    distributionHandler(data, attr_type_code, attr_value) {
+      const denom = data
+        .filter((item) => {
+          return item.attr_type_code === attr_type_code;
+        })
+        .reduce((prev, curr) => {
+          return prev.weight + curr.weight;
+        });
+
+      const num = data.find(
+        (item) =>
+          item.attr_type_code === attr_type_code &&
+          item.attr_value === attr_value
+      ).weight;
+
+      console.log({ num, denom });
+
+      return (num / denom) * 100;
+    },
     async setSmokerStatus() {
       await axios.post(
         `/selections/plan/${this.plan_id}/dist?pct_ns=${this.weightNonSmoker}`
@@ -99,13 +132,16 @@ export default {
         `/selections/plan/${this.plan_id}/dist?pct_m=${this.weightMale}`
       );
     },
-    async onSubmit(event) {
-      event.preventDefault();
-      console.log("clicked");
-    },
-    onReset(event) {
-      event.preventDefault();
-      console.log(this.selectionSubmissionHandler());
+    async calculateRates() {
+      const rates = await axios.get(`/selections/plan/${this.plan_id}/rates`);
+      this.rate_group_summary = [
+        ...rates.data.map((item) => {
+          return {
+            ...item,
+            _age_band: `${item.age_band.age_band_lower}-${item.age_band.age_band_upper}`,
+          };
+        }),
+      ];
     },
   },
 };

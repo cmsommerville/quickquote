@@ -150,16 +150,12 @@ export default {
 
     async save(event) {
       event.preventDefault();
-      const res = await axios.post("/selections/plan", this.output, {
-        query: {
-          product_id: this.selection_product.product_id,
-        },
-      });
-      if (res.status === 201) {
+      const plan = await axios.post("/selections/plan", this.output);
+      if (plan.status === 201) {
         this.$router.push({
           name: "selections-benefits",
           params: {
-            plan_id: res.data.selection_plan_id,
+            plan_id: plan.data.selection_plan_id,
           },
         });
       }

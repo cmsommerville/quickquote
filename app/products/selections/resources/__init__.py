@@ -5,6 +5,7 @@ from .Resource_SelectionAgeBands import *
 from .Resource_SelectionProvision import * 
 from .Resource_SelectionFactors import *
 from .Resource_SelectionDistribution import *
+from .Resource_DefaultDistribution import *
 from .Resource_RatingMain import *
 from .Config_RateTable import RateTableList
 from .Search_Plan import PlanSearch
@@ -34,6 +35,10 @@ routes = [
     {
         "class": RateTableList, 
         "endpoints": ['/config/rate-table']
+    },
+    {
+        "class": Resource_DefaultDistribution, 
+        "endpoints": ['/selections/plan/<int:plan_id>/default-dist']
     },
     {
         "class": Resource_SelectionDistribution, 

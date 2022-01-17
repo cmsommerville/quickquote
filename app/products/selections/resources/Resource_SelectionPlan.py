@@ -28,4 +28,7 @@ class Resource_SelectionPlan(Resource):
         except Exception as e:
             print(e)
 
+        # add default distributions to selections table
+        requests.post(f'/selections/plan/{plan.plan_id}/default-dist', json={})
+
         return plan_schema.dump(plan), 201
