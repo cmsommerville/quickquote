@@ -1,91 +1,102 @@
 <template>
-  <div class="container">
-    <div class="form-rater my-6" v-if="loaded">
-      <v-form class="form" @submit="save" @reset="onReset" v-if="show">
-        <tile-list-group
-          :config="products"
-          @tile:selected="tileSelectionHandler"
-        />
+  <div class="w-full bg-gray-50 rounded-md min-h-96 p-8">
+    <h2 class="font-bold text-3xl">Start a New Plan</h2>
+    <h3 class="font-normal text-lg mb-6">Let's pick a product</h3>
 
-        <v-select
-          outlined
-          rounded
-          background-color="lightest"
-          :disabled="!selection_product"
-          :items="selection_product ? selection_product.product_variations : []"
-          v-model="selection_product_variation"
-          item-text="product_variation_label"
-          item-value="product_variation_id"
-          return-object
-          label="Product Variation"
-          class="my-3"
-        ></v-select>
+    <div class="grid grid-cols-2">
+      <router-link
+        to="#"
+        class="
+          text-center
+          bg-gray-200
+          p-2
+          border-r border-gray-300
+          text-uppercase
+          border-b-4 border-b-red-500
+          text-red-500
+          uppercase
+          tracking-wide
+          text-sm
+        "
+        >Product</router-link
+      >
+      <router-link
+        to="#"
+        class="
+          text-center
+          bg-gray-200
+          p-2
+          text-uppercase
+          uppercase
+          tracking-wide
+          text-sm
+        "
+        >Configure</router-link
+      >
+    </div>
 
-        <v-switch
-          v-if="
-            selection_product_variation &&
-            selection_product_variation.vary_by_tobacco
-          "
-          label="Smoker Distinct"
-          v-model="selection_is_smoker_distinct"
-          class="my-3"
-        />
-
-        <v-switch
-          v-if="
-            selection_product_variation &&
-            selection_product_variation.vary_by_gender
-          "
-          v-model="selection_is_gender_distinct"
-          label="Gender Distinct"
-          class="my-3"
-        />
-
-        <v-select
-          outlined
-          rounded
-          background-color="lightest"
-          :items="selection_product ? selection_product.states : []"
-          v-model="selection_rating_state"
-          label="Rating State"
-          item-text="state_name"
-          item-value="state_id"
-          class="my-3"
+    <div class="grid grid-cols-3 gap-8">
+      <div>
+        <app-tile
+          text="Accident"
+          fromColor="from-red-500"
+          toColor="to-orange-500"
+          :selected="product_selection === 'AC'"
+          @update:selection="productSelectionHandler('AC')"
         >
-        </v-select>
+          <puzzle-icon class="opacity-20 text-black h-2/3 w-2/3" />
+        </app-tile>
+      </div>
+      <div>
+        <app-tile
+          text="Critical Illness"
+          :fromColor="'from-yellow-500'"
+          toColor="to-green-500"
+          :selected="product_selection === 'CI'"
+          @update:selection="productSelectionHandler('CI')"
+        >
+          <sun-icon class="opacity-20 text-black h-2/3 w-2/3" />
+        </app-tile>
+      </div>
+      <div>
+        <app-tile
+          text="Hospital Indemnity"
+          :fromColor="'from-blue-500'"
+          toColor="to-violet-500"
+          :selected="product_selection === 'HI'"
+          @update:selection="productSelectionHandler('HI')"
+        >
+          <plus-circle-icon class="opacity-20 text-black h-2/3 w-2/3" />
+        </app-tile>
+      </div>
+    </div>
 
-        <v-text-field
-          outlined
-          rounded
-          background-color="lightest"
-          :disabled="!selection_rating_state"
-          v-model="selection_plan_effective_date"
-          label="Plan Effective Date"
-          type="date"
-          class="my-3"
-          :rules="[rules.effective_date]"
-        ></v-text-field>
-
-        <div class="d-flex justify-center my-3">
-          <v-btn type="submit" color="primary" class="mx-3">Submit</v-btn>
-          <v-btn type="reset" color="secondary" class="mx-3">Reset</v-btn>
-        </div>
-      </v-form>
+    <div class="flex justify-center my-3">
+      <app-button
+        type="submit"
+        class="mx-3 border-red-500 bg-red-500 text-white"
+        :disabled="!product_selection"
+        >Next</app-button
+      >
+      <app-button type="reset" class="mx-3 border-red-500">Reset</app-button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "../../services/axios.js";
-import TileListGroup from "../../components/TileListGroup.vue";
+import AppButton from "../../components/AppButton.vue";
+import AppTile from "../../components/AppTile.vue";
+import { PuzzleIcon, SunIcon, PlusCircleIcon } from "@heroicons/vue/outline";
 
 export default {
-  name: "Plan",
-  components: { TileListGroup },
+  name: "SelectionPlan",
+  components: { AppButton, AppTile, PuzzleIcon, SunIcon, PlusCircleIcon },
   data() {
     return {
       loaded: false,
       error: null,
+      product_selection: null,
       selection_product: null,
       selection_product_variation: null,
       selection_rating_state: null,
@@ -132,6 +143,9 @@ export default {
     },
   },
   methods: {
+    productSelectionHandler(val) {
+      this.product_selection = val;
+    },
     tileSelectionHandler(selection) {
       this.selection_product = {
         ...selection,
@@ -172,11 +186,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.form-rater {
-  min-width: 60%;
-  background-color: #eee;
-  padding: 2rem;
 }
 </style>

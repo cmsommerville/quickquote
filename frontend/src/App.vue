@@ -2,8 +2,11 @@
   <v-app>
     <the-header @click-hamburger="drawer = !drawer" />
     <the-sidebar :drawer="drawer" @toggle="toggleDrawer" />
-    <v-main class="app-container">
-      <router-view :key="$route.fullPath" class="app-content" />
+    <v-main class="app-container bg-gradient-to-br from-red-500 to-red-400">
+      <router-view
+        :key="$route.fullPath"
+        class="app-content flex justify-center"
+      />
       <the-snackbar
         :snackbar="$store.getters.get_snackbar"
         :snackbar_message="$store.getters.get_snackbar_message"
@@ -44,13 +47,18 @@ export default {
 
 .app-container {
   display: flex;
+  background-image: linear-gradient(
+    to bottom right,
+    hsl(352, 80%, 60%),
+    hsl(5, 80%, 60%)
+  );
 }
 
-.app-content {
-  min-width: 60%;
-  max-width: 90%;
-  border: 1px solid #ddd;
-  padding: 2rem;
-  margin: 1rem auto;
-}
+// .app-content {
+//   min-width: 60%;
+//   max-width: 90%;
+//   border: 1px solid #ddd;
+//   padding: 2rem;
+//   margin: 1rem auto;
+// }
 </style>

@@ -1,0 +1,49 @@
+// import RaterEntry from "../../views/selections/RaterEntry.vue";
+// import Group from "../../views/selections/Group.vue";
+import SelectionPlan from "../views/selections/Selection_Plan.vue";
+// import Provisions from "../../views/selections/Provisions.vue";
+// import Benefits from "../../views/selections/Benefits.vue";
+// import AgeBands from "../../views/selections/AgeBands.vue";
+// import Premium from "../../views/selections/Premium.vue";
+
+export default [
+  //   {
+  //     path: "/rater",
+  //     name: "rater",
+  //     component: RaterEntry,
+  //   },
+  //   {
+  //     path: "/group",
+  //     name: "group",
+  //     component: Group,
+  //   },
+  {
+    path: "/selections/plan",
+    name: "selections-plan",
+    component: SelectionPlan,
+  },
+  //   {
+  //     path: "/selections/provisions/:plan_id",
+  //     name: "selections-provisions",
+  //     component: Provisions,
+  //     props: true,
+  //   },
+  //   {
+  //     path: "/selections/benefits/:plan_id",
+  //     name: "selections-benefits",
+  //     component: Benefits,
+  //     props: true,
+  //   },
+  //   {
+  //     path: "/selections/premium/:plan_id",
+  //     name: "rating-premium",
+  //     component: Premium,
+  //     props: true,
+  //   },
+  //   {
+  //     path: "/selections/age-bands/:plan_id",
+  //     name: "selections-age-bands",
+  //     component: AgeBands,
+  //     props: true,
+  //   },
+];
