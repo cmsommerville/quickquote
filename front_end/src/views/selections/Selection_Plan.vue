@@ -73,9 +73,9 @@
 
     <div class="flex justify-center my-3">
       <app-button
-        type="submit"
         class="mx-3 border-red-500 bg-red-500 text-white"
         :disabled="!product_selection"
+        to="/about"
         >Next</app-button
       >
       <app-button type="reset" class="mx-3 border-red-500">Reset</app-button>

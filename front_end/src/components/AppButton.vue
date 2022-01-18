@@ -15,6 +15,8 @@
       'bg-gray-300': $attrs.disabled,
       'text-gray-100': $attrs.disabled,
     }"
+    @click="routeTo(to)"
+    v-on="$listeners"
   >
     <slot></slot>
   </button>
@@ -23,7 +25,16 @@
 <script>
 export default {
   name: "AppButton",
-  props: {},
+  props: {
+    to: {
+      required: false,
+    },
+  },
+  methods: {
+    routeTo(route) {
+      this.$router.push(route);
+    },
+  },
 };
 </script>
 
