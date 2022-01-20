@@ -15,8 +15,7 @@
       'bg-gray-300': $attrs.disabled,
       'text-gray-100': $attrs.disabled,
     }"
-    @click="routeTo(to)"
-    v-on="$listeners"
+    v-bind="$attrs"
   >
     <slot></slot>
   </button>
@@ -28,11 +27,6 @@ export default {
   props: {
     to: {
       required: false,
-    },
-  },
-  methods: {
-    routeTo(route) {
-      this.$router.push(route);
     },
   },
 };

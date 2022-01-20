@@ -1,6 +1,7 @@
 // import RaterEntry from "../../views/selections/RaterEntry.vue";
 // import Group from "../../views/selections/Group.vue";
 import SelectionPlan from "../views/selections/Selection_Plan.vue";
+import SelectionPlanConfig from "../views/selections/Selection_PlanConfig.vue";
 // import Provisions from "../../views/selections/Provisions.vue";
 // import Benefits from "../../views/selections/Benefits.vue";
 // import AgeBands from "../../views/selections/AgeBands.vue";
@@ -21,6 +22,13 @@ export default [
     path: "/selections/plan",
     name: "selections-plan",
     component: SelectionPlan,
+    props: true,
+  },
+  {
+    path: "/selections/plan/config",
+    name: "selections-plan-config",
+    component: SelectionPlanConfig,
+    props: (route) => ({ product_id: route.query.product_id }),
   },
   //   {
   //     path: "/selections/provisions/:plan_id",

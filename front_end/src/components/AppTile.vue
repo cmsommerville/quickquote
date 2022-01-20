@@ -12,6 +12,7 @@
       'items-center': true,
       'hover:rotate-2': true,
       'hover:cursor-pointer': true,
+      'hover:scale-105': true,
       'ease-out': true,
       'duration-300': true,
       'ring-4': selected,
@@ -20,35 +21,21 @@
     @click="$emit('update:selection', !selected)"
   >
     <div
-      :class="
-        `w-full 
+      :class="`w-full 
         h-2/3 
         rounded-t-2xl 
         flex
         justify-center
         items-center
-        bg-gradient-to-br 
-      ` +
-        fromColor +
-        ' ' +
-        toColor
-      "
+        bg-cover
+        bg-center
+        ${background}
+      `"
     >
       <slot />
     </div>
     <div
-      class="
-        w-full
-        h-1/3
-        bg-white
-        rounded-b-2xl
-        flex
-        justify-center
-        items-center
-        font-bold
-        text-gray-600 text-lg
-        tracking-wide
-      "
+      class="w-full h-1/3 bg-white rounded-b-2xl flex justify-center items-center font-bold text-gray-600 text-lg text-center tracking-wide"
     >
       {{ text }}
     </div>
@@ -62,10 +49,7 @@ export default {
     text: {
       required: true,
     },
-    fromColor: {
-      required: true,
-    },
-    toColor: {
+    background: {
       required: true,
     },
     selected: {

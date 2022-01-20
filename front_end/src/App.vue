@@ -1,18 +1,10 @@
 <template>
-  <div
-    class="
-      min-w-screen min-h-screen
-      bg-gradient-to-br
-      from-red-500
-      to-orange-500
-      bg-cover
-    "
-  >
+  <div class="min-w-screen min-h-screen bg-slate-100">
     <header>
       <the-header />
     </header>
     <main class="h-full flex justify-center text-gray-600">
-      <div class="w-4/6 my-6">
+      <div class="min-w-4/6 my-6">
         <router-view />
       </div>
     </main>
