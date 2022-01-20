@@ -24,7 +24,20 @@
         >Product Variation
       </app-select>
 
-      <div class="flex flex-col">
+      <app-select
+        class="w-60"
+        v-model="state_id"
+        :items="states"
+        label="state_name"
+        value="state_id"
+        >Rating State
+      </app-select>
+
+      <app-input class="w-60" v-model="plan_effective_date" type="date"
+        >Plan Effective Date
+      </app-input>
+
+      <div class="flex flex-col pr-4">
         <app-checkbox class="my-2" v-model="is_gender_distinct"
           >Gender Distinct
         </app-checkbox>
@@ -32,9 +45,6 @@
           >Tobacco Distinct
         </app-checkbox>
       </div>
-      <app-input class="w-60" v-model="plan_effective_date" type="date"
-        >Plan Effective Date
-      </app-input>
     </div>
 
     <div class="flex justify-center my-3">
@@ -61,6 +71,10 @@ export default {
     return {
       loaded: false,
       product_variation_id: null,
+      state_id: null,
+      plan_effective_date: null,
+      is_gender_distinct: false,
+      is_tobacco_distinct: false,
       error: null,
       config: {},
     };
@@ -72,6 +86,14 @@ export default {
     this.loaded = true;
   },
   computed: {
+    states() {
+      return this.config.states.map((state) => {
+        return {
+          state_name: state.state.state_name,
+          state_id: state.state_id,
+        };
+      });
+    },
     output() {
       return {};
     },

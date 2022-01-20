@@ -1,13 +1,13 @@
 <template>
-  <label>
+  <label class="flex justify-end items-center text-right">
+    <slot></slot>
     <input
-      class="mr-8 rounded-sm"
+      class="ml-8 rounded-sm"
       type="checkbox"
       v-bind="$attrs"
       :value="modelValue"
-      @change="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', $event.target.checked)"
     />
-    <slot></slot>
   </label>
 </template>
 
