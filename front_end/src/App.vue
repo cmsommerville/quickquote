@@ -5,7 +5,11 @@
     </header>
     <main class="h-full flex justify-center text-gray-600">
       <div class="min-w-4/6 my-6">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition name="slide-fade" mode="out-in">
+            <component :is="Component"></component>
+          </transition>
+        </router-view>
       </div>
     </main>
   </div>
@@ -18,3 +22,16 @@ export default {
   components: { TheHeader },
 };
 </script>
+
+<style>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>
