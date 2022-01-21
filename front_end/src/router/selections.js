@@ -3,7 +3,7 @@
 import SelectionPlan from "../views/selections/Selection_Plan.vue";
 import SelectionPlanConfig from "../views/selections/Selection_PlanConfig.vue";
 // import Provisions from "../../views/selections/Provisions.vue";
-// import Benefits from "../../views/selections/Benefits.vue";
+import Selection_Benefits from "../views/selections/Selection_Benefits.vue";
 // import AgeBands from "../../views/selections/AgeBands.vue";
 // import Premium from "../../views/selections/Premium.vue";
 
@@ -36,12 +36,12 @@ export default [
   //     component: Provisions,
   //     props: true,
   //   },
-  //   {
-  //     path: "/selections/benefits/:plan_id",
-  //     name: "selections-benefits",
-  //     component: Benefits,
-  //     props: true,
-  //   },
+  {
+    path: "/selections/plan/:plan_id/benefits",
+    name: "selections-benefits",
+    component: Selection_Benefits,
+    props: true,
+  },
   //   {
   //     path: "/selections/premium/:plan_id",
   //     name: "rating-premium",

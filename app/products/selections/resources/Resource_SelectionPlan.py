@@ -29,6 +29,6 @@ class Resource_SelectionPlan(Resource):
             print(e)
 
         # add default distributions to selections table
-        requests.post(f'/selections/plan/{plan.plan_id}/default-dist', json={})
+        requests.post(f'http://localhost:5000/selections/plan/{plan.selection_plan_id}/default-dist', json={})
 
         return plan_schema.dump(plan), 201
