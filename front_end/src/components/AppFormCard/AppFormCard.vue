@@ -23,8 +23,8 @@
         :key="stage.id"
         :class="{
           ...stageBaseClasses,
-          'border-r': i === (stages.length ?? -1),
-          'border-gray-300': i === (stages.length ?? -1),
+          'border-r': i !== (stages.length - 1 ?? -1),
+          'border-gray-300': i !== (stages.length - 1 ?? -1),
           'border-b-4': stage.active,
           'border-b-red-500': stage.active,
           'text-red-500': stage.active,

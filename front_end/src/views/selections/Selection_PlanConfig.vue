@@ -30,8 +30,8 @@
             <app-checkbox class="my-4" v-model="is_gender_distinct"
               >Gender Distinct
             </app-checkbox>
-            <app-checkbox class="my-4" v-model="is_tobacco_distinct"
-              >Tobacco Distinct
+            <app-checkbox class="my-4" v-model="is_smoker_distinct"
+              >Smoker Distinct
             </app-checkbox>
           </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="flex justify-center">
           <app-button
             class="mx-3 border-red-500 bg-red-500 text-white"
-            to="/about"
+            @click="save"
             >Next</app-button
           >
           <app-button type="reset" class="mx-3 border-red-500"
@@ -79,7 +79,7 @@ export default {
       state_id: null,
       plan_effective_date: null,
       is_gender_distinct: false,
-      is_tobacco_distinct: false,
+      is_smoker_distinct: false,
       error: null,
       config: {},
     };
@@ -100,7 +100,14 @@ export default {
       });
     },
     output() {
-      return {};
+      return {
+        config_product_id: this.product_id,
+        config_product_variation_id: this.product_variation_id,
+        config_state_id: this.state_id,
+        plan_effective_date: this.plan_effective_date,
+        is_smoker_distinct: this.is_smoker_distinct,
+        is_gender_distinct: this.is_gender_distinct,
+      };
     },
   },
   methods: {
