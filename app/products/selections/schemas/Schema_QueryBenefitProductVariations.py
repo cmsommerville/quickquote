@@ -12,6 +12,7 @@ class Schema_QueryBPV_Coverage(ma.Schema):
     coverage_code = ma.String()
     coverage_label = ma.String()
     default_value = ma.Boolean()
+    section_code = ma.String()
 
 class Schema_QueryBPV_SelectedDurationItem(ma.Schema): 
     selection_benefit_duration_id = ma.Integer()

@@ -2,14 +2,18 @@
   <div v-if="loaded">
     <app-form-card :stages="stages" :title="title" :subtitle="subtitle">
       <template #content>
-        <div class="grid grid-cols-2 xl:grid-cols-2 gap-8">
-          <app-input
+        <!-- <app-input
             v-for="bnft in benefits"
             :key="bnft.config_benefit_id"
             class="w-60"
             v-model="bnft.ui_benefit_value"
             >{{ bnft.benefit_label }}
-          </app-input>
+          </app-input> -->
+        <div v-for="coverage in coverages" :key="coverage.coverage_id">
+          <selection-benefits-covg-panel
+            :coverage="coverage"
+            :label="coverage.coverage_label"
+          />
         </div>
       </template>
 
@@ -35,10 +39,11 @@
 <script>
 import axios from "@/services/axios.js";
 import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
+import SelectionBenefitsCovgPanel from "@/views/selections/Selection_Benefits/Selection_Benefits_CovgPanel.vue";
 
 export default {
   name: "SelectionBenefits",
-  components: { AppFormCard },
+  components: { AppFormCard, SelectionBenefitsCovgPanel },
   props: {
     plan_id: {
       required: true,
@@ -50,38 +55,37 @@ export default {
       loaded: false,
       title: "Add Some Benefits",
       subtitle: "You're half way through!",
-      stages: [
-        { label: "Base Benefits", id: "base", active: true },
+      section_code: "main",
+      _stages: [
+        { label: "Main Benefits", id: "main", active: true },
         { label: "Optional Benefits", id: "optional" },
       ],
       coverages: [],
       selected_value: null,
       error: null,
-      config: {},
     };
   },
   async mounted() {
     this.loaded = false;
     const res = await axios.get(`selections/plan/${this.plan_id}/benefits`);
-    this.coverages = [...res.data];
+    const section_coverages = [...res.data];
+    this.coverages = [
+      ...section_coverages.find((section) => {
+        return section.section_code === this.section_code;
+      }).coverages,
+    ];
     this.loaded = true;
   },
   computed: {
-    benefits() {
-      const active_stage = this.stages.find((stg) => stg.active);
-      return this.coverages.find((covg) => {
-        return covg.coverage_code === active_stage.id;
-      }).benefits;
+    stages() {
+      return [
+        ...this._stages.map((stg) => {
+          return { ...stg, active: stg.id === this.section_code };
+        }),
+      ];
     },
     output() {
-      return {
-        config_product_id: this.product_id,
-        config_product_variation_id: this.product_variation_id,
-        config_state_id: this.state_id,
-        plan_effective_date: this.plan_effective_date,
-        is_smoker_distinct: this.is_smoker_distinct,
-        is_gender_distinct: this.is_gender_distinct,
-      };
+      return {};
     },
   },
   methods: {

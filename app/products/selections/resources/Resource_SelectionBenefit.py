@@ -10,7 +10,18 @@ _selection_schema_list = Schema_SelectionBenefit(many=True)
 _config_schema_list = Schema_QueryBPV(many=True)
 
 
-def formatter(config):
+def _section_formatter(coverages: list): 
+    section_dd = defaultdict(list)
+    for covg in coverages:
+        section = covg['section_code']
+        section_dd[section].append(covg)
+
+    return [{
+        "section_code": covgs[0]['section_code'],
+        "coverages": covgs
+    } for section, covgs in section_dd.items()]
+
+def _formatter(config):
     """
     Allocate benefits to coverages
     """
@@ -44,7 +55,8 @@ class Resource_SelectionBenefit(Resource):
         # get query that returns config and selections
         qry = query_benefits(plan)
         data = _config_schema_list.dump(qry.populate_existing())
-        data = formatter(data)
+        data = _formatter(data)
+        data = _section_formatter(data)
         return data, 200
 
 
