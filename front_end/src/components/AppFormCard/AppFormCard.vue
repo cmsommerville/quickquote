@@ -1,13 +1,23 @@
 <template>
   <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
-    <h2 class="font-bold text-3xl">
-      <slot name="title"></slot>
-    </h2>
-    <h3 class="font-normal text-md mb-6">
-      <slot name="subtitle"></slot>
-    </h3>
-
-    <div :class="'grid grid-cols-' + stages.length">
+    <div class="mb-12">
+      <h2 class="font-bold text-3xl">{{ title }}</h2>
+      <h3 class="font-normal text-md">{{ subtitle }}</h3>
+    </div>
+    <div v-if="stages.length === 1" class="w-1/2 grid grid-cols-1">
+      <span
+        v-for="(stage, i) in stages"
+        :key="stage.id"
+        :class="{
+          ...stageBaseClasses,
+          'border-b-4': true,
+          'border-b-red-500': true,
+          'text-red-500': true,
+        }"
+        >{{ stage.label }}</span
+      >
+    </div>
+    <div v-if="stages.length > 1" :class="'grid grid-cols-' + stages.length">
       <span
         v-for="(stage, i) in stages"
         :key="stage.id"
@@ -22,17 +32,12 @@
         >{{ stage.label }}</span
       >
     </div>
-
-    <slot name="content"></slot>
-    <slot name="actions">
-      <div class="flex justify-center my-8">
-        <app-button
-          class="mx-3 border-red-500 bg-red-500 text-white"
-          to="/about"
-          >Next</app-button
-        >
-      </div>
-    </slot>
+    <div class="my-12">
+      <slot name="content"></slot>
+    </div>
+    <div class="my-8">
+      <slot name="actions"></slot>
+    </div>
   </div>
 </template>
 
@@ -40,6 +45,14 @@
 export default {
   name: "AppFormCard",
   props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    subtitle: {
+      type: String,
+      required: true,
+    },
     stages: {
       type: Array,
       required: true,
