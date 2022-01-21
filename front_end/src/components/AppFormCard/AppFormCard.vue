@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded" class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
+  <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
     <h2 class="font-bold text-3xl">
       <slot name="title"></slot>
     </h2>
