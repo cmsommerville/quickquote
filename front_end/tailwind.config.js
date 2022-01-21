@@ -8,16 +8,21 @@ module.exports = {
       fontFamily: {
         sans: ['"Inter var"', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        theme: {
+          primary: "#6d28d9",
+        },
+      },
     },
     backgroundImage: {
       "accident-sm":
-        "linear-gradient(to right bottom, rgba(239,68,68, 0.8), rgba(239,68,68, 0.8)), url('/src/assets/img/accident-010.jpg')",
+        "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)), url('/src/assets/img/accident-010.jpg')",
       "stethoscope-sm":
-        "linear-gradient(to right bottom, rgba(239,68,68, 0.8), rgba(239,68,68, 0.8)), url('/src/assets/img/stethoscope-010.jpg')",
+        "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)), url('/src/assets/img/stethoscope-010.jpg')",
       "pulse-sm":
-        "linear-gradient(to right bottom, rgba(239,68,68, 0.8), rgba(239,68,68, 0.8)), url('/src/assets/img/pulse-010.jpg')",
+        "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)), url('/src/assets/img/pulse-010.jpg')",
       "x-ray-sm":
-        "linear-gradient(to right bottom, rgba(239,68,68, 0.8), rgba(239,68,68, 0.8)),url('/src/assets/img/x-ray-010.jpg')",
+        "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)),url('/src/assets/img/x-ray-010.jpg')",
     },
   },
   plugins: [

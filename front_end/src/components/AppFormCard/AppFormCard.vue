@@ -11,11 +11,15 @@
         :class="{
           ...stageBaseClasses,
           'border-b-4': true,
-          'border-b-red-500': true,
-          'text-red-500': true,
+          'border-b-theme-primary': true,
+          'text-theme-primary': true,
         }"
-        >{{ stage.label }}</span
       >
+        <router-link v-if="!!stage.to" :to="{ name: stage.to }">{{
+          stage.label
+        }}</router-link>
+        <span v-else>{{ stage.label }}</span>
+      </span>
     </div>
     <div v-if="stages.length > 1" :class="'grid grid-cols-' + stages.length">
       <span
@@ -26,10 +30,14 @@
           'border-r': i !== (stages.length - 1 ?? -1),
           'border-gray-300': i !== (stages.length - 1 ?? -1),
           'border-b-4': stage.active,
-          'border-b-red-500': stage.active,
-          'text-red-500': stage.active,
+          'border-b-theme-primary': stage.active,
+          'text-theme-primary': stage.active,
         }"
-        >{{ stage.label }}</span
+      >
+        <router-link v-if="!!stage.to" :to="{ name: stage.to }">{{
+          stage.label
+        }}</router-link>
+        <span v-else>{{ stage.label }}</span></span
       >
     </div>
     <div class="my-12">

@@ -8,7 +8,10 @@
       'border-2': true,
       'px-8': true,
       'py-2': true,
-      'hover:bg-opacity-80': true,
+      'hover:bg-opacity-90': !transparent,
+      'hover:bg-theme-primary': transparent,
+      'hover:text-white': transparent,
+      'hover:bg-opacity-60': transparent,
       'hover:scale-105': true,
       'ease-out': true,
       'duration-300': true,
@@ -27,6 +30,9 @@ export default {
   props: {
     to: {
       required: false,
+    },
+    transparent: {
+      default: false,
     },
   },
 };

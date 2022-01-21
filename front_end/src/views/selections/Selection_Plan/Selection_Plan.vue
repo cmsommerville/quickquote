@@ -38,7 +38,7 @@
       <template #actions>
         <div class="flex justify-center">
           <app-button
-            class="mx-3 border-red-500 bg-red-500 text-white"
+            class="mx-3 border-theme-primary bg-theme-primary text-white"
             :disabled="!selection"
             @click="configure"
             >Next</app-button
@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import axios from "../../services/axios.js";
-import AppFormCard from "../../components/AppFormCard/AppFormCard.vue";
-import AppTile from "../../components/AppTile.vue";
+import axios from "@/services/axios.js";
+import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
+import AppTile from "@/components/AppTile.vue";
 
 export default {
   name: "SelectionPlan",

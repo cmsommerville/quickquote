@@ -40,11 +40,11 @@
       <template #actions>
         <div class="flex justify-center">
           <app-button
-            class="mx-3 border-red-500 bg-red-500 text-white"
+            class="mx-3 border-theme-primary bg-theme-primary text-white"
             @click="save"
             >Next</app-button
           >
-          <app-button type="reset" class="mx-3 border-red-500"
+          <app-button type="reset" class="mx-3 border-theme-primary"
             >Reset</app-button
           >
         </div>
@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import axios from "../../services/axios.js";
-import AppFormCard from "../../components/AppFormCard/AppFormCard.vue";
+import axios from "@/services/axios.js";
+import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 
 export default {
   name: "SelectionPlanConfig",
@@ -111,9 +111,10 @@ export default {
     },
   },
   methods: {
-    routeTo(route_name) {
+    routeTo(route_name, params = {}) {
       this.$router.push({
         name: route_name,
+        params: { ...params },
       });
     },
     initialize(data) {
@@ -123,11 +124,8 @@ export default {
     async save() {
       const plan = await axios.post("/selections/plan", this.output);
       if (plan.status === 201) {
-        this.routeTo({
-          name: "selections-benefits",
-          params: {
-            plan_id: plan.data.selection_plan_id,
-          },
+        this.routeTo("selections-benefits", {
+          plan_id: plan.data.selection_plan_id,
         });
       }
     },

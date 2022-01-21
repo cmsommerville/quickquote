@@ -16,7 +16,7 @@
       'ease-out': true,
       'duration-300': true,
       'ring-4': selected,
-      'ring-red-500': selected,
+      'ring-theme-primary': selected,
     }"
     @click="$emit('update:selection', !selected)"
   >

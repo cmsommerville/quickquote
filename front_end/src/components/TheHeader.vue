@@ -12,15 +12,13 @@
     >
       <search-icon class="h-6 w-6 inline-block opacity-50" />
     </app-input>
-    <div class="mx-4">
-      <router-link
-        class="pb-1 text-sm font-extralight uppercase tracking-wider flex items-center border-b-2 border-transparent hover:text-red-500 hover:border-red-500 active:border-red-500 ease-out duration-100"
-        to="#"
-      >
-        <plus-icon class="inline-block h-4 w-4" />
-        <span class="ml-1">New Quote</span>
-      </router-link>
-    </div>
+    <app-button
+      class="bg-theme-primary text-white text-sm flex items-center px-6 py-1"
+      @click="routeTo('selections-plan')"
+    >
+      <plus-icon class="inline-block h-4 w-4" />
+      <span class="ml-1">New Quote</span>
+    </app-button>
   </nav>
 </template>
 
@@ -36,6 +34,11 @@ export default {
     return {
       inputValue: null,
     };
+  },
+  methods: {
+    routeTo(route_name, params = {}) {
+      this.$router.push({ name: route_name, params: { ...params } });
+    },
   },
 };
 </script>

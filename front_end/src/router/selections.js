@@ -1,9 +1,9 @@
 // import RaterEntry from "../../views/selections/RaterEntry.vue";
 // import Group from "../../views/selections/Group.vue";
-import SelectionPlan from "../views/selections/Selection_Plan.vue";
-import SelectionPlanConfig from "../views/selections/Selection_PlanConfig.vue";
+import SelectionPlan from "../views/selections/Selection_Plan/Selection_Plan.vue";
+import SelectionPlanConfig from "../views/selections/Selection_Plan/Selection_PlanConfig.vue";
 // import Provisions from "../../views/selections/Provisions.vue";
-import Selection_Benefits from "../views/selections/Selection_Benefits.vue";
+import Selection_Benefits from "../views/selections/Selection_Benefits/Selection_Benefits.vue";
 // import AgeBands from "../../views/selections/AgeBands.vue";
 // import Premium from "../../views/selections/Premium.vue";
 
