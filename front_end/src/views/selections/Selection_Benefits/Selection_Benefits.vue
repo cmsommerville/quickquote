@@ -2,19 +2,13 @@
   <div v-if="loaded">
     <app-form-card :stages="stages" :title="title" :subtitle="subtitle">
       <template #content>
-        <!-- <app-input
-            v-for="bnft in benefits"
-            :key="bnft.config_benefit_id"
-            class="w-60"
-            v-model="bnft.ui_benefit_value"
-            >{{ bnft.benefit_label }}
-          </app-input> -->
-        <div v-for="coverage in coverages" :key="coverage.coverage_id">
-          <selection-benefits-covg-panel
-            :coverage="coverage"
-            :label="coverage.coverage_label"
-          />
-        </div>
+        <selection-benefits-covg-panel
+          v-for="coverage in coverages"
+          :key="coverage.coverage_id"
+          :coverage="coverage"
+          :label="coverage.coverage_label"
+          @selections:change="coverageHandler"
+        />
       </template>
 
       <template #actions>
@@ -54,7 +48,7 @@ export default {
     return {
       loaded: false,
       title: "Add Some Benefits",
-      subtitle: "You're half way through!",
+      subtitle: "You're half-way done!",
       section_code: "main",
       _stages: [
         { label: "Main Benefits", id: "main", active: true },
@@ -89,6 +83,9 @@ export default {
     },
   },
   methods: {
+    coverageHandler(el) {
+      console.log(el);
+    },
     routeTo(route_name) {
       this.$router.push({
         name: route_name,

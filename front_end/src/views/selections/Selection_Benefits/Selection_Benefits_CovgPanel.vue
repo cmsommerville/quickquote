@@ -1,6 +1,19 @@
 <template>
   <div class="rounded-md shadow-md">
-    <div class="px-12 py-4 flex justify-between items-center mb-6 bg-slate-50">
+    <div
+      :class="{
+        'px-12': true,
+        'py-4': true,
+        flex: true,
+        'justify-between': true,
+        'items-center': true,
+        'mb-6': true,
+        'bg-gray-50': true,
+        'border-b-2': !hidden,
+        'border-b-gray-200': !hidden,
+        'rounded-t-md': true,
+      }"
+    >
       <h2 class="text-lg">{{ coverage.coverage_label }}</h2>
       <app-button
         class="border-0"
@@ -8,7 +21,14 @@
         :transparent="true"
         @click="hidden = !hidden"
       >
-        <arrow-circle-down-icon class="h-8 w-8 text-theme-primary" />
+        <arrow-circle-down-icon
+          v-if="hidden"
+          class="h-8 w-8 text-theme-primary"
+        />
+        <arrow-circle-up-icon
+          v-if="!hidden"
+          class="h-8 w-8 text-theme-primary"
+        />
       </app-button>
     </div>
     <transition name="slide-fade" mode="out-in">
@@ -17,8 +37,9 @@
           <app-input
             v-for="benefit in benefits"
             :key="benefit.benefit_id"
-            v-model="benefit.ui_benefit_value"
-            @change="setValue"
+            class="w-24"
+            v-model.number="benefit.ui_benefit_value"
+            @input="setValue"
             >{{ benefit.benefit_label }}</app-input
           >
         </div>
@@ -28,11 +49,11 @@
 </template>
 
 <script>
-import { ArrowCircleDownIcon } from "@heroicons/vue/outline";
+import { ArrowCircleDownIcon, ArrowCircleUpIcon } from "@heroicons/vue/outline";
 
 export default {
   name: "Selection_Benefits_CovgPanel",
-  components: { ArrowCircleDownIcon },
+  components: { ArrowCircleDownIcon, ArrowCircleUpIcon },
   props: {
     coverage: {
       type: Object,
@@ -75,7 +96,7 @@ export default {
       this.setValue();
     },
     setValue() {
-      this.$emit("selections-change", this.benefits);
+      this.$emit("selections:change", this.benefits);
     },
   },
 };

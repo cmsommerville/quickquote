@@ -13,7 +13,8 @@
       <search-icon class="h-6 w-6 inline-block opacity-50" />
     </app-input>
     <app-button
-      class="bg-theme-primary text-white text-sm flex items-center px-6 py-1"
+      :transparent="true"
+      class="text-sm flex items-center px-6 py-1"
       @click="routeTo('selections-plan')"
     >
       <plus-icon class="inline-block h-4 w-4" />
