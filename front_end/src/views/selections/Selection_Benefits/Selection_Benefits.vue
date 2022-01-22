@@ -60,7 +60,7 @@ export default {
         { label: "Main Benefits", id: "main", active: true },
         { label: "Optional Benefits", id: "optional" },
       ],
-      coverages: [],
+      section_coverages: [],
       selections: [],
       error: null,
     };
@@ -68,12 +68,7 @@ export default {
   async mounted() {
     this.loaded = false;
     const res = await axios.get(`selections/plan/${this.plan_id}/benefits`);
-    const section_coverages = [...res.data];
-    this.coverages = [
-      ...section_coverages.find((section) => {
-        return section.section_code === this.section_code;
-      }).coverages,
-    ];
+    this.section_coverages = [...res.data];
     this.loaded = true;
   },
   computed: {
@@ -84,13 +79,22 @@ export default {
         }),
       ];
     },
+    coverages() {
+      const ix = this.section_coverages.findIndex((section) => {
+        return section.section_code === this.section_code;
+      });
+      if (ix < 0) {
+        return [];
+      }
+      return [...this.section_coverages[ix].coverages];
+    },
     output() {
       return {};
     },
   },
   methods: {
     toggleStageHandler(id) {
-      console.log(id);
+      this.section_code = id;
     },
     coverageHandler(el) {
       this.selections = [
