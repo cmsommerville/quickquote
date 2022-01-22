@@ -8,13 +8,18 @@
       @toggle:stage="toggleStageHandler"
     >
       <template #content>
-        <selection-benefits-covg-panel
-          v-for="coverage in coverages"
-          :key="coverage.coverage_id"
-          :coverage="coverage"
-          :label="coverage.coverage_label"
-          @selections:change="coverageHandler"
-        />
+        <div v-if="!coverages.length" class="flex justify-center items-center">
+          <h2 class="text-xl">No benefits!</h2>
+        </div>
+        <div v-else>
+          <selection-benefits-covg-panel
+            v-for="coverage in coverages"
+            :key="coverage.coverage_id"
+            :coverage="coverage"
+            :label="coverage.coverage_label"
+            @selections:change="coverageHandler"
+          />
+        </div>
       </template>
 
       <template #actions>

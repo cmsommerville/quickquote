@@ -7,6 +7,7 @@ module.exports = {
     minWidth: {
       "1/2": "50%",
       "2/3": "67%",
+      "5/6": "83%",
     },
     extend: {
       fontFamily: {

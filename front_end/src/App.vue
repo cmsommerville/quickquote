@@ -4,7 +4,7 @@
       <the-header />
     </header>
     <main class="h-full flex justify-center text-gray-600">
-      <div class="w-2/3 my-6">
+      <div class="sm:w-5/6 2xl:w-2/3 my-6">
         <router-view v-slot="{ Component }">
           <transition name="slide-fade" mode="out-in">
             <component :is="Component"></component>

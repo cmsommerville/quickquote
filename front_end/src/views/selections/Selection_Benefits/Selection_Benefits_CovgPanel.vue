@@ -32,12 +32,12 @@
       </app-button>
     </div>
     <transition name="slide-fade" mode="out-in">
-      <div class="px-12 pb-12" v-if="!hidden">
-        <div class="grid grid-cols-2 gap-4">
+      <div class="px-6 pb-12 w-full flex justify-center" v-if="!hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <app-input
             v-for="benefit in benefits"
             :key="benefit.benefit_id"
-            class="w-24"
+            class="w-20"
             :prefix="benefit.unit_code === 'Dollar' ? '$' : ''"
             :suffix="benefit.unit_code === 'Percent' ? '%' : ''"
             v-model.number="benefit.ui_benefit_value"
