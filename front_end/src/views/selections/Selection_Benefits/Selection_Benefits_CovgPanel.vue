@@ -38,8 +38,10 @@
             v-for="benefit in benefits"
             :key="benefit.benefit_id"
             class="w-24"
+            :prefix="benefit.unit_code === 'Dollar' ? '$' : ''"
+            :suffix="benefit.unit_code === 'Percent' ? '%' : ''"
             v-model.number="benefit.ui_benefit_value"
-            @input="setValue"
+            @input="emitValues"
             >{{ benefit.benefit_label }}</app-input
           >
         </div>
@@ -74,6 +76,7 @@ export default {
   mounted() {
     this.selected = this.coverage.default_value;
     this.benefits = this.coverage.benefits;
+    this.emitValues();
   },
   methods: {
     toggleCoverage() {
@@ -93,10 +96,13 @@ export default {
           }
         }
       });
-      this.setValue();
+      this.emitValues();
     },
-    setValue() {
-      this.$emit("selections:change", this.benefits);
+    emitValues() {
+      this.$emit("selections:change", {
+        coverage_code: this.coverage.coverage_code,
+        benefits: this.benefits,
+      });
     },
   },
 };

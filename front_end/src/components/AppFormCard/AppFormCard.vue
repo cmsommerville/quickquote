@@ -13,12 +13,10 @@
           'border-b-4': true,
           'border-b-theme-primary': true,
           'text-theme-primary': true,
+          'cursor-pointer': tabbed,
         }"
-      >
-        <router-link v-if="!!stage.to" :to="{ name: stage.to }">{{
-          stage.label
-        }}</router-link>
-        <span v-else>{{ stage.label }}</span>
+        @click="toggleHandler(stage.id)"
+        >{{ stage.label }}
       </span>
     </div>
     <div v-if="stages.length > 1" :class="'grid grid-cols-' + stages.length">
@@ -32,12 +30,10 @@
           'border-b-4': stage.active,
           'border-b-theme-primary': stage.active,
           'text-theme-primary': stage.active,
+          'cursor-pointer': tabbed,
         }"
-      >
-        <router-link v-if="!!stage.to" :to="{ name: stage.to }">{{
-          stage.label
-        }}</router-link>
-        <span v-else>{{ stage.label }}</span></span
+        @click="toggleHandler(stage.id)"
+        >{{ stage.label }}</span
       >
     </div>
     <div class="my-12">
@@ -65,6 +61,9 @@ export default {
       type: Array,
       required: true,
     },
+    tabbed: {
+      default: false,
+    },
   },
   data() {
     return {
@@ -78,6 +77,11 @@ export default {
         "text-sm": true,
       },
     };
+  },
+  methods: {
+    toggleHandler(id) {
+      this.$emit("toggle:stage", id);
+    },
   },
 };
 </script>

@@ -1,6 +1,12 @@
 <template>
   <div v-if="loaded">
-    <app-form-card :stages="stages" :title="title" :subtitle="subtitle">
+    <app-form-card
+      :stages="stages"
+      :title="title"
+      :subtitle="subtitle"
+      :tabbed="true"
+      @toggle:stage="toggleStageHandler"
+    >
       <template #content>
         <selection-benefits-covg-panel
           v-for="coverage in coverages"
@@ -55,7 +61,7 @@ export default {
         { label: "Optional Benefits", id: "optional" },
       ],
       coverages: [],
-      selected_value: null,
+      selections: [],
       error: null,
     };
   },
@@ -83,8 +89,16 @@ export default {
     },
   },
   methods: {
+    toggleStageHandler(id) {
+      console.log(id);
+    },
     coverageHandler(el) {
-      console.log(el);
+      this.selections = [
+        ...this.selections.filter((item) => {
+          item.coverage_code !== el.coverage_code;
+        }),
+        { ...el },
+      ];
     },
     routeTo(route_name) {
       this.$router.push({
@@ -96,10 +110,13 @@ export default {
         data.product_variations[0].product_variation_id;
     },
     async save() {
-      const plan = await axios.post("/selections/plan", this.output);
+      const plan = await axios.post(
+        `/selections/plan/${this.plan_id}/benefits`,
+        this.output
+      );
       if (plan.status === 201) {
         this.routeTo({
-          name: "selections-benefits",
+          name: "selections-provisions",
           params: {
             plan_id: plan.data.selection_plan_id,
           },
