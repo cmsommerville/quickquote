@@ -16,7 +16,7 @@
           </div>
         </slot>
 
-        <div v-bind="$attrs">
+        <div class="w-full" v-bind="$attrs">
           <slot name="main">
             <ul class="w-full">
               <sidebar-list-item
@@ -46,7 +46,12 @@ export default {
         {
           route_name: "selections-plan",
           icon: "plus-icon",
-          label: "New Quotes",
+          label: "New Quote",
+        },
+        {
+          route_name: "home",
+          icon: "cog-icon",
+          label: "Product Factory",
         },
       ],
     };
