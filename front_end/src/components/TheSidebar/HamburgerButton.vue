@@ -5,7 +5,7 @@
         type="button"
         :class="{
           'burger-button': true,
-          'relative h-8 w-8 block border-0 bg-transparent focus:outline-0 cursor-pointer': true,
+          'relative h-8 w-8 block border-0 bg-transparent focus:outline-0 text-gray-600 cursor-pointer': true,
           '-rotate-180': isBurgerActive,
         }"
         title="Menu"

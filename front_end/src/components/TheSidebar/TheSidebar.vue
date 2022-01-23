@@ -6,22 +6,51 @@
       v-if="isPanelOpen"
     ></div>
     <transition name="slide">
-      <div
+      <nav
         v-if="isPanelOpen"
-        class="w-64 h-screen fixed top-0 left-0 z-50 bg-white overflow-y-auto px-2"
+        class="w-64 h-screen fixed top-0 left-0 z-50 bg-white overflow-y-auto flex flex-col items-center"
       >
+        <slot name="header">
+          <div class="w-full py-3 border-b border-gray-100 flex justify-center">
+            <the-logo />
+          </div>
+        </slot>
+
         <div v-bind="$attrs">
-          <slot></slot>
+          <slot name="main">
+            <ul class="w-full">
+              <sidebar-list-item
+                v-for="route in navLinks"
+                :key="route.route_name"
+                :route="route"
+              />
+            </ul>
+          </slot>
         </div>
-      </div>
+      </nav>
     </transition>
   </div>
 </template>
 
 <script>
+import TheLogo from "../TheLogo.vue";
+import SidebarListItem from "./SidebarListItem.vue";
+
 export default {
   name: "TheSidebar",
   inheritAttrs: false,
+  components: { SidebarListItem, TheLogo },
+  data() {
+    return {
+      navLinks: [
+        {
+          route_name: "selections-plan",
+          icon: "plus-icon",
+          label: "New Quotes",
+        },
+      ],
+    };
+  },
   methods: {
     closeSidebarPanel() {
       this.$store.commit("toggleNav");

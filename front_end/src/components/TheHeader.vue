@@ -30,22 +30,6 @@
       class="flex flex-col items-center py-2"
       @click="$store.commit('toggleNav')"
     >
-      <router-link :to="{ name: 'home' }"><the-logo /></router-link>
-      <ul class="mt-6 w-full">
-        <li
-          v-for="route in navLinks"
-          :key="route.route_name"
-          class="text-gray-500 py-3 flex items-center justify-center"
-        >
-          <router-link
-            :to="{ name: route.route_name }"
-            class="flex items-center"
-          >
-            <span class="inline-block mr-2">{{ route.label }}</span>
-            <component :is="route.icon" class="inline-block w-6 h-6" />
-          </router-link>
-        </li>
-      </ul>
     </the-sidebar>
   </div>
 </template>
@@ -62,13 +46,6 @@ export default {
   data() {
     return {
       inputValue: null,
-      navLinks: [
-        {
-          route_name: "selections-plan",
-          icon: "plus-icon",
-          label: "New Quotes",
-        },
-      ],
     };
   },
   methods: {
