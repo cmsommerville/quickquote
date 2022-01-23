@@ -29,6 +29,12 @@
             @click="save"
             >Next</app-button
           >
+          <app-button
+            type="reset"
+            class="mx-3 border-theme-primary"
+            :transparent="true"
+            >Reset</app-button
+          >
         </div>
       </template>
     </app-form-card>
@@ -37,7 +43,6 @@
 
 <script>
 import axios from "@/services/axios.js";
-import Model_SelectionBenefit from "@/models/Model_SelectionBenefit.js";
 import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 import SelectionBenefitsCovgPanel from "@/views/selections/Selection_Benefits/Selection_Benefits_CovgPanel.vue";
 
@@ -89,21 +94,7 @@ export default {
       return [...this.section_coverages[ix].coverages];
     },
     output() {
-      return this.selections.reduce((prev, covg) => {
-        const benefits = covg.benefits.map((bnft) => {
-          const b = new Model_SelectionBenefit(
-            this.plan_id,
-            bnft.config_benefit_id,
-            bnft.config_rate_group_id,
-            bnft.ui_benefit_value
-          );
-          if (bnft.selection_benefit_id) {
-            b.set_selection_benefit_id(bnft.selection_benefit_id);
-          }
-          return b;
-        });
-        return [...prev, ...benefits];
-      }, []);
+      return {};
     },
   },
   methods: {
@@ -118,25 +109,31 @@ export default {
         { ...el },
       ];
     },
-    routeTo(route_name, params = {}) {
+    routeTo(route_name) {
       this.$router.push({
         name: route_name,
-        params: { ...params },
       });
     },
+    initialize(data) {
+      this.product_variation_id =
+        data.product_variations[0].product_variation_id;
+    },
     async save() {
-      const bnfts = await axios.post(
+      const plan = await axios.post(
         `/selections/plan/${this.plan_id}/benefits`,
         this.output
       );
-      if (bnfts.status === 201) {
+      if (plan.status === 201) {
         this.routeTo({
           name: "selections-provisions",
           params: {
-            plan_id: bnfts.data.selection_plan_id,
+            plan_id: plan.data.selection_plan_id,
           },
         });
       }
+    },
+    onReset() {
+      console.log("Reset");
     },
   },
 };

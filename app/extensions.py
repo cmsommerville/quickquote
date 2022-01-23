@@ -5,5 +5,5 @@ from flask_marshmallow import Marshmallow
 
 sess = Session()
 db = SQLAlchemy(engine_options={"fast_executemany": True})
-mongo = PyMongo()
+# mongo = PyMongo()
 ma = Marshmallow()

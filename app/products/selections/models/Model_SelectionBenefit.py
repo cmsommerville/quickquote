@@ -13,6 +13,9 @@ SELECTION_PLAN = TBL_NAMES['SELECTION_PLAN']
 
 class Model_SelectionBenefit(BaseModel):
     __tablename__ = SELECTION_BENEFIT
+    __table_args__ = (
+        db.UniqueConstraint('selection_plan_id', 'config_benefit_id'),
+    )
 
     selection_benefit_id = db.Column(db.Integer, primary_key=True)
     selection_plan_id = db.Column(db.Integer, db.ForeignKey(f'{SELECTION_PLAN}.selection_plan_id'))

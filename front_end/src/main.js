@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { store } from "./store/_store.js";
 import "./tailwind.css";
 import App from "./App.vue";
 import { routes } from "./routes.js";
@@ -24,4 +25,5 @@ app.component("app-checkbox", AppCheckbox);
 app.component("app-button", AppButton);
 
 app.use(router);
+app.use(store);
 app.mount("#app");

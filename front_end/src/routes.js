@@ -6,7 +6,7 @@ import selectionRoutes from "./router/selections";
 
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
-  { path: "/", component: Home, meta: { title: "Home" } },
+  { path: "/", component: Home, name: "home", meta: { title: "Home" } },
   {
     path: "/about",
     meta: { title: "About" },
