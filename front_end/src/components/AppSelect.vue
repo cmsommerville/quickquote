@@ -7,8 +7,12 @@
       @change="$emit('update:modelValue', $event.target.value)"
       class="ml-8 rounded-md border-2 py-1 mx-4 placeholder:text-inherit placeholder:font-extralight focus:border-0 focus:ring-2 focus:ring-theme-primary"
     >
-      <option v-for="item in items" :key="item[value]" :value="item[value]">
-        {{ item[label] }}
+      <option
+        v-for="item in items"
+        :key="item[item_value]"
+        :value="item[item_value]"
+      >
+        {{ item[item_text] }}
       </option>
     </select>
   </label>
@@ -26,10 +30,10 @@ export default {
       required: true,
       type: Array,
     },
-    label: {
+    item_text: {
       default: "label",
     },
-    value: {
+    item_value: {
       default: "code",
     },
   },

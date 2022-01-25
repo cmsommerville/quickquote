@@ -8,8 +8,8 @@
               class="w-60"
               v-model="product_variation_id"
               :items="config.product_variations"
-              label="product_variation_label"
-              value="product_variation_id"
+              item_text="product_variation_label"
+              item_value="product_variation_id"
               >Product Variation
             </app-select>
 
@@ -17,8 +17,8 @@
               class="w-60"
               v-model="state_id"
               :items="states"
-              label="state_name"
-              value="state_id"
+              item_text="state_name"
+              item_value="state_id"
               >Rating State
             </app-select>
 

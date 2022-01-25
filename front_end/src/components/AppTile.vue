@@ -27,10 +27,9 @@
         flex
         justify-center
         items-center
-        bg-cover
-        bg-center
         ${background}
       `"
+      v-bind="$attrs"
     >
       <slot />
     </div>
@@ -45,12 +44,13 @@
 <script>
 export default {
   name: "AppTile",
+  inheritAttrs: false,
   props: {
     text: {
       required: true,
     },
     background: {
-      required: true,
+      default: "",
     },
     selected: {
       required: true,

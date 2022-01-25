@@ -2,8 +2,8 @@
 // import Group from "../../views/selections/Group.vue";
 import SelectionPlan from "../views/selections/Selection_Plan/Selection_Plan.vue";
 import SelectionPlanConfig from "../views/selections/Selection_Plan/Selection_PlanConfig.vue";
-// import Provisions from "../../views/selections/Provisions.vue";
-import Selection_Benefits from "../views/selections/Selection_Benefits/Selection_Benefits.vue";
+import SelectionProvisions from "../views/selections/Selection_Provisions/Selection_Provisions.vue";
+import SelectionBenefits from "../views/selections/Selection_Benefits/Selection_Benefits.vue";
 // import AgeBands from "../../views/selections/AgeBands.vue";
 // import Premium from "../../views/selections/Premium.vue";
 
@@ -30,16 +30,16 @@ export default [
     component: SelectionPlanConfig,
     props: (route) => ({ product_id: route.query.product_id }),
   },
-  //   {
-  //     path: "/selections/provisions/:plan_id",
-  //     name: "selections-provisions",
-  //     component: Provisions,
-  //     props: true,
-  //   },
+  {
+    path: "/selections/plan/:plan_id/provisions",
+    name: "selections-provisions",
+    component: SelectionProvisions,
+    props: true,
+  },
   {
     path: "/selections/plan/:plan_id/benefits",
     name: "selections-benefits",
-    component: Selection_Benefits,
+    component: SelectionBenefits,
     props: true,
   },
   //   {

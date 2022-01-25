@@ -1,24 +1,18 @@
 <template>
   <div v-if="loaded">
-    <app-form-card
-      :stages="stages"
-      :title="title"
-      :subtitle="subtitle"
-      :tabbed="true"
-      @toggle:stage="toggleStageHandler"
-    >
+    <app-form-card :stages="stages" :title="title" :subtitle="subtitle">
       <template #content>
-        <div v-if="!coverages.length" class="flex justify-center items-center">
-          <h2 class="text-xl">No benefits!</h2>
-        </div>
-        <div v-else>
-          <selection-benefits-covg-panel
-            v-for="coverage in coverages"
-            :key="coverage.coverage_id"
-            :coverage="coverage"
-            :label="coverage.coverage_label"
-            @selections:change="coverageHandler"
-          />
+        <div class="grid grid-cols-2 gap-8">
+          <component
+            v-for="prov in provisions"
+            :key="prov.provision_id"
+            :is="prov.ui_component.component_type_code"
+            item_text="item_label"
+            item_value="item_code"
+            v-bind="prov.ui_component"
+            v-model="prov.ui_provision_value"
+            >{{ prov.ui_component.label }}</component
+          >
         </div>
       </template>
 
@@ -29,12 +23,6 @@
             @click="save"
             >Next</app-button
           >
-          <app-button
-            type="reset"
-            class="mx-3 border-theme-primary"
-            :transparent="true"
-            >Reset</app-button
-          >
         </div>
       </template>
     </app-form-card>
@@ -44,11 +32,10 @@
 <script>
 import axios from "@/services/axios.js";
 import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
-import SelectionBenefitsCovgPanel from "@/views/selections/Selection_Benefits/Selection_Benefits_CovgPanel.vue";
 
 export default {
   name: "SelectionBenefits",
-  components: { AppFormCard, SelectionBenefitsCovgPanel },
+  components: { AppFormCard },
   props: {
     plan_id: {
       required: true,
@@ -58,22 +45,18 @@ export default {
   data() {
     return {
       loaded: false,
-      title: "Add Some Benefits",
-      subtitle: "You're half-way done!",
+      title: "Specify Some Provisions",
+      subtitle: "Almost done!",
       section_code: "main",
-      _stages: [
-        { label: "Main Benefits", id: "main", active: true },
-        { label: "Optional Benefits", id: "optional" },
-      ],
-      section_coverages: [],
-      selections: [],
+      _stages: [{ label: "Main Provisions", id: "main", active: true }],
+      provisions: [],
       error: null,
     };
   },
   async mounted() {
     this.loaded = false;
-    const res = await axios.get(`selections/plan/${this.plan_id}/benefits`);
-    this.section_coverages = [...res.data];
+    const res = await axios.get(`/selections/plan/${this.plan_id}/provisions`);
+    this.provisions = [...res.data];
     this.loaded = true;
   },
   computed: {
@@ -84,56 +67,48 @@ export default {
         }),
       ];
     },
-    coverages() {
-      const ix = this.section_coverages.findIndex((section) => {
-        return section.section_code === this.section_code;
-      });
-      if (ix < 0) {
-        return [];
-      }
-      return [...this.section_coverages[ix].coverages];
-    },
     output() {
-      return {};
+      return this.provisions.map((item) => {
+        const val = this.convertDataType(item.ui_provision_value);
+        const data = {
+          selection_plan_id: this.plan_id,
+          config_provision_id: item.config_provision_id,
+          provision_value: String(val),
+          provision_data_type: typeof val,
+        };
+        if (item.selection_provision_id) {
+          data.selection_provision_id = item.selection_provision_id;
+        }
+        return data;
+      });
     },
   },
   methods: {
-    toggleStageHandler(id) {
-      this.section_code = id;
+    convertDataType(val) {
+      if (["true", "false"].includes(val.toLowerCase())) {
+        return val.toLowerCase() === "true";
+      }
+      if (!isNaN(+val)) {
+        return +val;
+      }
+      return val;
     },
-    coverageHandler(el) {
-      this.selections = [
-        ...this.selections.filter((item) => {
-          item.coverage_code !== el.coverage_code;
-        }),
-        { ...el },
-      ];
-    },
-    routeTo(route_name) {
+    routeTo(route_name, query = {}) {
       this.$router.push({
         name: route_name,
+        params: { plan_id: this.plan_id },
+        query: { ...query },
       });
     },
-    initialize(data) {
-      this.product_variation_id =
-        data.product_variations[0].product_variation_id;
-    },
+
     async save() {
-      const plan = await axios.post(
-        `/selections/plan/${this.plan_id}/benefits`,
+      const res = await axios.post(
+        `/selections/plan/${this.plan_id}/provisions`,
         this.output
       );
-      if (plan.status === 201) {
-        this.routeTo({
-          name: "selections-provisions",
-          params: {
-            plan_id: plan.data.selection_plan_id,
-          },
-        });
-      }
-    },
-    onReset() {
-      console.log("Reset");
+
+      await axios.post(`/selections/plan/${this.plan_id}/rates`);
+      this.routeTo("home");
     },
   },
 };

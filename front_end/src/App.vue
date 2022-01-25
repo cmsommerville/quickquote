@@ -5,7 +5,7 @@
     </header>
     <main class="h-full flex justify-center text-gray-600">
       <div class="sm:w-5/6 2xl:w-2/3 my-6">
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component }" :key="$route.fullPath">
           <transition name="slide-fade" mode="out-in">
             <component :is="Component"></component>
           </transition>

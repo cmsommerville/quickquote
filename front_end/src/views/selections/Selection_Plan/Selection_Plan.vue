@@ -6,12 +6,14 @@
           <app-tile
             text="Accident"
             background="bg-accident-sm"
+            class="bg-cover bg-center"
             :selected="selection === 'AC'"
             @update:selection="productSelectionHandler('AC')"
           >
           </app-tile>
           <app-tile
             text="Critical Illness"
+            class="bg-cover bg-center"
             background="bg-pulse-sm"
             :selected="selection === 'CI'"
             @update:selection="productSelectionHandler('CI')"
@@ -19,6 +21,7 @@
           </app-tile>
           <app-tile
             text="Hospital Indemnity"
+            class="bg-cover bg-center"
             background="bg-stethoscope-sm"
             :selected="selection === 'HI'"
             @update:selection="productSelectionHandler('HI')"
@@ -27,6 +30,7 @@
 
           <app-tile
             text="Short Term Disability"
+            class="bg-cover bg-center"
             background="bg-accident-sm"
             :selected="selection === 'ST'"
             @update:selection="productSelectionHandler('ST')"
