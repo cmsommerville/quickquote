@@ -1,5 +1,32 @@
 <template>
-  <div class="">
+  <div class="relative">
+    <div
+      id="tooltip"
+      v-if="tooltip_data"
+      :style="{ top: tooltip_Y + 'px', left: tooltip_X + 'px' }"
+    >
+      <h3 class="text-sm mb-1 pa-2">State: {{ tooltip_data.id }}</h3>
+      <p
+        v-if="
+          tooltip_data.state_effective_date &&
+          tooltip_data.state_expiration_date
+        "
+        class="text-xs"
+      >
+        {{
+          new Date(tooltip_data.state_effective_date).toLocaleDateString(
+            "en-US"
+          )
+        }}
+        thru
+        {{
+          new Date(tooltip_data.state_expiration_date).toLocaleDateString(
+            "en-US"
+          )
+        }}
+      </p>
+      <p v-else class="text-xs">Not configured yet!</p>
+    </div>
     <svg
       xmlns:cc="http://creativecommons.org/ns#"
       xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -28,6 +55,9 @@
           "
           :d="state.d"
           @click="select(state.id)"
+          @mouseleave="tooltip_data = null"
+          @mouseover="hover(state)"
+          @mousemove="displayTooltip"
         />
         <g id="gDC" v-for="dist in DC" :key="dist.id">
           <path id="pathDC" :fill="dist.fill" :d="dist.d" />
@@ -42,6 +72,9 @@
             :cy="dist.cy"
             :r="dist.r"
             @click="select(dist.id)"
+            @mouseleave="tooltip_data = null"
+            @mouseover="hover(dist)"
+            @mousemove="displayTooltip"
           />
         </g>
       </g>
@@ -57,6 +90,7 @@
 </template>
 
 <script>
+import axios from "@/services/axios.js";
 import { states } from "./states.js";
 
 export default {
@@ -79,45 +113,62 @@ export default {
       type: String,
     },
   },
-  mounted() {
-    this._states = states.map((state) => {
-      const ps =
-        this.product_states.find((ps) => ps.state_code === state.id) ?? {};
+  async mounted() {
+    const ref_states = await axios.get("/config/ref-states");
+    const all_states = [
+      ...ref_states.data.map((item) => {
+        const prod_states =
+          this.product_states.find((ps) => ps.state_code === item.state_code) ??
+          {};
+        const svg_states = states.find((st) => st.id === item.state_code);
+        if (prod_states.state_code) {
+          prod_states.fill = this.fill_active;
+        } else {
+          prod_states.fill = this.fill_default;
+        }
+        return {
+          ...item,
+          ...prod_states,
+          ...svg_states,
+        };
+      }),
+    ];
 
-      if (ps.state_code) {
-        ps.fill = this.fill_active;
-      } else {
-        ps.fill = this.fill_default;
-      }
-      return {
-        ...state,
-        ...ps,
-      };
-    });
+    this.$store.commit("initialize_ref_states", all_states);
+    this.$store.commit("initialize_selected_states");
   },
   data() {
     return {
-      _states: [],
-      selected_states: [],
+      tooltip_data: null,
+      tooltip_X: null,
+      tooltip_Y: null,
     };
   },
   computed: {
+    all_states() {
+      return this.$store.getters.get_ref_states;
+    },
+    selected_states() {
+      return this.$store.getters.get_selected_states;
+    },
     states() {
-      return this._states.filter((state) => state.id !== "DC");
+      return this.all_states.filter((state) => state.id !== "DC");
     },
     DC() {
-      const dc = this._states.filter((state) => state.id === "DC");
+      const dc = this.all_states.filter((state) => state.id === "DC");
       return dc;
     },
   },
   methods: {
+    displayTooltip(ev) {
+      this.tooltip_Y = ev.offsetY;
+      this.tooltip_X = ev.offsetX + 30;
+    },
+    hover(state) {
+      this.tooltip_data = state;
+    },
     select(_id) {
-      if (this.selected_states.includes(_id)) {
-        this.selected_states = this.selected_states.filter((st) => st !== _id);
-      } else {
-        this.selected_states.push(_id);
-      }
-      this.$emit("select:state", this.selected_states);
+      this.$store.commit("toggle_selected_state", _id);
     },
   },
 };
@@ -132,6 +183,21 @@ export default {
   width: 100%;
   height: 100%;
 }
+
+#tooltip {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  background-color: #fff;
+  border: 2px solid var(--violet-400);
+  border-radius: 5px;
+  padding: 5px;
+  overflow: hidden;
+  /* width: 200px;
+  height: 60px; */
+}
+
 path:hover,
 circle:hover {
   stroke: var(--violet-600);

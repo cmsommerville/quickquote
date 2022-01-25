@@ -2,7 +2,7 @@
   <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
     <div class="mb-12">
       <h2 class="font-bold text-3xl">{{ title }}</h2>
-      <h3 class="font-normal text-md">{{ subtitle }}</h3>
+      <h3 v-if="subtitle" class="font-normal text-md">{{ subtitle }}</h3>
     </div>
     <div v-if="stages.length === 1" class="w-1/2 grid grid-cols-1">
       <span
