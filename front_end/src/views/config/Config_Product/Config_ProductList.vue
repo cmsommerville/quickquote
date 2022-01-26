@@ -44,15 +44,9 @@
 
 <script>
 import axios from "@/services/axios.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
-import AppButton from "@/components/AppButton.vue";
-import AppTile from "@/components/AppTile.vue";
-
-import { PlusCircleIcon } from "@heroicons/vue/outline";
 
 export default {
   name: "Config_ProductList",
-  components: { AppFormCard, AppButton, AppTile, PlusCircleIcon },
   async mounted() {
     this.loaded = false;
     const prods = await axios.get("/qry-config/all-products");

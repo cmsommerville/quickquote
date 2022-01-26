@@ -38,22 +38,9 @@
 
 <script>
 import axios from "@/services/axios.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
-import AppButton from "@/components/AppButton.vue";
-import AppInput from "@/components/AppInput.vue";
-import AppTile from "@/components/AppTile.vue";
-
-import { PlusCircleIcon } from "@heroicons/vue/outline";
 
 export default {
   name: "Config_ExistingProduct",
-  components: {
-    AppFormCard,
-    AppButton,
-    AppInput,
-    AppTile,
-    PlusCircleIcon,
-  },
   props: {
     product_id: {
       required: true,

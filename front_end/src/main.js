@@ -4,11 +4,8 @@ import "./tailwind.css";
 import App from "./App.vue";
 import { routes } from "./routes.js";
 import { createRouter, createWebHistory } from "vue-router";
-
-import AppInput from "./components/AppInput.vue";
-import AppSelect from "./components/AppSelect.vue";
-import AppCheckbox from "./components/AppCheckbox.vue";
-import AppButton from "./components/AppButton.vue";
+import UIComponents from "@/plugins/ui-components.js";
+import icons from "@/plugins/icons.js";
 
 const app = createApp(App);
 
@@ -18,11 +15,9 @@ const router = createRouter({
   routes,
 });
 
-// global components
-app.component("app-input", AppInput);
-app.component("app-select", AppSelect);
-app.component("app-checkbox", AppCheckbox);
-app.component("app-button", AppButton);
+// global UI components
+app.use(UIComponents);
+app.use(icons);
 
 app.use(router);
 app.use(store);

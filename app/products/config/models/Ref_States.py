@@ -1,5 +1,6 @@
 from app.extensions import db
 from app.shared import BaseModel
+from sqlalchemy import VARCHAR
 
 from ...__constants__ import TBL_NAMES
 
@@ -15,3 +16,4 @@ class Model_RefStates(BaseModel):
     state_id = db.Column(db.Integer, primary_key=True)
     state_code = db.Column(db.String(2), nullable=False)
     state_name = db.Column(db.String(100), nullable=False)
+    # svg_path = db.Column(VARCHAR(None))
