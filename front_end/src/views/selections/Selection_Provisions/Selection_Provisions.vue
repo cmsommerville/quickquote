@@ -31,11 +31,9 @@
 
 <script>
 import axios from "@/services/axios.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 
 export default {
   name: "SelectionBenefits",
-  components: { AppFormCard },
   props: {
     plan_id: {
       required: true,

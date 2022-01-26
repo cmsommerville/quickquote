@@ -97,7 +97,7 @@ export default {
     return {
       loaded: false,
       stages: [
-        { label: "Products", id: "products", to: "config-product-list" },
+        { label: "Product", id: "product", to: "config-product" },
         {
           label: "States",
           id: "states",

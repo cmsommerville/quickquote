@@ -35,14 +35,13 @@
 </template>
 
 <script>
-import { PlusIcon, SearchIcon } from "@heroicons/vue/outline";
 import TheLogo from "./TheLogo.vue";
 import TheSidebar from "./TheSidebar/TheSidebar.vue";
 import HamburgerButton from "./TheSidebar/HamburgerButton.vue";
 
 export default {
   name: "TheHeader",
-  components: { PlusIcon, SearchIcon, TheLogo, TheSidebar, HamburgerButton },
+  components: { TheLogo, TheSidebar, HamburgerButton },
   data() {
     return {
       inputValue: null,

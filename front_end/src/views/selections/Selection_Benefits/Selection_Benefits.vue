@@ -38,12 +38,11 @@
 <script>
 import axios from "@/services/axios.js";
 import Model_SelectionBenefit from "@/models/Model_SelectionBenefit.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 import SelectionBenefitsCovgPanel from "@/views/selections/Selection_Benefits/Selection_Benefits_CovgPanel.vue";
 
 export default {
   name: "SelectionBenefits",
-  components: { AppFormCard, SelectionBenefitsCovgPanel },
+  components: { SelectionBenefitsCovgPanel },
   props: {
     plan_id: {
       required: true,

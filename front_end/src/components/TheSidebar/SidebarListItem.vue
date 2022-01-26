@@ -15,11 +15,8 @@
 </template>
 
 <script>
-import { PlusIcon, PuzzleIcon, CogIcon } from "@heroicons/vue/outline";
-
 export default {
   name: "SidebarListItem",
-  components: { PlusIcon, PuzzleIcon, CogIcon },
   props: {
     route: {
       type: Object,

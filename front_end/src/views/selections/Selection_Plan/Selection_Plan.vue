@@ -55,12 +55,9 @@
 
 <script>
 import axios from "@/services/axios.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
-import AppTile from "@/components/AppTile.vue";
 
 export default {
   name: "SelectionPlan",
-  components: { AppFormCard, AppTile },
   data() {
     return {
       loaded: false,
@@ -107,10 +104,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style scoped></style>

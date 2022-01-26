@@ -51,11 +51,8 @@
 </template>
 
 <script>
-import { ArrowCircleDownIcon, ArrowCircleUpIcon } from "@heroicons/vue/outline";
-
 export default {
   name: "Selection_Benefits_CovgPanel",
-  components: { ArrowCircleDownIcon, ArrowCircleUpIcon },
   props: {
     coverage: {
       type: Object,

@@ -77,7 +77,7 @@ export default {
         {
           text: "Product Variations",
           icon: "plus-circle-icon",
-          id: "product-variations",
+          id: "product_variations",
           prereq_ids: ["states"],
           route_name: "config-product-variations",
         },
@@ -85,7 +85,7 @@ export default {
           text: "Benefits",
           icon: "plus-circle-icon",
           id: "benefits",
-          prereq_ids: ["product-variations"],
+          prereq_ids: ["product_variations"],
           route_name: "config-benefits",
         },
         {
@@ -108,7 +108,7 @@ export default {
       );
       if (!this.has_list(has_items["states"]))
         return "First things first. Let's setup some states!";
-      if (!this.has_list(has_items["product-variations"]))
+      if (!this.has_list(has_items["product_variations"]))
         return "Now let's add some product variations!";
       if (!this.has_list(has_items["benefits"]))
         return "Great job so far! We need to add benefits";

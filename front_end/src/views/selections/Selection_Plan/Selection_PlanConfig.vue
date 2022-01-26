@@ -55,11 +55,9 @@
 
 <script>
 import axios from "@/services/axios.js";
-import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 
 export default {
   name: "SelectionPlanConfig",
-  components: { AppFormCard },
   props: {
     product_id: {
       required: true,
@@ -136,10 +134,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style scoped></style>
