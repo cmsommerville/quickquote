@@ -10,15 +10,16 @@
       'flex-col': true,
       'justify-center': true,
       'items-center': true,
-      'hover:rotate-2': true,
-      'hover:cursor-pointer': true,
-      'hover:scale-105': true,
+      pulse: !disabled,
+      'hover:rotate-2': !disabled,
+      'hover:cursor-pointer': !disabled,
+      'hover:scale-105': !disabled,
       'ease-out': true,
       'duration-300': true,
-      'ring-4': selected,
-      'ring-theme-primary': selected,
+      'ring-4': !disabled && selected,
+      'ring-theme-primary': !disabled && selected,
     }"
-    @click="$emit('update:selection', !selected)"
+    @click="clickHandler"
   >
     <div
       :class="`w-full 
@@ -27,7 +28,7 @@
         flex
         justify-center
         items-center
-        ${background}
+        ${disabled ? 'bg-gray-500' : background}
       `"
       v-bind="$attrs"
     >
@@ -49,6 +50,9 @@ export default {
     text: {
       required: true,
     },
+    radio_group: {
+      default: "radio_group",
+    },
     background: {
       default: "",
     },
@@ -56,8 +60,35 @@ export default {
       required: true,
       type: Boolean,
     },
+    disabled: {
+      default: false,
+      type: Boolean,
+    },
+  },
+  methods: {
+    clickHandler() {
+      if (!this.disabled) this.$emit("update:selection", !this.selected);
+    },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.pulse:focus-within {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.97);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+
+  100% {
+    transform: scale(0.97);
+  }
+}
+</style>

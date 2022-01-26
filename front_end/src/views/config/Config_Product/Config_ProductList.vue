@@ -31,8 +31,9 @@
       <template #actions>
         <div class="flex justify-center">
           <app-button
-            class="mx-3 border-theme-primary bg-theme-primary text-white"
+            class="mx-3"
             @click="configure"
+            :disabled="product_id == null"
             >Next</app-button
           >
         </div>

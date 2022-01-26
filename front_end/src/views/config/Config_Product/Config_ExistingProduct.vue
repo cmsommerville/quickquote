@@ -8,52 +8,28 @@
       @toggle:stage="toggleHandler"
     >
       <template #content>
-        <div>
-          <div class="grid grid-cols-5 gap-8 relative h-96">
-            <div class="col-span-3">
-              <united-states-map
-                class="h-full"
-                :product_states="product_states"
-              />
-              <div class="flex justify-end">
-                <app-button class="h-10 text-xs" @click="toggleAllStates">{{
-                  this.selected_states.length ? "Unselect All" : "Select All"
-                }}</app-button>
-              </div>
-            </div>
+        <div class="grid grid-cols-4">
+          <app-tile
+            v-for="tile in tiles"
+            :key="tile.id"
+            :text="tile.text"
+            class="bg-cover bg-center"
+            background="bg-grad-violet-indigo"
+            :disabled="!has_list(tile.prereq_ids)"
+            :selected="checkedHandler(tile.id)"
+            @update:selection="selectionHandler(tile)"
+            @dblclick="routeHandler"
+          >
+            <component :is="tile.icon" class="h-1/2 w-1/2 text-white" />
+          </app-tile>
+        </div>
+      </template>
 
-            <div
-              class="flex flex-col justify-evenly col-span-2 col-start-4 pr-8"
-            >
-              <app-input type="date" v-model="state_effective_date"
-                >Effective Date</app-input
-              >
-
-              <app-input type="date" v-model="state_expiration_date"
-                >Expiration Date</app-input
-              >
-
-              <h2 class="border-t-2 pt-6 mt-8 text-right">
-                Your selection will make
-                <span class="font-semibold text-theme-primary">{{
-                  selected_states.length === 1
-                    ? "1 state"
-                    : selected_states.length + " states"
-                }}</span>
-                effective
-                {{ new Date(state_effective_date).toLocaleDateString() }}
-                through
-                {{ new Date(state_expiration_date).toLocaleDateString() }}.
-              </h2>
-              <div class="flex justify-center mt-4">
-                <app-button
-                  class="mx-3 border-theme-primary bg-theme-primary text-white"
-                  @click="save"
-                  >Next</app-button
-                >
-              </div>
-            </div>
-          </div>
+      <template #actions>
+        <div class="flex justify-center">
+          <app-button class="mx-3" :disabled="!selection" @click="routeHandler"
+            >Next</app-button
+          >
         </div>
       </template>
     </app-form-card>
@@ -66,7 +42,6 @@ import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 import AppButton from "@/components/AppButton.vue";
 import AppInput from "@/components/AppInput.vue";
 import AppTile from "@/components/AppTile.vue";
-import UnitedStatesMap from "@/components/USAMap/USAMap.vue";
 
 import { PlusCircleIcon } from "@heroicons/vue/outline";
 
@@ -78,7 +53,6 @@ export default {
     AppInput,
     AppTile,
     PlusCircleIcon,
-    UnitedStatesMap,
   },
   props: {
     product_id: {
@@ -90,73 +64,96 @@ export default {
     this.loaded = false;
     const prod = await axios.get(`/config/product/${this.product_id}`);
     this.product = { ...prod.data };
-    this.product_states = [
-      ...prod.data.states.map((state) => {
-        return {
-          product_state_id: state.product_state_id,
-          state_id: state.state_id,
-          state_code: state.state.state_code,
-          state_name: state.state.state_name,
-          state_effective_date: state.state_effective_date,
-          state_expiration_date: state.state_expiration_date,
-        };
-      }),
-    ];
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
-      title: "Let's Activate Some States",
-      subtitle: "",
+      title: "Setup This Product",
       stages: [
-        { label: "Products", id: "products", to: "config-product-list" },
+        { label: "All Products", id: "products", to: "config-product-list" },
         {
-          label: "States",
-          id: "states",
+          label: "Product",
+          id: "product",
           active: true,
           to: "config-product",
         },
       ],
+      tiles: [
+        {
+          text: "States",
+          icon: "plus-circle-icon",
+          id: "states",
+          prereq_ids: [],
+          route_name: "config-product-states",
+        },
+        {
+          text: "Product Variations",
+          icon: "plus-circle-icon",
+          id: "product-variations",
+          prereq_ids: ["states"],
+          route_name: "config-product-variations",
+        },
+        {
+          text: "Benefits",
+          icon: "plus-circle-icon",
+          id: "benefits",
+          prereq_ids: ["product-variations"],
+          route_name: "config-benefits",
+        },
+        {
+          text: "Provisions",
+          icon: "plus-circle-icon",
+          id: "provisions",
+          prereq_ids: ["benefits"],
+          route_name: "config-provisions",
+        },
+      ],
+      selection: null,
       product: {},
-      product_states: [],
-      state_effective_date: "1900-01-01",
-      state_expiration_date: "9999-12-31",
     };
   },
   computed: {
-    ref_states() {
-      return this.$store.getters.get_ref_states;
-    },
-    selected_states() {
-      return this.$store.getters.get_selected_states;
-    },
-    output() {
-      if (!this.selected_states) return [];
-      return this.selected_states.map((state) => {
-        const state_obj = this.ref_states.find((s) => s.state_code === state);
-        const prod_state = this.product_states.find(
-          (s) => s.state_code === state
-        );
-
-        const output_state = {
-          product_id: this.product_id,
-          state_id: state_obj.state_id,
-          state_effective_date: this.state_effective_date,
-          state_expiration_date: this.state_expiration_date,
-        };
-
-        if (prod_state && prod_state.product_state_id) {
-          output_state.product_state_id = prod_state.product_state_id;
-        }
-
-        return output_state;
-      });
+    subtitle() {
+      const has_items = this.tiles.reduce(
+        (a, v) => ({ ...a, [v.id]: v.prereq_ids }),
+        {}
+      );
+      if (!this.has_list(has_items["states"]))
+        return "First things first. Let's setup some states!";
+      if (!this.has_list(has_items["product-variations"]))
+        return "Now let's add some product variations!";
+      if (!this.has_list(has_items["benefits"]))
+        return "Great job so far! We need to add benefits";
+      if (!this.has_list(has_items["provisions"]))
+        return "Let's tailor things even more with some provisions!";
+      return "You've done most of the setup. What would you like to edit?";
     },
   },
   methods: {
-    toggleAllStates() {
-      this.$store.commit("toggle_all_states");
+    has_list(prereq_ids) {
+      if (prereq_ids.length === 0) return true;
+
+      return prereq_ids.reduce((prev, _id) => {
+        return prev && this.product[_id] && this.product[_id].length > 0;
+      }, true);
+    },
+    checkedHandler(key) {
+      if (this.selection) {
+        return this.selection.id === key;
+      }
+      return false;
+    },
+    selectionHandler(val) {
+      this.selection = val;
+    },
+    routeHandler() {
+      if (this.selection) {
+        const disabled = !this.has_list(this.selection.prereq_ids);
+        if (!disabled) {
+          this.routeTo(this.selection.route_name);
+        }
+      }
     },
     routeTo(route_name, query = {}) {
       this.$router.push({
@@ -168,10 +165,6 @@ export default {
     toggleHandler(id) {
       const stage = this.stages.find((stg) => stg.id === id);
       this.routeTo(stage.to);
-    },
-    async save() {
-      await axios.post("/config/product/states", this.output);
-      this.$store.commit("initialize_selected_states");
     },
   },
 };

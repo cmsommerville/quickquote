@@ -17,7 +17,7 @@ export default [
   },
   {
     path: "/config/product/:product_id/states",
-    name: "config-product",
+    name: "config-product-states",
     component: Config_ProductStates,
     props: true,
   },

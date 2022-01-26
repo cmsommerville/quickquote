@@ -9,7 +9,7 @@
     >
       <template #content>
         <div>
-          <div class="grid grid-cols-5 gap-8 relative h-96">
+          <div class="grid grid-cols-6 xl:grid-cols-5 gap-8 relative h-96">
             <div class="col-span-3">
               <united-states-map
                 class="h-full"
@@ -23,7 +23,7 @@
             </div>
 
             <div
-              class="flex flex-col justify-evenly col-span-2 col-start-4 pr-8"
+              class="flex flex-col justify-evenly col-span-3 col-start-4 xl:col-span-2"
             >
               <app-input type="date" v-model="state_effective_date"
                 >Effective Date</app-input
@@ -33,7 +33,7 @@
                 >Expiration Date</app-input
               >
 
-              <h2 class="border-t-2 pt-6 mt-8 text-right">
+              <h2 class="border-t-2 pt-6 mr-4 mt-8 text-right">
                 Your selection will make
                 <span class="font-semibold text-theme-primary">{{
                   selected_states.length === 1
@@ -107,8 +107,6 @@ export default {
   data() {
     return {
       loaded: false,
-      title: "Let's Activate Some States",
-      subtitle: "",
       stages: [
         { label: "Products", id: "products", to: "config-product-list" },
         {
@@ -125,6 +123,18 @@ export default {
     };
   },
   computed: {
+    title() {
+      if (this.product_states.length > 10) {
+        return `${this.product_states.length} States Activated So Far!`;
+      }
+      return "Let's Activate Some States!";
+    },
+    subtitle() {
+      if (this.product_states.length > 10) {
+        return "Great job!";
+      }
+      return `${this.product_states.length} states activated so far...`;
+    },
     ref_states() {
       return this.$store.getters.get_ref_states;
     },
