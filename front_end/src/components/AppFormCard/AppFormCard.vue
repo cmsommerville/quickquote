@@ -32,25 +32,9 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      stageBaseClasses: {
-        "text-center": true,
-        "bg-gray-200": true,
-        "p-2": true,
-        "text-uppercase": true,
-        uppercase: true,
-        "tracking-wide": true,
-        "text-sm": true,
-      },
-    };
-  },
   methods: {
     toggleHandler(stg) {
       this.$emit("toggle:stage", stg);
-    },
-    handleInput(data) {
-      this.$emit("input:data", data);
     },
   },
 };
