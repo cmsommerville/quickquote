@@ -60,7 +60,7 @@ export default {
       subtitle: "Or edit an existing one...",
       stages: [
         { label: "Products", id: "products", active: true },
-        { label: "Configure", id: "config" },
+        { label: "Configure", id: "config", disabled: true },
       ],
       products: [],
       product_id: null,

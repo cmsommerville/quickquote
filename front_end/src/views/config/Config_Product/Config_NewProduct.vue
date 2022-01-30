@@ -4,7 +4,6 @@
       :stages="stages"
       :title="title"
       :subtitle="subtitle"
-      :tabbed="true"
       @toggle:stage="toggleHandler"
     >
       <template #content>

@@ -4,7 +4,6 @@
       :stages="stages"
       :title="title"
       :subtitle="subtitle"
-      :tabbed="true"
       @toggle:stage="toggleHandler"
     >
       <template #content>
@@ -111,7 +110,7 @@ export default {
       if (!this.has_list(has_items["product_variations"]))
         return "Now let's add some product variations!";
       if (!this.has_list(has_items["benefits"]))
-        return "Great job so far! We need to add benefits";
+        return "Great job so far! Let's add some benefits next!";
       if (!this.has_list(has_items["provisions"]))
         return "Let's tailor things even more with some provisions!";
       return "You've done most of the setup. What would you like to edit?";

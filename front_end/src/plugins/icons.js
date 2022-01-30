@@ -7,6 +7,10 @@ import {
   PuzzleIcon,
   CogIcon,
   SearchIcon,
+  SunIcon,
+  StarIcon,
+  SparklesIcon,
+  MoonIcon,
 } from "@heroicons/vue/outline";
 
 export default {
@@ -19,5 +23,9 @@ export default {
     app.component("puzzle-icon", PuzzleIcon);
     app.component("cog-icon", CogIcon);
     app.component("search-icon", SearchIcon);
+    app.component("sun-icon", SunIcon);
+    app.component("star-icon", StarIcon);
+    app.component("sparkles-icon", SparklesIcon);
+    app.component("moon-icon", MoonIcon);
   },
 };

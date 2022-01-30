@@ -1,14 +1,5 @@
 <template>
-  <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
-    <div class="mb-12 flex justify-between">
-      <div>
-        <h2 class="font-bold text-3xl">{{ title }}</h2>
-        <h3 v-if="subtitle" class="font-normal text-md">{{ subtitle }}</h3>
-      </div>
-      <slot name="addl-info"></slot>
-    </div>
-    <app-form-tabs :stages="stages" @toggle:stage="toggleHandler" />
-    <!-- 
+  <div>
     <div v-if="stages.length === 1" class="w-1/2 grid grid-cols-1">
       <span
         v-for="(stage, i) in stages"
@@ -18,7 +9,7 @@
           'border-b-4': true,
           'border-b-theme-primary': true,
           'text-theme-primary': true,
-          'cursor-pointer': tabbed,
+          'cursor-pointer': !stage.disabled,
         }"
         @click="toggleHandler(stage)"
         >{{ stage.label }}
@@ -35,42 +26,22 @@
           'border-b-4': stage.active,
           'border-b-theme-primary': stage.active,
           'text-theme-primary': stage.active,
-          'cursor-pointer': tabbed,
+          'cursor-pointer': !stage.disabled,
         }"
         @click="toggleHandler(stage)"
         >{{ stage.label }}</span
       >
-    </div> -->
-    <div class="my-12">
-      <slot name="content" @input:data="handleInput"></slot>
-    </div>
-    <div class="my-8">
-      <slot name="actions"></slot>
     </div>
   </div>
 </template>
 
 <script>
-import AppFormTabs from "./AppFormTabs.vue";
-
 export default {
-  name: "AppFormCard",
-  components: { AppFormTabs },
+  name: "AppFormTabs",
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    subtitle: {
-      type: String,
-      required: true,
-    },
     stages: {
       type: Array,
       required: true,
-    },
-    tabbed: {
-      default: false,
     },
   },
   data() {
@@ -88,10 +59,9 @@ export default {
   },
   methods: {
     toggleHandler(stg) {
-      this.$emit("toggle:stage", stg);
-    },
-    handleInput(data) {
-      this.$emit("input:data", data);
+      if (!stg.disabled) {
+        this.$emit("toggle:stage", stg.id);
+      }
     },
   },
 };
