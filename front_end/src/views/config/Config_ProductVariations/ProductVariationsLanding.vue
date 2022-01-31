@@ -3,21 +3,21 @@
     <div>
       <div class="my-8">
         <app-input
-          v-model="selection.product_variation_label"
+          v-model="_selection.product_variation_label"
           :disabled="disableInputs"
           >Product Variation Name</app-input
         >
       </div>
       <div class="my-8">
         <app-input
-          v-model="selection.product_variation_code"
+          v-model="_selection.product_variation_code"
           :disabled="disableInputs"
           >Product Variation Code</app-input
         >
       </div>
       <div class="my-8">
         <app-input
-          v-model="selection.product_variation_effective_date"
+          v-model="_selection.product_variation_effective_date"
           :disabled="disableInputs"
           type="date"
           >Effective Date</app-input
@@ -25,7 +25,7 @@
       </div>
       <div class="my-8">
         <app-input
-          v-model="selection.product_variation_expiration_date"
+          v-model="_selection.product_variation_expiration_date"
           :disabled="disableInputs"
           type="date"
           >Expiration Date</app-input
@@ -37,7 +37,7 @@
         class="shadow-xl rounded-lg w-auto h-20 m-8 overflow-hidden flex hover:cursor-pointer"
         v-for="(variation, ix) in product_variations"
         :key="variation.product_variation_id"
-        @click="selection = variation"
+        @click="_selection = { ...variation }"
       >
         <div
           class="w-1/5 h-full bg-gradient-to-br from-violet-500 to-indigo-500 flex justify-center items-center text-white"
@@ -69,15 +69,18 @@ export default {
       required: true,
       type: Array,
     },
-    setter: {
-      default: () => true,
-      type: Function,
+    selection: {
+      required: true,
+      type: Object,
     },
+  },
+  mounted() {
+    this._selection = { ...this._selection, ...this.selection };
   },
   data() {
     return {
       loaded: false,
-      selection: {
+      _selection: {
         product_variation_code: null,
         product_variation_label: null,
         product_variation_effective_date: "1900-01-01",
@@ -86,13 +89,16 @@ export default {
     };
   },
   watch: {
-    selection(newVal) {
-      this.setter(newVal);
+    _selection: {
+      handler() {
+        this.$emit("input:data", this._selection);
+      },
+      deep: true,
     },
   },
   computed: {
     disableInputs() {
-      return !!(this.selection && this.selection.product_variation_id);
+      return !!(this._selection && this._selection.product_variation_id);
     },
   },
   methods: {

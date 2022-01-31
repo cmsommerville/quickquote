@@ -6,6 +6,7 @@
       type="checkbox"
       v-bind="$attrs"
       :value="modelValue"
+      :checked="modelValue"
       @input="$emit('update:modelValue', $event.target.checked)"
     />
   </label>

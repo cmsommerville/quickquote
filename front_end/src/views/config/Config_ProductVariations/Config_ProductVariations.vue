@@ -1,58 +1,66 @@
 <template>
-  <div>
-    <app-form-card
-      :stages="stages"
-      :title="title"
-      :subtitle="subtitle"
-      :tabbed="true"
+  <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
+    <app-form-header :title="title" :subtitle="subtitle" />
+    <product-variation-tabs
+      :active_stage="active_stage"
       @toggle:stage="toggleHandler"
-      @input:variation="inputHandler"
-    >
-      <template #content>
-        <product-variations-landing
+    />
+    <div class="my-12">
+      <product-variations-landing
+        v-if="active_stage === 'product_variations'"
+        :product_variations="product_variations"
+        :selection="selection"
+        @input:data="inputHandler"
+      />
+      <product-variation-rating
+        v-if="active_stage === 'product_variation_rating'"
+        :selection="selection"
+        @input:data="inputHandler"
+      />
+    </div>
+    <div class="my-8">
+      <div class="flex justify-center">
+        <app-button
+          class="mx-3"
           v-if="active_stage === 'product_variations'"
-          :product_variations="product_variations"
-          :setter="inputHandler"
-        />
-        <product-variation-config
-          v-if="active_stage === 'product_variation_config'"
-          :selection="selection"
-        />
-      </template>
+          @click="active_stage = 'product_variation_rating'"
+          >Configure</app-button
+        >
 
-      <template #actions>
-        <div class="flex justify-center">
-          <app-button
-            class="mx-3"
-            :disabled="!selection"
-            @click="
-              routeTo('config-product-variation-config', {
-                product_variation_id: selection.product_variation_id,
-              })
-            "
-            >Next</app-button
-          >
-          <app-button
-            v-if="selection && selection.product_variation_id"
-            class="mx-3"
-            :transparent="true"
-            >Edit</app-button
-          >
-        </div>
-      </template>
-    </app-form-card>
+        <app-button
+          class="mx-3"
+          v-if="active_stage === 'product_variation_rating'"
+          :disabled="!validate"
+          @click="save"
+          >Save</app-button
+        >
+        <app-button
+          v-if="selection && selection.product_variation_id"
+          class="mx-3"
+          :transparent="true"
+          >Edit</app-button
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "@/services/axios.js";
+import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
+import ProductVariationTabs from "./ProductVariationTabs.vue";
 import ProductVariationsLanding from "./ProductVariationsLanding.vue";
-import ProductVariationConfig from "./ProductVariationConfig.vue";
-import Model_ConfigProductVariation from "@/models/Model_ConfigProductVariation.js";
+import ProductVariationRating from "./ProductVariationRating.vue";
+import { Model_ConfigProductVariation } from "@/models/Model_ConfigProductVariation.js";
 
 export default {
   name: "Config_ProductVariations",
-  components: { ProductVariationsLanding, ProductVariationConfig },
+  components: {
+    ProductVariationsLanding,
+    ProductVariationRating,
+    ProductVariationTabs,
+    AppFormHeader,
+  },
   props: {
     product_id: {
       required: true,
@@ -65,6 +73,7 @@ export default {
       `/qry-config/all-product-variations?product_id=${this.product_id}`
     );
     this.product_variations = [...res.data];
+    this.selection = new Model_ConfigProductVariation(this.product_id);
     this.loaded = true;
   },
   data() {
@@ -73,51 +82,48 @@ export default {
       title: "Add Some Variations",
       subtitle: "",
       active_stage: "product_variations",
-      _stages: [
-        { label: "Product", id: "product", to: "config-product" },
-        {
-          label: "Variations",
-          id: "product_variations",
-          tabbed: true,
-        },
-        {
-          label: "Config",
-          id: "product_variation_config",
-          tabbed: true,
-        },
-        {
-          label: "Age Bands",
-          id: "config-age-bands",
-          to: "config-age-bands",
-        },
-      ],
       product_variations: [],
       selection: {},
     };
   },
-  watch: {
-    selection(newVal) {
-      this.$store.commit("");
-    },
-  },
   computed: {
-    stages() {
-      return this._stages.map((stg) => {
-        return { ...stg, active: this.active_stage === stg.id };
-      });
+    output() {
+      return new Model_ConfigProductVariation(
+        this.product_id,
+        this.selection.product_variation_code,
+        this.selection.product_variation_label,
+        this.selection.product_variation_effective_date,
+        this.selection.product_variation_expiration_date,
+        this.selection.is_gender_rated ?? null,
+        this.selection.is_age_rated ?? null,
+        this.selection.is_tobacco_rated ?? null,
+        this.selection.is_family_code_rated ?? null,
+        this.selection.family_code_rating_algorithm_code ?? null,
+        this.selection.vary_by_gender ?? null,
+        this.selection.vary_by_tobacco ?? null
+      );
+    },
+    validate() {
+      const variation = new Model_ConfigProductVariation(
+        this.product_id,
+        this.selection.product_variation_code,
+        this.selection.product_variation_label,
+        this.selection.product_variation_effective_date,
+        this.selection.product_variation_expiration_date,
+        this.selection.is_gender_rated ?? null,
+        this.selection.is_age_rated ?? null,
+        this.selection.is_tobacco_rated ?? null,
+        this.selection.is_family_code_rated ?? null,
+        this.selection.family_code_rating_algorithm_code ?? null,
+        this.selection.vary_by_gender ?? null,
+        this.selection.vary_by_tobacco ?? null
+      );
+      return variation.validate();
     },
   },
   methods: {
     inputHandler(data) {
-      console.log(data);
       this.selection = { ...this.selection, ...data };
-    },
-    formatDateText(input_dt) {
-      const dt = new Date(input_dt);
-      const dtDateOnly = new Date(
-        dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000
-      );
-      return format(dtDateOnly, "M/d/yyyy");
     },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
@@ -126,13 +132,15 @@ export default {
         query: { ...query },
       });
     },
-    toggleHandler(id) {
-      const stage = this.stages.find((stg) => stg.id === id);
-      if (!!stage.tabbed) {
+    toggleHandler(stage) {
+      if (!!stage.tab) {
         this.active_stage = stage.id;
       } else {
         this.routeTo(stage.to);
       }
+    },
+    async save() {
+      await axios.post("/config/product-variations", this.output);
     },
   },
 };

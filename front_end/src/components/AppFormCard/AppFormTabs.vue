@@ -26,6 +26,8 @@
           'border-b-4': stage.active,
           'border-b-theme-primary': stage.active,
           'text-theme-primary': stage.active,
+          'hover:text-theme-primary': !stage.disabled,
+          'hover:font-medium': !stage.disabled,
           'cursor-pointer': !stage.disabled,
         }"
         @click="toggleHandler(stage)"
@@ -60,7 +62,7 @@ export default {
   methods: {
     toggleHandler(stg) {
       if (!stg.disabled) {
-        this.$emit("toggle:stage", stg.id);
+        this.$emit("toggle:stage", stg);
       }
     },
   },
