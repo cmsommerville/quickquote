@@ -32,7 +32,7 @@
         >
       </div>
     </div>
-    <div class="max-h-96 overflow-scroll">
+    <div>
       <div
         class="shadow-xl rounded-lg w-auto h-20 m-8 overflow-hidden flex hover:cursor-pointer"
         v-for="(variation, ix) in product_variations"
@@ -63,15 +63,15 @@
 import { format } from "date-fns";
 
 export default {
-  name: "ProductVariationsLanding",
+  name: "AgeBandsLanding",
   props: {
-    product_variations: {
+    product_id: {
       required: true,
-      type: Array,
+      type: [Number, String],
     },
-    selection: {
+    product_variation_id: {
       required: true,
-      type: Object,
+      type: [Number, String],
     },
   },
   mounted() {

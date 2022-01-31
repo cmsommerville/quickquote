@@ -28,11 +28,6 @@ export default {
           tab: true,
         },
         {
-          label: "Distributions",
-          id: "product_variation_distributions",
-          tab: true,
-        },
-        {
           label: "Age Bands",
           id: "age_bands",
           tab: true,

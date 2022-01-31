@@ -102,6 +102,15 @@ export default {
         this.age_dist = [...age.data];
         this.gender_dist = [...gender.data];
         this.smoker_dist = [...smoker.data];
+        this._selection.age_distribution_set_id =
+          this.selection.age_distribution_set_id ??
+          age.data[0].age_distribution_set_id;
+        this._selection.unisex_distribution_set_id =
+          this.selection.unisex_distribution_set_id ??
+          gender.data[0].attr_distribution_set_id;
+        this._selection.unismoker_distribution_set_id =
+          this.selection.unismoker_distribution_set_id ??
+          smoker.data[0].attr_distribution_set_id;
         this.loaded = true;
       }
     );

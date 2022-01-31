@@ -10,6 +10,11 @@ export class Model_ConfigProductVariation {
     is_tobacco_rated,
     is_family_code_rated,
     family_code_rating_algorithm_code,
+    min_issue_age,
+    max_issue_age,
+    unismoker_distribution_set_id,
+    unisex_distribution_set_id,
+    age_distribution_set_id,
     vary_by_gender,
     vary_by_tobacco
   ) {
@@ -27,6 +32,12 @@ export class Model_ConfigProductVariation {
     this.family_code_rating_algorithm_code = is_family_code_rated
       ? family_code_rating_algorithm_code
       : null;
+
+    this.min_issue_age = min_issue_age ?? null;
+    this.max_issue_age = max_issue_age ?? null;
+    this.unismoker_distribution_set_id = unismoker_distribution_set_id ?? null;
+    this.unisex_distribution_set_id = unisex_distribution_set_id ?? null;
+    this.age_distribution_set_id = age_distribution_set_id ?? null;
     this.vary_by_gender = vary_by_gender ?? false;
     this.vary_by_tobacco = vary_by_tobacco ?? false;
   }
@@ -37,7 +48,11 @@ export class Model_ConfigProductVariation {
       !!this.product_variation_code &&
       !!this.product_variation_label &&
       !!this.product_variation_effective_date &&
-      !!this.product_variation_expiration_date
+      !!this.min_issue_age &&
+      !!this.max_issue_age &&
+      !!this.unismoker_distribution_set_id &&
+      !!this.unisex_distribution_set_id &&
+      !!this.age_distribution_set_id
     );
   }
 }

@@ -99,6 +99,11 @@ export default {
         this.selection.is_tobacco_rated ?? null,
         this.selection.is_family_code_rated ?? null,
         this.selection.family_code_rating_algorithm_code ?? null,
+        this.selection.min_issue_age ?? null,
+        this.selection.max_issue_age ?? null,
+        this.selection.unismoker_distribution_set_id ?? null,
+        this.selection.unisex_distribution_set_id ?? null,
+        this.selection.age_distribution_set_id ?? null,
         this.selection.vary_by_gender ?? null,
         this.selection.vary_by_tobacco ?? null
       );
@@ -115,6 +120,11 @@ export default {
         this.selection.is_tobacco_rated ?? null,
         this.selection.is_family_code_rated ?? null,
         this.selection.family_code_rating_algorithm_code ?? null,
+        this.selection.min_issue_age ?? null,
+        this.selection.max_issue_age ?? null,
+        this.selection.unismoker_distribution_set_id ?? null,
+        this.selection.unisex_distribution_set_id ?? null,
+        this.selection.age_distribution_set_id ?? null,
         this.selection.vary_by_gender ?? null,
         this.selection.vary_by_tobacco ?? null
       );

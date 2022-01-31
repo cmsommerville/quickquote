@@ -4,11 +4,6 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    minWidth: {
-      "1/2": "50%",
-      "2/3": "67%",
-      "5/6": "83%",
-    },
     extend: {
       fontFamily: {
         sans: ['"Inter var"', ...defaultTheme.fontFamily.sans],
@@ -29,6 +24,14 @@ module.exports = {
           "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)), url('/src/assets/img/pulse-010.jpg')",
         "x-ray-sm":
           "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)),url('/src/assets/img/x-ray-010.jpg')",
+      },
+      minWidth: {
+        "1/2": "50%",
+        "2/3": "67%",
+        "5/6": "83%",
+      },
+      maxHeight: {
+        "1/2": "50%",
       },
     },
   },
