@@ -13,7 +13,7 @@
             <div class="col-span-3">
               <united-states-map
                 class="h-full"
-                :product_states="product_states"
+                :configured_states="product_states"
               />
               <div class="flex justify-end">
                 <app-button class="h-10 text-xs" @click="toggleAllStates">{{

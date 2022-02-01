@@ -1,18 +1,37 @@
 <template>
-  <label class="flex justify-end items-center text-right">
-    <slot />
+  <div
+    :class="{
+      flex: true,
+      'items-center': true,
+      relative: true,
+    }"
+  >
+    <label
+      :class="{
+        'text-right': true,
+        'mr-8': !top,
+        absolute: top,
+        '-top-5': top,
+        'left-0': top,
+        'text-sm': top,
+      }"
+      :for="htmlFor"
+    >
+      <slot />
+    </label>
     <select
+      :id="htmlFor"
+      :name="htmlFor"
       :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)"
       :class="{
-        'ml-8': true,
         'rounded-md': true,
         'border-2': true,
         'border-gray-300': true,
         'py-1': true,
         'pl-2': true,
         'pr-10': true,
-        'mx-4': true,
+        'w-full': true,
 
         'placeholder:text-inherit': true,
         'placeholder:font-extralight': true,
@@ -30,7 +49,7 @@
         {{ item[item_text] }}
       </option>
     </select>
-  </label>
+  </div>
 </template>
 
 <script>
@@ -51,6 +70,17 @@ export default {
     item_value: {
       default: "code",
     },
+    top: {
+      default: false,
+    },
+  },
+  mounted() {
+    this.htmlFor = (Math.random() + 1).toString(36).substring(4);
+  },
+  data() {
+    return {
+      htmlFor: "",
+    };
   },
 };
 </script>

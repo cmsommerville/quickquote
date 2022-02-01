@@ -19,9 +19,15 @@ export const storeConfigUI = {
       state.selected_states = [];
     },
     toggle_selected_state(state, val) {
-      if (state.selected_states.includes(val)) {
+      if (
+        state.selected_states.findIndex(
+          (st) => st.state_code === val.state_code
+        ) >= 0
+      ) {
         state.selected_states = [
-          ...state.selected_states.filter((st) => st !== val),
+          ...state.selected_states.filter(
+            (st) => st.state_code !== val.state_code
+          ),
         ];
       } else {
         state.selected_states = [...state.selected_states, val];
@@ -31,7 +37,7 @@ export const storeConfigUI = {
       if (state.selected_states.length > 0) {
         state.selected_states = [];
       } else {
-        state.selected_states = state.ref_states.map((s) => s.state_code);
+        state.selected_states = [...state.ref_states];
       }
     },
   },

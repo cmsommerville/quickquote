@@ -1,9 +1,10 @@
 import {
   PlusCircleIcon,
+  PlusIcon,
+  MinusIcon,
   ArrowCircleDownIcon,
   ArrowCircleUpIcon,
   MenuIcon,
-  PlusIcon,
   PuzzleIcon,
   CogIcon,
   SearchIcon,
@@ -11,11 +12,13 @@ import {
   StarIcon,
   SparklesIcon,
   MoonIcon,
+  ShieldExclamationIcon,
 } from "@heroicons/vue/outline";
 
 export default {
   install: (app, options) => {
     app.component("plus-circle-icon", PlusCircleIcon);
+    app.component("minus-icon", MinusIcon);
     app.component("arrow-circle-down-icon", ArrowCircleDownIcon);
     app.component("arrow-circle-up-icon", ArrowCircleUpIcon);
     app.component("menu-icon", MenuIcon);
@@ -27,5 +30,6 @@ export default {
     app.component("star-icon", StarIcon);
     app.component("sparkles-icon", SparklesIcon);
     app.component("moon-icon", MoonIcon);
+    app.component("shield-exclamation-icon", ShieldExclamationIcon);
   },
 };

@@ -5,7 +5,7 @@
       v-if="tooltip_data"
       :style="{ top: tooltip_Y + 'px', left: tooltip_X + 'px' }"
     >
-      <h3 class="text-sm mb-1 pa-2">State: {{ tooltip_data.id }}</h3>
+      <h3 class="text-sm mb-1 pa-2">State: {{ tooltip_data.state_code }}</h3>
       <p
         v-if="
           tooltip_data.state_effective_date &&
@@ -13,17 +13,9 @@
         "
         class="text-xs"
       >
-        {{
-          new Date(tooltip_data.state_effective_date).toLocaleDateString(
-            "en-US"
-          )
-        }}
+        {{ formatDateText(tooltip_data.state_effective_date) }}
         thru
-        {{
-          new Date(tooltip_data.state_expiration_date).toLocaleDateString(
-            "en-US"
-          )
-        }}
+        {{ formatDateText(tooltip_data.state_expiration_date) }}
       </p>
       <p v-else class="text-xs">Not configured yet!</p>
     </div>
@@ -48,30 +40,26 @@
       <g id="g5">
         <path
           v-for="state in states"
-          :key="state.id"
-          :id="state.id"
-          :fill="
-            selected_states.includes(state.id) ? fill_selected : state.fill
-          "
-          :d="state.d"
-          @click="select(state.id)"
+          :key="state.state_code"
+          :id="state.state_code"
+          :fill="fillColor(state)"
+          :d="state.svg_path"
+          @click="select(state)"
           @mouseleave="tooltip_data = null"
           @mouseover="hover(state)"
           @mousemove="displayTooltip"
         />
-        <g id="gDC" v-for="dist in DC" :key="dist.id">
-          <path id="pathDC" :fill="dist.fill" :d="dist.d" />
+        <g id="gDC" v-for="dist in DC" :key="dist.state_code">
+          <path id="pathDC" :fill="dist.fill" :d="dist.svg_path" />
           <circle
             id="circleDC"
-            :fill="
-              selected_states.includes(dist.id) ? fill_selected : dist.fill
-            "
+            :fill="fillColor(dist)"
             :stroke="dist.stroke"
             :stroke-width="dist['stroke-width']"
             :cx="dist.cx"
             :cy="dist.cy"
             :r="dist.r"
-            @click="select(dist.id)"
+            @click="select(dist)"
             @mouseleave="tooltip_data = null"
             @mouseover="hover(dist)"
             @mousemove="displayTooltip"
@@ -90,13 +78,13 @@
 </template>
 
 <script>
+import { format } from "date-fns";
 import axios from "@/services/axios.js";
-import { states } from "./states.js";
 
 export default {
   name: "UnitedStatesMap",
   props: {
-    product_states: {
+    configured_states: {
       required: true,
       type: Array,
     },
@@ -105,33 +93,34 @@ export default {
       type: String,
     },
     fill_selected: {
-      default: "var(--violet-500)",
+      default: "var(--theme-500)",
       type: String,
     },
     fill_active: {
-      default: "var(--violet-300)",
+      default: "var(--theme-300)",
       type: String,
     },
   },
   async mounted() {
     const ref_states = await axios.get("/config/ref-states");
     const all_states = [
-      ...ref_states.data.map((item) => {
-        const prod_states =
-          this.product_states.find((ps) => ps.state_code === item.state_code) ??
-          {};
-        const svg_states = states.find((st) => st.id === item.state_code);
-        if (prod_states.state_code) {
-          prod_states.fill = this.fill_active;
-        } else {
-          prod_states.fill = this.fill_default;
-        }
-        return {
-          ...item,
-          ...prod_states,
-          ...svg_states,
-        };
-      }),
+      ...ref_states.data
+        .filter((st) => !!st.svg_path)
+        .map((item) => {
+          const config_states =
+            this.configured_states.find(
+              (cs) => cs.state_code === item.state_code
+            ) ?? {};
+          if (config_states.state_code) {
+            config_states.fill = this.fill_active;
+          } else {
+            config_states.fill = this.fill_default;
+          }
+          return {
+            ...item,
+            ...config_states,
+          };
+        }),
     ];
 
     this.$store.commit("initialize_ref_states", all_states);
@@ -152,10 +141,21 @@ export default {
       return this.$store.getters.get_selected_states;
     },
     states() {
-      return this.all_states.filter((state) => state.id !== "DC");
+      return this.all_states.filter((state) => state.state_code !== "DC");
     },
     DC() {
-      const dc = this.all_states.filter((state) => state.id === "DC");
+      const dc = this.all_states
+        .filter((state) => state.state_code === "DC")
+        .map((st) => {
+          return {
+            stroke: "#FFFFFF",
+            "stroke-width": "1.5",
+            cx: "975.3",
+            cy: "351.8",
+            r: "7",
+            ...st,
+          };
+        });
       return dc;
     },
   },
@@ -167,8 +167,24 @@ export default {
     hover(state) {
       this.tooltip_data = state;
     },
-    select(_id) {
-      this.$store.commit("toggle_selected_state", _id);
+    select(state) {
+      this.$store.commit("toggle_selected_state", state);
+    },
+    fillColor(state) {
+      if (
+        this.selected_states.findIndex(
+          (st) => st.state_code === state.state_code
+        ) >= 0
+      )
+        return this.fill_selected;
+      return state.fill;
+    },
+    formatDateText(input_dt) {
+      const dt = new Date(input_dt);
+      const dtDateOnly = new Date(
+        dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000
+      );
+      return format(dtDateOnly, "M/d/yyyy");
     },
   },
 };
@@ -190,7 +206,7 @@ export default {
   left: 0px;
   z-index: 1;
   background-color: #fff;
-  border: 2px solid var(--violet-400);
+  border: 2px solid var(--theme-400);
   border-radius: 5px;
   padding: 5px;
   overflow: hidden;
@@ -200,10 +216,10 @@ export default {
 
 path:hover,
 circle:hover {
-  stroke: var(--violet-600);
+  stroke: var(--theme-600);
   stroke-width: 2px;
   stroke-linejoin: round;
-  fill: var(--violet-600);
+  fill: var(--theme-600);
   cursor: pointer;
 }
 #path67 {
