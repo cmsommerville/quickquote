@@ -15,19 +15,18 @@
       </div>
     </div>
     <div v-else class="flex justify-center flex-col">
-      <div class="grid grid-cols-2 gap-8 my-4">
-        <div
-          v-for="band in age_bands"
-          :key="band.age_band_id"
-          class="h-24 p-4 flex items-center rounded-md shadow-md text-gray-400 hover:bg-theme-primary hover:text-white hover:cursor-pointer"
-          @click="selection = band"
+      <div class="h-96">
+        <ag-grid-vue
+          class="ag-theme-alpine"
+          style="width: 100%; height: 100%"
+          :columnDefs="columnDefs"
+          @grid-ready="onGridReady"
+          :rowData="rowData"
+          rowSelection="single"
+          @selection-changed="onGridSelectionChanged"
+          @row-double-clicked="doubleClickHandler"
         >
-          <shield-exclamation-icon class="w-12 h-12 mr-4" />
-          <div class="uppercase tracking-wide font-light">
-            <p class="text-lg">Hello World!</p>
-            <p class="text-sm">Hello World!</p>
-          </div>
-        </div>
+        </ag-grid-vue>
       </div>
       <div class="mx-auto mt-12">
         <app-button @click="clickHandler">Edit</app-button>
@@ -37,8 +36,13 @@
 </template>
 
 <script>
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import { AgGridVue } from "ag-grid-vue3";
+
 export default {
   name: "LandingAgeBands",
+  components: { AgGridVue },
   props: {
     age_bands: {
       required: true,
@@ -48,11 +52,80 @@ export default {
   data() {
     return {
       selection: null,
+      columnDefs: [
+        {
+          headerName: "Age Band Set ID",
+          field: "age_band_set_id",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "Variation Code",
+          field: "product_variation_code",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "Variation Name",
+          field: "product_variation_label",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "State Code",
+          field: "state_code",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "State Name",
+          field: "state_name",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "Effective Date",
+          field: "age_band_effective_date",
+          sortable: true,
+          filter: true,
+        },
+        {
+          headerName: "Expiration Date",
+          field: "age_band_expiration_date",
+          sortable: true,
+          filter: true,
+        },
+      ],
+      rowSelection: null,
     };
   },
   methods: {
     clickHandler() {
       this.$emit("click:edit", this.selection);
+    },
+    onGridReady(params) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnApi;
+    },
+    onGridSelectionChanged() {
+      this.rowSelection = this.gridApi.getSelectedRows()[0];
+    },
+    doubleClickHandler() {
+      this.rowSelection = this.gridApi.getSelectedRows()[0];
+    },
+  },
+  computed: {
+    rowData() {
+      return this.age_bands.map((item) => {
+        return {
+          ...item,
+          product_variation_code: item.product_variation.product_variation_code,
+          product_variation_label:
+            item.product_variation.product_variation_label,
+          state_code: item.state.state_code,
+          state_name: item.state.state_name,
+        };
+      });
     },
   },
 };

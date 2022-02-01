@@ -23,7 +23,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "ag-grid-community/dist/styles/ag-grid.css";
+@import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.2s ease;
