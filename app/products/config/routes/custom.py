@@ -19,6 +19,10 @@ custom_routes = [
         "endpoints": ['/qry-config/all-age-bands']
     }, 
     {
+        "class": Query_AllAgeBandsByProduct, 
+        "endpoints": ['/qry-config/product/<int:product_id>/all-age-bands']
+    }, 
+    {
         "class": Query_AllCoverages,  
         "endpoints": ['/qry-config/all-coverages']
     }, 
@@ -61,5 +65,13 @@ custom_routes = [
     {
         "class": Query_AllFactors, 
         "endpoints": ['/qry-config/factors']
+    }, 
+    {
+        "class": Query_AttrDistributionSets, 
+        "endpoints": ['/qry-config/attr-distribution-sets']
+    }, 
+    {
+        "class": Query_AgeDistributionSets, 
+        "endpoints": ['/qry-config/age-distribution-sets']
     }, 
 ]

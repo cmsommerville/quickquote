@@ -14,6 +14,7 @@ routes = [
     *custom_crud_routes,  
 
     *product_list_routes, 
+    *product_variation_list_routes, 
     *benefit_list_routes, 
     *provision_list_routes,
     *factor_list_routes, 

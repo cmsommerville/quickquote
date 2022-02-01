@@ -16,4 +16,4 @@ class Model_RefStates(BaseModel):
     state_id = db.Column(db.Integer, primary_key=True)
     state_code = db.Column(db.String(2), nullable=False)
     state_name = db.Column(db.String(100), nullable=False)
-    # svg_path = db.Column(VARCHAR(None))
+    svg_path = db.Column(VARCHAR(None))

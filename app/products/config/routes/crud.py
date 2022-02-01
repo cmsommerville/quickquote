@@ -29,15 +29,6 @@ product_routes = [
 product_variations_routes = [
     {
         "class": CRUD_ResourceFactory(
-            resource_name='CRUD_Config_ProductVariation', 
-            model=Model_ConfigProductVariation, 
-            schema=Schema_ConfigProductVariation,
-            primary_key='product_variation_id'
-        ).generate_class(), 
-        "endpoints": ['/config/product-variations/<int:id>', '/config/product-variations']
-    }, 
-    {
-        "class": CRUD_ResourceFactory(
             resource_name='CRUD_Config_AgeBandSet', 
             model=Model_ConfigAgeBandSet, 
             schema=Schema_ConfigAgeBandSet, 
@@ -250,6 +241,10 @@ rating_routes = [
 
 custom_crud_routes = [
     {
+        "class": CRUD_ProductVariation, 
+        "endpoints": ['/config/product-variations/<int:id>', '/config/product-variations']
+    }, 
+    {
         "class": CRUD_ProvisionUIComponentConfig, 
         "endpoints": ['/config/provision-ui-component/<int:id>', '/config/provision-ui-component']
     }, 
@@ -274,6 +269,19 @@ product_list_routes = [
         "endpoints": ['/config/product/states/<int:id>', '/config/product/states']
     }, 
 ]
+
+product_variation_list_routes = [
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_Config_AgeBandSet_List', 
+            model=Model_ConfigAgeBandSet, 
+            schema=Schema_ConfigAgeBandSet,
+            primary_key='age_band_set_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/age-band-sets']
+    }, 
+]
+
 
 benefit_list_routes = [
     {

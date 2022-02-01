@@ -645,7 +645,7 @@ CONFIG_PROVISION_UI = {
         "min_value": 0.0,
         "step_value": 1.0,
         "max_value": 9999999.0,
-        "component_type_code": "app-inpuyt"
+        "component_type_code": "app-input"
   }, 
   "prex": {
         "ui_label": "Pre-Existing Condition Limitation",
@@ -859,11 +859,12 @@ AGE_DISTRIBUTION =  {
 
 SEX_DISTINCT_DISTRIBUTION = {
   "attr_type_code": "gender", 
-  "attr_distribution_set_label": "Male/Female", 
+  "attr_distribution_set_label": "Standard Gender Distinct", 
   "attr_distribution": [
     {"attr_value": "M", "weight": 1}, 
     {"attr_value": "F", "weight": 1}, 
-  ]
+  ], 
+  "is_composite_default_dist": True,
 }
 
 UNISEX_DISTRIBUTION = {
@@ -872,7 +873,8 @@ UNISEX_DISTRIBUTION = {
   "attr_distribution": [
     {"attr_value": "M", "weight": 0.5}, 
     {"attr_value": "F", "weight": 0.5}, 
-  ]
+  ], 
+  "is_composite_default_dist": False
 }
 
 SMOKER_DISTINCT_DISTRIBUTION =  {
@@ -881,7 +883,8 @@ SMOKER_DISTINCT_DISTRIBUTION =  {
   "attr_distribution": [
     {"attr_value": "N", "weight": 1}, 
     {"attr_value": "T", "weight": 1},
-  ]
+  ], 
+  "is_composite_default_dist": True,
 }
 UNISMOKER_DISTRIBUTION =  {
   "attr_type_code": "smoker_status", 
@@ -889,5 +892,6 @@ UNISMOKER_DISTRIBUTION =  {
   "attr_distribution": [
     {"attr_value": "N", "weight": 0.85}, 
     {"attr_value": "T", "weight": 0.15},
-  ]
+  ], 
+  "is_composite_default_dist": False
 }
