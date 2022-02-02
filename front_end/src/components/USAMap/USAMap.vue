@@ -85,7 +85,7 @@ export default {
   name: "UnitedStatesMap",
   props: {
     configured_states: {
-      required: true,
+      default: [],
       type: Array,
     },
     fill_default: {

@@ -1,15 +1,22 @@
 export const storeConfig = {
   state: () => ({
-    product_variation: {},
+    selections_obj: null,
+    selections_array: null,
   }),
   getters: {
-    get_product_variation(state) {
-      return state.product_variation;
+    get_selections_object(state) {
+      return state.selections_obj;
+    },
+    get_selections_array(state) {
+      return state.selections_array;
     },
   },
   mutations: {
-    set_product_variation(state, payload) {
-      state.product_variation = { ...payload };
+    SET_SELECTIONS_OBJECT(state, payload) {
+      state.selections_obj = { ...payload };
+    },
+    SET_SELECTIONS_ARRAY(state, payload) {
+      state.selections_array = [...payload];
     },
   },
   actions: {},

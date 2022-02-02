@@ -2,10 +2,9 @@ import Config_ProductList from "@/views/config/Config_Product/Config_ProductList
 import Config_Product from "@/views/config/Config_Product/Config_Product.vue";
 import Config_ProductStates from "@/views/config/Config_Product/Config_ProductStates.vue";
 import Config_ProductVariations from "@/views/config/Config_ProductVariations/Config_ProductVariations.vue";
-import Config_AgeBands from "@/views/config/Config_AgeBands/Config_AgeBands.vue";
-import Landing_AgeBands from "@/views/config/Config_AgeBands/Landing_AgeBands.vue";
-import New_AgeBands from "@/views/config/Config_AgeBands/New_AgeBands.vue";
-import New_AgeBandsStates from "@/views/config/Config_AgeBands/New_AgeBandsStates.vue";
+import AgeBandsLanding from "@/views/config/Config_AgeBands/AgeBandsLanding.vue";
+import AgeBandsConfig from "@/views/config/Config_AgeBands/AgeBandsConfig.vue";
+import AgeBandsStates from "@/views/config/Config_AgeBands/AgeBandsStates.vue";
 
 export default [
   {
@@ -35,27 +34,28 @@ export default [
   {
     path: "/config/product/:product_id/age-bands",
     name: "config-age-bands",
-    component: Config_AgeBands,
+    component: AgeBandsLanding,
     props: true,
-    children: [
-      {
-        path: "",
-        name: "config-age-bands-landing",
-        component: Landing_AgeBands,
-        props: true,
-      },
-      {
-        path: "new",
-        name: "config-age-bands-new",
-        component: New_AgeBands,
-        props: true,
-      },
-      {
-        path: "new",
-        name: "config-age-bands-states",
-        component: New_AgeBandsStates,
-        props: true,
-      },
-    ],
+  },
+  {
+    path: "/config/product/:product_id/age-band",
+    name: "config-age-band",
+    component: AgeBandsConfig,
+    props: (route) => ({ ...route.params, ...route.query }),
+    beforeEnter(to, from, next) {
+      if (["config-age-bands", "config-age-band-states"].includes(from.name))
+        next();
+      else next({ name: "config-age-bands", params: { ...to.params } });
+    },
+  },
+  {
+    path: "/config/product/:product_id/age-band-states",
+    name: "config-age-band-states",
+    component: AgeBandsStates,
+    props: (route) => ({ ...route.params, ...route.query }),
+    beforeEnter(to, from, next) {
+      if (from.name === "config-age-band") next();
+      else next({ name: "config-age-bands", params: { ...to.params } });
+    },
   },
 ];

@@ -25,6 +25,7 @@ class CRUD_ProvisionUIComponentConfig(Resource):
             return config_provision_ui_select_schema.dump(config), 200
         return "error", 404
 
+
     @classmethod
     def post(cls):
         req = request.get_json()

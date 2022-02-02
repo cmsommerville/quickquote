@@ -23,8 +23,8 @@
       'hover:scale-105': !$attrs.disabled,
       'ease-out': true,
       'duration-300': true,
-      'bg-gray-300': $attrs.disabled,
-      'text-gray-100': $attrs.disabled,
+      'bg-gray-200': $attrs.disabled,
+      'text-gray-500': $attrs.disabled,
     }"
     v-bind="$attrs"
   >

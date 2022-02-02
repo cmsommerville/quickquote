@@ -2,6 +2,7 @@ export const storeConfigUI = {
   state: () => ({
     ref_states: [],
     selected_states: [],
+    snackbar_message: null,
   }),
   getters: {
     get_ref_states(state) {
@@ -9,6 +10,9 @@ export const storeConfigUI = {
     },
     get_selected_states(state) {
       return state.selected_states;
+    },
+    get_snackbar_message(state) {
+      return state.snackbar_message;
     },
   },
   mutations: {
@@ -40,6 +44,16 @@ export const storeConfigUI = {
         state.selected_states = [...state.ref_states];
       }
     },
+    set_snackbar_message(state, msg) {
+      state.snackbar_message = msg;
+    },
   },
-  actions: {},
+  actions: {
+    SET_SNACKBAR_MESSAGE({ commit }, msg) {
+      commit("set_snackbar_message", msg);
+      setTimeout(() => {
+        commit("set_snackbar_message", null);
+      }, 5000);
+    },
+  },
 };

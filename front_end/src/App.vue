@@ -12,14 +12,17 @@
         </router-view>
       </div>
     </main>
+    <app-snackbar />
   </div>
 </template>
 
 <script>
 import TheHeader from "./components/TheHeader.vue";
+import AppSnackbar from "@/components/AppSnackbar.vue";
+
 export default {
   name: "App",
-  components: { TheHeader },
+  components: { TheHeader, AppSnackbar },
 };
 </script>
 
