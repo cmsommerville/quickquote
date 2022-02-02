@@ -11,7 +11,9 @@
         </div>
       </div>
       <div class="mx-auto mt-6">
-        <app-button @click="clickHandler">Create New</app-button>
+        <app-button @click="routeTo('config-age-bands-new')"
+          >Create New</app-button
+        >
       </div>
     </div>
     <div v-else class="flex justify-center flex-col">
@@ -24,12 +26,23 @@
           :rowData="rowData"
           rowSelection="single"
           @selection-changed="onGridSelectionChanged"
-          @row-double-clicked="doubleClickHandler"
+          @row-double-clicked="doubleClickRowHandler"
         >
         </ag-grid-vue>
       </div>
       <div class="mx-auto mt-12">
-        <app-button @click="clickHandler">Edit</app-button>
+        <app-button
+          class="mx-6"
+          :disabled="!rowSelection"
+          @click="routeTo('config-age-bands')"
+          >Edit</app-button
+        >
+        <app-button
+          class="mx-6"
+          :transparent="true"
+          @click="routeTo('config-age-bands-new')"
+          >Create New</app-button
+        >
       </div>
     </div>
   </div>
@@ -44,6 +57,10 @@ export default {
   name: "LandingAgeBands",
   components: { AgGridVue },
   props: {
+    product_id: {
+      required: true,
+      type: [Number, String],
+    },
     age_bands: {
       required: true,
       type: Array,
@@ -100,8 +117,12 @@ export default {
     };
   },
   methods: {
-    clickHandler() {
-      this.$emit("click:edit", this.selection);
+    routeTo(route_name, params = {}, query = {}) {
+      this.$router.push({
+        name: route_name,
+        params: { product_id: this.product_id, ...params },
+        query: { ...query },
+      });
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -110,8 +131,9 @@ export default {
     onGridSelectionChanged() {
       this.rowSelection = this.gridApi.getSelectedRows()[0];
     },
-    doubleClickHandler() {
+    doubleClickRowHandler() {
       this.rowSelection = this.gridApi.getSelectedRows()[0];
+      this.routeTo("config-age-bands");
     },
   },
   computed: {

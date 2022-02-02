@@ -18,9 +18,9 @@
             : selected_states.length + " states"
         }}</span>
         effective
-        {{ formatDateText(selection.age_band_effective_date) }}
+        {{ formatDateText(modelValue.age_band_effective_date) }}
         through
-        {{ formatDateText(selection.age_band_expiration_date) }}
+        {{ formatDateText(modelValue.age_band_expiration_date) }}
       </h2>
       <div class="flex justify-center mt-12">
         <app-button
@@ -48,19 +48,10 @@ export default {
       required: true,
       type: [Number, String],
     },
-    selection: {
+    modelValue: {
       required: true,
       type: Object,
     },
-  },
-  mounted() {
-    if (
-      this.selection &&
-      this.selection.state &&
-      this.selection.state.state_code
-    ) {
-      this.state = [this.selection.state.state_code];
-    }
   },
   data() {
     return {
@@ -77,7 +68,7 @@ export default {
     output() {
       return this.selected_states.map((state) => {
         return {
-          ...this.selection,
+          ...this.modelValue,
           state_id: state.state_id,
         };
       });

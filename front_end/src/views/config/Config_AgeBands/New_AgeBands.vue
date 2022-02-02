@@ -4,14 +4,14 @@
       <div class="grid grid-cols-3 gap-8 my-4">
         <div class="col-span-2 p-2 border-l-8 border-gray-200">
           <app-age-band-selector
-            :input_data="_selection.age_bands"
+            :input_data="modelValue.age_bands"
             @change:bands="ageBandHandler"
           />
         </div>
         <div class="flex flex-col">
           <div class="w-60 my-6">
             <app-select
-              v-model="_selection.product_variation_id"
+              v-model="modelValue.product_variation_id"
               :items="product_variations"
               item_text="product_variation_label"
               item_value="product_variation_id"
@@ -21,7 +21,7 @@
           </div>
           <div class="w-60 my-6">
             <app-input
-              v-model="_selection.age_band_effective_date"
+              v-model="modelValue.age_band_effective_date"
               type="date"
               :top="true"
               >Effective Date</app-input
@@ -29,7 +29,7 @@
           </div>
           <div class="w-60 my-6">
             <app-input
-              v-model="_selection.age_band_expiration_date"
+              v-model="modelValue.age_band_expiration_date"
               type="date"
               :top="true"
               >Expiration Date</app-input
@@ -38,7 +38,9 @@
         </div>
       </div>
       <div class="mx-auto mt-6">
-        <app-button @click="clickHandler">States</app-button>
+        <app-button @click="routeTo('config-age-bands-states')"
+          >States</app-button
+        >
       </div>
     </div>
   </div>
@@ -56,46 +58,30 @@ export default {
       required: true,
       type: [Number, String],
     },
-    selection: {
+    product_variations: {
       required: true,
-      type: [Object, null],
+      type: Array,
+    },
+    modelValue: {
+      required: true,
     },
   },
-  async mounted() {
-    const pv = await axios.get(
-      `/qry-config/all-product-variations?product_id=${this.product_id}`
-    );
-    this.product_variations = [...pv.data];
-    if (this.selection && this.selection.age_bands) {
-      this._selection = {
-        ...this.selection,
-      };
-    }
-  },
-  data() {
-    return {
-      product_variations: [],
-      _selection: {
-        age_band_effective_date: "1900-01-01",
-        age_band_expiration_date: "9999-12-31",
-        age_bands: [{ age_band_lower: 18, age_band_upper: 99 }],
-      },
-    };
-  },
   watch: {
-    _selection: {
+    modelValue: {
       handler(val) {
-        this.$emit("change:variation", val);
+        this.$emit("update:modelValue", val);
       },
       deep: true,
     },
   },
   methods: {
-    clickHandler() {
-      this.$emit("click:edit", this._selection);
+    routeTo(route_name) {
+      this.$router.push({
+        name: route_name,
+      });
     },
     ageBandHandler(age_bands) {
-      this._selection.age_bands = [...age_bands];
+      this.modelValue.age_bands = [...age_bands];
     },
   },
 };

@@ -5,23 +5,13 @@
       :active_stage="active_stage"
       @toggle:stage="toggleHandler"
     />
-    <div class="my-12">
-      <landing-age-bands
-        v-if="active_stage === 'landing'"
+    <div class="my-12" v-if="loaded">
+      <router-view
         :age_bands="age_bands"
-        @click:edit="clickLandingHandler"
-      />
-      <age-bands-configure
-        v-if="active_stage === 'configure'"
         :product_id="product_id"
-        :selection="selection"
-        @click:edit="clickEditHandler"
-      />
-      <age-bands-states
-        v-if="active_stage === 'states'"
-        :product_id="product_id"
-        :selection="selection"
-      />
+        :product_variations="product_variations"
+        v-model="selection"
+      ></router-view>
     </div>
   </div>
 </template>
@@ -30,17 +20,11 @@
 import axios from "@/services/axios.js";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AgeBandsTabs from "./AgeBandsTabs.vue";
-import LandingAgeBands from "./Landing_AgeBands.vue";
-import AgeBandsConfigure from "./NewAgeBandsConfigure.vue";
-import AgeBandsStates from "./NewAgeBandsStates.vue";
 
 export default {
   name: "Config_ProductVariations",
   components: {
     AgeBandsTabs,
-    LandingAgeBands,
-    AgeBandsConfigure,
-    AgeBandsStates,
     AppFormHeader,
   },
   props: {
@@ -49,13 +33,25 @@ export default {
       type: [Number, String],
     },
   },
-  async mounted() {
+  mounted() {
     this.loaded = false;
-    const res = await axios.get(
+    const p_age_bands = axios.get(
       `/qry-config/product/${this.product_id}/all-age-bands`
     );
-    this.age_bands = [...res.data];
-    this.loaded = true;
+    const p_variations = axios.get(
+      `/qry-config/all-product-variations?product_id=${this.product_id}`
+    );
+
+    Promise.all([p_age_bands, p_variations])
+      .then(([ab, vars]) => {
+        this.age_bands = [...ab.data];
+        this.product_variations = [...vars.data];
+
+        this.loaded = true;
+      })
+      .catch((err) => {
+        this.loaded = true;
+      });
   },
   data() {
     return {
@@ -64,23 +60,20 @@ export default {
       subtitle: "These age bands have already been configured",
       active_stage: "landing",
       age_bands: [],
-      selection: null,
+      product_variations: [],
+      selection: {
+        age_band_effective_date: "1900-01-01",
+        age_band_expiration_date: "9999-12-31",
+        age_bands: [
+          {
+            age_band_lower: 18,
+            age_band_upper: 99,
+          },
+        ],
+      },
     };
   },
-  computed: {},
   methods: {
-    clickLandingHandler(selection) {
-      this.selection = selection;
-      if (selection) {
-        console.log(selection);
-      } else {
-        this.active_stage = "configure";
-      }
-    },
-    clickEditHandler(selection) {
-      this.selection = { ...selection };
-      this.active_stage = "states";
-    },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
@@ -94,10 +87,6 @@ export default {
       } else {
         this.routeTo(stage.to);
       }
-    },
-    async save() {
-      console.log("Woot");
-      //   await axios.post("/config/age-bands", this.output);
     },
   },
 };

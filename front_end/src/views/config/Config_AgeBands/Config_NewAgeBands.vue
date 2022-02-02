@@ -26,7 +26,7 @@ import axios from "@/services/axios.js";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AgeBandsTabs from "./AgeBandsTabs.vue";
 import AgeBandsLanding from "./Landing_AgeBands.vue";
-import AgeBandsConfigure from "./NewAgeBandsConfigure.vue";
+import AgeBandsConfigure from "./New_AgeBands.vue";
 import AgeBandsStates from "./NewAgeBandsStates.vue";
 
 export default {
@@ -57,7 +57,7 @@ export default {
       loaded: false,
       title: "Age Bands",
       subtitle: "These age bands have already been configured",
-      active_stage: "landing",
+      active_stage: "configure",
       age_bands: [],
       selection: null,
     };

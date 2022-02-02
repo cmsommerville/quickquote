@@ -18,7 +18,7 @@ export default {
       _stages: [
         { label: "Back to Product", id: "product", to: "config-product" },
         {
-          label: "Existing",
+          label: "Age Bands",
           id: "landing",
           tab: true,
         },
