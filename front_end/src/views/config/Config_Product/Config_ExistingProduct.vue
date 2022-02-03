@@ -81,6 +81,20 @@ export default {
           route_name: "config-product-variations",
         },
         {
+          text: "Age Bands",
+          icon: "plus-circle-icon",
+          id: "age_bands",
+          prereq_ids: ["product_variations"],
+          route_name: "config-age-bands",
+        },
+        {
+          text: "Coverages",
+          icon: "plus-circle-icon",
+          id: "coverages",
+          prereq_ids: [],
+          route_name: "config-coverages",
+        },
+        {
           text: "Benefits",
           icon: "plus-circle-icon",
           id: "benefits",
