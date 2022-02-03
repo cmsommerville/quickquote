@@ -64,7 +64,7 @@ export default {
       default: "",
     },
     top: {
-      default: false,
+      default: true,
     },
   },
   mounted() {

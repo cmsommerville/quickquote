@@ -5,6 +5,7 @@ import Config_ProductVariations from "@/views/config/Config_ProductVariations/Co
 import AgeBandsLanding from "@/views/config/Config_AgeBands/AgeBandsLanding.vue";
 import AgeBandsConfig from "@/views/config/Config_AgeBands/AgeBandsConfig.vue";
 import AgeBandsStates from "@/views/config/Config_AgeBands/AgeBandsStates.vue";
+import routes_config_coverages from "@/views/config/Config_Coverage/routes.js";
 
 export default [
   {
@@ -58,4 +59,5 @@ export default [
       else next({ name: "config-age-bands", params: { ...to.params } });
     },
   },
+  ...routes_config_coverages,
 ];

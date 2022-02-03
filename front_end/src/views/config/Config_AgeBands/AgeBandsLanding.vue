@@ -3,24 +3,7 @@
     <app-form-header :title="title" :subtitle="subtitle" />
     <age-bands-tabs :active_stage="active_stage" />
     <div class="my-12" v-if="loaded">
-      <div
-        v-if="age_bands.length === 0"
-        class="flex flex-col justify-center my-12"
-      >
-        <div class="w-1/2 h-2/3 mx-auto py-8 flex items-center">
-          <shield-exclamation-icon class="w-24 h-24 text-gray-300 mr-4" />
-          <div class="text-gray-400 uppercase tracking-wide">
-            <p class="text-4xl font-extralight my-2">Uh oh!</p>
-            <p class="font-light text-md">
-              No age bands have been configured yet.
-            </p>
-          </div>
-        </div>
-        <div class="mx-auto mt-6">
-          <app-button @click="configure">Create New</app-button>
-        </div>
-      </div>
-      <div v-else class="flex justify-center flex-col my-12">
+      <div class="flex justify-center flex-col my-12">
         <div class="h-96">
           <ag-grid-vue
             class="ag-theme-alpine"
