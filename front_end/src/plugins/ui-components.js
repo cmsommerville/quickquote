@@ -4,6 +4,7 @@ import AppCheckbox from "@/components/AppCheckbox.vue";
 import AppButton from "@/components/AppButton.vue";
 import AppFormCard from "@/components/AppFormCard/AppFormCard.vue";
 import AppTile from "@/components/AppTile.vue";
+import AppSwitch from "@/components/AppSwitch.vue";
 
 export default {
   install: (app, options) => {
@@ -13,5 +14,6 @@ export default {
     app.component("app-button", AppButton);
     app.component("app-form-card", AppFormCard);
     app.component("app-tile", AppTile);
+    app.component("app-switch", AppSwitch);
   },
 };

@@ -71,7 +71,7 @@ export default {
       default: "code",
     },
     top: {
-      default: false,
+      default: true,
     },
   },
   mounted() {

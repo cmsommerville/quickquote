@@ -15,6 +15,10 @@ class Schema_ConfigBenefit(BaseSchema):
         include_relationships = True
         include_fk = True
 
+    benefit_label = ma.Function(lambda obj: obj.ref_benefit.benefit_label)
+    coverage_code = ma.Function(lambda obj: getattr(obj.coverage, 'coverage_code', None))
+    
+    
     ref_benefit = ma.Nested(Schema_RefBenefit)
     state = ma.Nested(Schema_RefStates)
     child_states = ma.List(ma.Nested('self', exclude=('child_states',)))

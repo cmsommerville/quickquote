@@ -12,6 +12,10 @@ import {
   StarIcon,
   SparklesIcon,
   MoonIcon,
+  QuestionMarkCircleIcon,
+  BadgeCheckIcon,
+  CheckCircleIcon,
+  ShieldCheckIcon,
   ShieldExclamationIcon,
 } from "@heroicons/vue/outline";
 
@@ -30,6 +34,10 @@ export default {
     app.component("star-icon", StarIcon);
     app.component("sparkles-icon", SparklesIcon);
     app.component("moon-icon", MoonIcon);
+    app.component("question-mark-circle-icon", QuestionMarkCircleIcon);
+    app.component("badge-check-icon", BadgeCheckIcon);
+    app.component("check-circle-icon", CheckCircleIcon);
+    app.component("shield-check-icon", ShieldCheckIcon);
     app.component("shield-exclamation-icon", ShieldExclamationIcon);
   },
 };

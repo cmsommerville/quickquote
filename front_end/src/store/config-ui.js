@@ -19,8 +19,8 @@ export const storeConfigUI = {
     initialize_ref_states(state, val) {
       state.ref_states = [...val];
     },
-    initialize_selected_states(state) {
-      state.selected_states = [];
+    initialize_selected_states(state, val = []) {
+      state.selected_states = [...val];
     },
     toggle_selected_state(state, val) {
       if (

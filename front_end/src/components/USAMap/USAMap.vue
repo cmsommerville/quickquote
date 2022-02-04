@@ -96,10 +96,6 @@ export default {
       default: "var(--theme-500)",
       type: String,
     },
-    fill_active: {
-      default: "var(--theme-300)",
-      type: String,
-    },
   },
   async mounted() {
     const ref_states = await axios.get("/config/ref-states");
@@ -111,11 +107,7 @@ export default {
             this.configured_states.find(
               (cs) => cs.state_code === item.state_code
             ) ?? {};
-          if (config_states.state_code) {
-            config_states.fill = this.fill_active;
-          } else {
-            config_states.fill = this.fill_default;
-          }
+          config_states.fill = this.fill_default;
           return {
             ...item,
             ...config_states,
@@ -124,7 +116,7 @@ export default {
     ];
 
     this.$store.commit("initialize_ref_states", all_states);
-    this.$store.commit("initialize_selected_states");
+    this.$store.commit("initialize_selected_states", this.configured_states);
   },
   data() {
     return {

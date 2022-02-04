@@ -25,6 +25,9 @@ module.exports = {
         "x-ray-sm":
           "linear-gradient(to right bottom, rgba(91,33,182, 0.8), rgba(91,33,182, 0.8)),url('/src/assets/img/x-ray-010.jpg')",
       },
+      width: {
+        "90%": "90%",
+      },
       minWidth: {
         "1/2": "50%",
         "2/3": "67%",

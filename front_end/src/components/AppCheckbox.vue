@@ -1,12 +1,31 @@
 <template>
-  <div class="flex justify-end items-center text-right">
+  <div
+    :class="{
+      'justify-end': true,
+      relative: true,
+      flex: true,
+      'items-center': true,
+      'text-right': true,
+    }"
+  >
     <label :for="htmlFor">
       <slot></slot>
     </label>
     <input
       :id="htmlFor"
       :name="htmlFor"
-      class="ml-8 rounded-sm text-theme-primary hover:outline hover:outline-offset-2 hover:outline-2 hover:outline-theme-primary focus:outline focus:outline-2 focus:outline-theme-primary"
+      :class="{
+        'ml-8': true,
+        'rounded-sm': true,
+        'text-theme-primary': true,
+        'hover:outline': true,
+        'hover:outline-offset-2': true,
+        'hover:outline-2': true,
+        'hover:outline-theme-primary': true,
+        'focus:outline': true,
+        'focus:outline-2': true,
+        'focus:outline-theme-primary': true,
+      }"
       type="checkbox"
       v-bind="$attrs"
       :value="modelValue"
@@ -22,7 +41,7 @@ export default {
   inheritAttrs: false,
   props: {
     modelValue: {
-      required: true,
+      default: false,
       type: Boolean,
     },
   },
@@ -36,5 +55,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

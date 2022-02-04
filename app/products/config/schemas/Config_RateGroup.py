@@ -13,5 +13,6 @@ class Schema_ConfigRateGroup(BaseSchema):
         include_relationships = True
         include_fk = True
 
+    rate_group_label = ma.Function(lambda obj: obj.rate_group.rate_group_label)
     rate_type = ma.Nested(Schema_RefRateType)
     rate_group = ma.Nested(Schema_RefRateGroup)
