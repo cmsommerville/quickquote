@@ -2,7 +2,21 @@
   <div v-if="loaded">
     <app-form-card :stages="stages" :title="title" :subtitle="subtitle">
       <template #content>
-        <div class="grid grid-cols-6 xl:grid-cols-5 gap-8 relative h-96 my-12">
+        <div class="my-4 flex justify-center">
+          <div class="mx-16">
+            <app-input type="date" v-model="state_effective_date"
+              >Effective Date</app-input
+            >
+          </div>
+          <div class="mx-16">
+            <app-input type="date" v-model="state_expiration_date"
+              >Expiration Date</app-input
+            >
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-6 xl:grid-cols-5 gap-8 relative min-h-96 my-12"
+        >
           <div class="col-span-3">
             <united-states-map
               class="h-full"
@@ -20,58 +34,50 @@
             </div>
           </div>
 
-          <div
-            class="flex flex-col justify-center col-span-3 col-start-4 xl:col-span-2"
-          >
+          <div class="grid grid-cols-1 col-span-3 col-start-4 xl:col-span-2">
             <div
-              class="flex items-center mb-2 p-2 rounded-md shadow-md border border-gray-200"
+              class="relative flex flex-col items-center w-1/2 mx-auto my-6 p-2 rounded-lg shadow-md border border-gray-200"
             >
-              <shield-check-icon
-                class="h-12 w-12 text-green-500 inline-block mr-8"
-              />
-              <p class="uppercase text-md font-light">
-                Added:
-                <span class="inline-block ml-2"
-                  >{{ state_adds.length }} states</span
-                >
-              </p>
-            </div>
-
-            <div
-              class="flex items-center mb-2 p-2 rounded-md shadow-md border border-gray-200"
-            >
-              <shield-exclamation-icon
-                class="h-12 w-12 text-red-600 inline-block mr-8"
-              />
-              <p class="uppercase text-md font-light">
-                Removed:
-                <span class="inline-block ml-2"
-                  >{{ state_deletes.length }} states</span
-                >
-              </p>
-            </div>
-
-            <div
-              class="flex items-center mb-2 p-2 rounded-md shadow-md border border-gray-200"
-            >
-              <check-circle-icon
-                class="h-12 w-12 text-green-500 inline-block mr-8"
-              />
-              <p class="uppercase text-md font-light">
-                Unchanged:
-                <span class="inline-block ml-2"
-                  >{{ state_keeps.length }} states</span
-                >
-              </p>
-            </div>
-
-            <div class="flex justify-center mt-12">
-              <app-button
-                class="mx-3"
-                :disabled="output.length === 0"
-                @click="save"
-                >Save</app-button
+              <div
+                class="absolute h-10 w-10 -top-3 -right-3 bg-green-600 rounded-full flex justify-center items-center"
               >
+                <span class="text-white text-center">{{
+                  state_adds.length
+                }}</span>
+              </div>
+              <div class="w-1/3 flex justify-center mt-4">
+                <shield-check-icon class="h-16 w-16 text-green-600" />
+              </div>
+              <div class="w-full m-4 flex justify-center">
+                <app-button
+                  @click="addHandler"
+                  :flat="true"
+                  class="text-green-600 hover:border-green-600"
+                  >Add States</app-button
+                >
+              </div>
+            </div>
+            <div
+              class="relative flex flex-col items-center w-1/2 mx-auto my-6 p-2 rounded-lg shadow-md border border-gray-200"
+            >
+              <div
+                class="absolute h-10 w-10 -top-3 -right-3 bg-red-500 rounded-full flex justify-center items-center"
+              >
+                <span class="text-white text-center">{{
+                  state_deletes.length
+                }}</span>
+              </div>
+              <div class="w-1/3 flex justify-center mt-4">
+                <shield-exclamation-icon class="h-16 w-16 text-red-500" />
+              </div>
+              <div class="w-full m-4 flex justify-center">
+                <app-button
+                  @click="deleteHandler"
+                  :flat="true"
+                  class="text-red-500 hover:border-red-500"
+                  >Delete States</app-button
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -113,10 +119,11 @@ export default {
     this.parent_benefit = { ...this.$store.getters.get_selections_object };
     this.configured_states = [
       ...this.parent_benefit.child_states.map((cs) => {
-        return cs.state;
+        return { ...cs.state, benefit_id: cs.benefit_id };
       }),
     ];
-
+    this.state_effective_date = this.parent_benefit.benefit_effective_date;
+    this.state_expiration_date = this.parent_benefit.benefit_expiration_date;
     this.loaded = true;
   },
   data() {
@@ -143,6 +150,8 @@ export default {
         },
       ],
       parent_benefit: {},
+      state_effective_date: "1900-01-01",
+      state_expiration_date: "9999-12-31",
       configured_states: [],
     };
   },
@@ -152,37 +161,40 @@ export default {
     },
     state_adds() {
       // find states that have been selected but not previously configured
-      return this.selected_states.filter((sel) => {
+      const adds = this.selected_states.filter((sel) => {
         return (
           this.configured_states.findIndex((cfg) => {
             return cfg.state_code === sel.state_code;
           }) === -1
         );
       });
-    },
-    state_keeps() {
-      // find states that have been selected and have been previously configured
-      return this.selected_states.filter((sel) => {
-        return (
-          this.configured_states.findIndex((cfg) => {
-            return cfg.state_code === sel.state_code;
-          }) !== -1
-        );
+
+      const bnfts = adds.map((st) => {
+        return this.applyModel({
+          ...this.parent_benefit,
+          ...st,
+          benefit_effective_date: this.state_effective_date,
+          benefit_expiration_date: this.state_expiration_date,
+        });
       });
+      return bnfts;
     },
     state_deletes() {
       // find states that have been unselected but previously configured
-      return this.configured_states.filter((cfg) => {
+      const dels = this.configured_states.filter((cfg) => {
         return (
           this.selected_states.findIndex((sel) => {
             return cfg.state_code === sel.state_code;
           }) === -1
         );
       });
-    },
-    output() {
-      const bnfts = this.selected_states.map((st) => {
-        return this.applyModel({ ...this.parent_benefit, ...st });
+      const bnfts = dels.map((st) => {
+        return this.applyModel({
+          ...this.parent_benefit,
+          ...st,
+          benefit_effective_date: this.state_effective_date,
+          benefit_expiration_date: this.state_expiration_date,
+        });
       });
       return bnfts;
     },
@@ -203,6 +215,20 @@ export default {
         data.benefit_effective_date,
         data.benefit_expiration_date
       );
+    },
+    async addHandler() {
+      try {
+        const res = await axios.post(`/config/benefits`, this.state_adds);
+        this.$store.dispatch(
+          "SET_SNACKBAR_MESSAGE",
+          `Added ${res.data.length} new states to benefit '${this.parent_benefit.benefit_code}'`
+        );
+      } catch (err) {
+        this.$store.dispatch("SET_SNACKBAR_MESSAGE", err);
+      }
+    },
+    deleteHandler() {
+      console.log("Delete");
     },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({

@@ -105,3 +105,11 @@ class Model_ConfigBenefit(BaseModel):
             raise ValidationError("Benefit already exists in this state")
         super().save_to_db()
         
+    @classmethod
+    def delete_by_benefit_code(cls, benefit_code: str) -> None:
+        try: 
+            cls.query.filter(cls.benefit_code == benefit_code).delete()
+            db.session.commit()
+        except Exception as e: 
+            db.session.rollback()
+            raise

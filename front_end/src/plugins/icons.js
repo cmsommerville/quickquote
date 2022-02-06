@@ -17,6 +17,9 @@ import {
   CheckCircleIcon,
   ShieldCheckIcon,
   ShieldExclamationIcon,
+  GlobeIcon,
+  GlobeAltIcon,
+  XIcon,
 } from "@heroicons/vue/outline";
 
 export default {
@@ -39,5 +42,8 @@ export default {
     app.component("check-circle-icon", CheckCircleIcon);
     app.component("shield-check-icon", ShieldCheckIcon);
     app.component("shield-exclamation-icon", ShieldExclamationIcon);
+    app.component("globe-icon", GlobeIcon);
+    app.component("globe-alt-icon", GlobeAltIcon);
+    app.component("x-icon", XIcon);
   },
 };
