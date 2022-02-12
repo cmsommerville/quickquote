@@ -115,15 +115,15 @@ export default {
       this.configure();
     },
     configure() {
-      if (this._selection.benefit_id) {
-        this.routeTo(
-          "config-benefit",
-          {},
-          { benefit_id: this._selection.benefit_id }
-        );
-      } else {
-        this.routeTo("config-benefit");
-      }
+      // if (this._selection.benefit_id) {
+      this.routeTo(
+        "config-benefit",
+        {},
+        { benefit_id: this._selection.benefit_id }
+      );
+      // } else {
+      //   this.routeTo("config-benefit");
+      // }
     },
   },
   computed: {

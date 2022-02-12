@@ -177,8 +177,8 @@ export default {
       type: [Number, String],
     },
     benefit_id: {
-      default: null,
-      type: [Number, String, null],
+      required: false,
+      type: [Number, String],
     },
   },
   mounted() {
@@ -270,11 +270,6 @@ export default {
         this.benefit,
         this.multiple_states
       );
-
-      if (this.benefit.benefit_id) {
-        bnft.set_benefit_id(this.benefit.benefit_id);
-      }
-
       return bnft;
     },
   },
@@ -298,10 +293,10 @@ export default {
         data.is_durational
       );
     },
-    routeTo(route_name, query = {}) {
+    routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id },
+        params: { product_id: this.product_id, ...params },
         query: { ...query },
       });
     },

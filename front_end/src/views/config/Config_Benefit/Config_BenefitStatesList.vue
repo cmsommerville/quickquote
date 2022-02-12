@@ -18,18 +18,18 @@
           </ag-grid-vue>
         </div>
         <div class="mx-auto mt-12 flex items-center">
-          <app-button
-            class="mx-6"
-            :disabled="!_selection.coverage_id"
-            @click="configure"
-            >Edit</app-button
-          >
-          <app-button class="mx-6" :transparent="true" @click="configure"
-            >Create New</app-button
-          >
-          <app-button class="mx-6 p-1" :fab="true" @click="configure"
-            ><globe-alt-icon class="h-8 w-8"
-          /></app-button>
+          <config-new-benefit-states-modal
+            class="mx-4"
+            :parent_benefit="benefit"
+            @close:modal="loadBenefit"
+          />
+          <config-edit-benefit-states-modal
+            class="mx-4"
+            :disabled="!_selection.benefit_id"
+            :transparent="true"
+            :benefit="_selection"
+            @close:modal="loadBenefit"
+          />
         </div>
       </div>
     </div>
@@ -42,7 +42,8 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
-import AppModal from "@/components/AppModal.vue";
+import ConfigNewBenefitStatesModal from "./Config_NewBenefitStates_Modal.vue";
+import ConfigEditBenefitStatesModal from "./Config_EditBenefitStates_Modal.vue";
 import { AgGridVue } from "ag-grid-vue3";
 import { CONFIG_BENEFIT_STATES_LIST__COLUMN_DEFS } from "./config.js";
 
@@ -52,7 +53,8 @@ export default {
     AgGridVue,
     AppFormTabs,
     AppFormHeader,
-    AppModal,
+    ConfigNewBenefitStatesModal,
+    ConfigEditBenefitStatesModal,
   },
   props: {
     product_id: {
@@ -66,9 +68,7 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    const res = await axios.get(`/config/benefit/${this.benefit_id}`);
-
-    this.benefit = { ...res.data };
+    await this.loadBenefit();
     this.loaded = true;
   },
   data() {
@@ -100,6 +100,10 @@ export default {
     };
   },
   methods: {
+    async loadBenefit() {
+      const res = await axios.get(`/config/benefit/${this.benefit_id}`);
+      this.benefit = { ...res.data };
+    },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
@@ -116,13 +120,6 @@ export default {
     },
     onGridSelectionChanged() {
       this._selection = this.gridApi.getSelectedRows()[0];
-    },
-    doubleClickRowHandler() {
-      this._selection = this.gridApi.getSelectedRows()[0];
-      this.configure();
-    },
-    configure() {
-      console.log("Woot");
     },
   },
   computed: {

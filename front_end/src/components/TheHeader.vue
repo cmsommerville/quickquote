@@ -14,6 +14,7 @@
         label="Search"
         placeholder="Input Plan Number"
         v-model="inputValue"
+        :top="false"
       >
         <search-icon class="h-6 w-6 inline-block opacity-50" />
       </app-input>

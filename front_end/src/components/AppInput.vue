@@ -53,6 +53,7 @@
         :class="{
           'border-0': true,
           'outline-0': true,
+          'bg-transparent': true,
           'placeholder:text-inherit': true,
           'placeholder:font-extralight': true,
           'w-full': !suffix,

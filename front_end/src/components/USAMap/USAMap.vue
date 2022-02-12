@@ -33,10 +33,21 @@
       inkscape:version="0.91 r13725"
       x="0px"
       y="0px"
-      viewBox="174 100 959 593"
-      enable-background="new 174 100 959 593"
+      viewBox="170 90 960 600"
+      enable-background="new 0 0 959 593"
       xml:space="preserve"
     >
+      <defs>
+        <pattern
+          id="disabled"
+          width="8"
+          height="10"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45 50 50)"
+        >
+          <line stroke="#d1d5db" stroke-width="7px" y2="10" />
+        </pattern>
+      </defs>
       <g id="g5">
         <path
           v-for="state in states"
@@ -92,6 +103,10 @@ export default {
       default: "var(--gray-300)",
       type: String,
     },
+    fill_disabled: {
+      default: "var(--gray-100)",
+      type: String,
+    },
     fill_selected: {
       default: "var(--theme-500)",
       type: String,
@@ -107,7 +122,12 @@ export default {
             this.configured_states.find(
               (cs) => cs.state_code === item.state_code
             ) ?? {};
-          config_states.fill = this.fill_default;
+          if (config_states.state_code) {
+            config_states.fill = this.fill_disabled;
+            config_states.disabled = true;
+          } else {
+            config_states.fill = this.fill_default;
+          }
           return {
             ...item,
             ...config_states,
@@ -116,7 +136,7 @@ export default {
     ];
 
     this.$store.commit("initialize_ref_states", all_states);
-    this.$store.commit("initialize_selected_states", this.configured_states);
+    this.$store.commit("initialize_selected_states", []);
   },
   data() {
     return {
@@ -160,9 +180,10 @@ export default {
       this.tooltip_data = state;
     },
     select(state) {
-      this.$store.commit("toggle_selected_state", state);
+      if (!state.disabled) this.$store.commit("toggle_selected_state", state);
     },
     fillColor(state) {
+      if (state.disabled) return "url(#disabled)";
       if (
         this.selected_states.findIndex(
           (st) => st.state_code === state.state_code
@@ -202,8 +223,6 @@ export default {
   border-radius: 5px;
   padding: 5px;
   overflow: hidden;
-  /* width: 200px;
-  height: 60px; */
 }
 
 path:hover,
@@ -218,5 +237,16 @@ circle:hover {
   fill: none !important;
   stroke: #a9a9a9 !important;
   cursor: default;
+}
+
+.stripe {
+  color: white;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--gray-100),
+    var(--gray-100) 10px,
+    var(--gray-200) 10px,
+    var(--gray-200) 20px
+  );
 }
 </style>
