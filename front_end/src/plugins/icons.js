@@ -2,6 +2,7 @@ import {
   PlusCircleIcon,
   PlusIcon,
   MinusIcon,
+  PencilIcon,
   ArrowCircleDownIcon,
   ArrowCircleUpIcon,
   MenuIcon,
@@ -45,5 +46,6 @@ export default {
     app.component("globe-icon", GlobeIcon);
     app.component("globe-alt-icon", GlobeAltIcon);
     app.component("x-icon", XIcon);
+    app.component("pencil-icon", PencilIcon);
   },
 };

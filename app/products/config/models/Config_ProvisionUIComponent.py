@@ -19,7 +19,7 @@ class Model_ConfigProvisionUIComponent(BaseModel):
     component_type  = db.Column(db.String(50), nullable=False)
     component_type_code = db.Column(
         db.String(50), db.ForeignKey(f"{REF_COMPONENT_TYPES}.component_type_code"), nullable=False)
-    ui_label = db.Column(db.String, nullable=False)
+    ui_label = db.Column(db.String)
 
     __mapper_args__ = {
         'polymorphic_identity': 'BASE',

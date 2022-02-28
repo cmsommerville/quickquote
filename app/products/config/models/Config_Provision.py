@@ -16,13 +16,13 @@ class Model_ConfigProvision(BaseModel):
 
     provision_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey(f"{CONFIG_PRODUCT}.product_id"), nullable=False)
-    provision_code = db.Column(db.ForeignKey(f"{REF_PROVISION}.provision_code"), nullable=False)
+    provision_code = db.Column(db.String(30), nullable=False)
+    provision_label = db.Column(db.String(100))
     provision_effective_date = db.Column(db.Date(), nullable=False)
     provision_expiration_date = db.Column(db.Date(), nullable=False)
 
     product = db.relationship(
         "Model_ConfigProduct", back_populates="provisions")
-    provision = db.relationship("Model_RefProvision")
     states = db.relationship(
         "Model_ConfigProvisionStateAvailability", back_populates="provision")
     factors = db.relationship("Model_ConfigFactor")

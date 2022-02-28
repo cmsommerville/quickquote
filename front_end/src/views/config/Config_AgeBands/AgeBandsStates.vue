@@ -113,7 +113,7 @@ export default {
     },
     async save() {
       try {
-        const res = await axios.post(`/config/age-band-set`, this.output);
+        const res = await axios.post(`/config/age-band-sets`, this.output);
         this.$store.dispatch(
           "SET_SNACKBAR_MESSAGE",
           `Created ${res.data.length} new age bands`
@@ -131,18 +131,18 @@ export default {
       return this.$store.getters.get_selected_states;
     },
     output() {
-      const age_band_set = new Model_ConfigAgeBands(
-        this._selection.product_variation_id,
-        this._selection.state_id,
-        this._selection.age_band_effective_date,
-        this._selection.age_band_expiration_date,
-        this._selection.age_bands
-      );
+      const age_band_sets = this.selected_states.map((st) => {
+        return new Model_ConfigAgeBands(
+          this._selection.age_band_set_id,
+          this._selection.product_variation_id,
+          st.state_id,
+          this._selection.age_band_effective_date,
+          this._selection.age_band_expiration_date,
+          this._selection.age_bands
+        );
+      });
 
-      if (this.age_band_set_id)
-        age_band_set.set_age_band_set_id(this.age_band_set_id);
-
-      return age_band_set;
+      return age_band_sets;
     },
   },
 };

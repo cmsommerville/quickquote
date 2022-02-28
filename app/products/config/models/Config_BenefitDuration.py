@@ -18,14 +18,13 @@ class Model_ConfigBenefitDuration(BaseModel):
     benefit_duration_id = db.Column(db.Integer, primary_key=True)
     benefit_id = db.Column(db.Integer, db.ForeignKey(
         f"{CONFIG_BENEFIT}.benefit_id"))
-    benefit_duration_code = db.Column(
-        db.String(30), db.ForeignKey(f"{REF_BENEFIT_DURATION}.duration_code"))
+    benefit_duration_code = db.Column(db.String(30))
+    benefit_duration_label = db.Column(db.String(100))
     default_duration_item_code = db.Column(db.String(30))
 
     benefit = db.relationship(
         "Model_ConfigBenefit",back_populates="durations")
-    duration = db.relationship("Model_RefBenefitDuration")
-    duration_items = db.relationship(
+    items = db.relationship(
         "Model_ConfigBenefitDurationItem", back_populates="duration")
     selected_duration_item = db.relationship(
         "Model_SelectionBenefitDuration", 

@@ -12,7 +12,7 @@
             >Max Issue Age</app-input
           >
         </div>
-        <div class="my-4">
+        <div class="my-8">
           <app-input
             :disabled="!_selection.is_family_code_rated"
             v-model="_selection.family_code_rating_algorithm_code"
@@ -45,30 +45,36 @@
     </div>
     <div class="border-t border-gray-200 my-8 flex flex-col items-center">
       <div class="my-8">
-        <app-select
-          v-model="_selection.age_distribution_set_id"
-          :items="age_dist"
-          item_text="age_distribution_set_label"
-          item_value="age_distribution_set_id"
-          class="w-80 text-right my-2"
-          >Age Distribution</app-select
-        >
-        <app-select
-          v-model="_selection.unismoker_distribution_set_id"
-          :items="smoker_dist"
-          item_text="attr_distribution_set_label"
-          item_value="attr_distribution_set_id"
-          class="w-80 text-right my-2"
-          >Unismoker Distribution</app-select
-        >
-        <app-select
-          v-model="_selection.unisex_distribution_set_id"
-          :items="gender_dist"
-          item_text="attr_distribution_set_label"
-          item_value="attr_distribution_set_id"
-          class="w-80 text-right my-2"
-          >Unisex Distribution</app-select
-        >
+        <div class="my-8">
+          <app-select
+            v-model="_selection.age_distribution_set_id"
+            :items="age_dist"
+            item_text="age_distribution_set_label"
+            item_value="age_distribution_set_id"
+            class="w-80 text-right my-2"
+            >Age Distribution</app-select
+          >
+        </div>
+        <div class="my-8">
+          <app-select
+            v-model="_selection.unismoker_distribution_set_id"
+            :items="smoker_dist"
+            item_text="attr_distribution_set_label"
+            item_value="attr_distribution_set_id"
+            class="w-80 text-right my-2"
+            >Unismoker Distribution</app-select
+          >
+        </div>
+        <div class="my-8">
+          <app-select
+            v-model="_selection.unisex_distribution_set_id"
+            :items="gender_dist"
+            item_text="attr_distribution_set_label"
+            item_value="attr_distribution_set_id"
+            class="w-80 text-right my-2"
+            >Unisex Distribution</app-select
+          >
+        </div>
       </div>
     </div>
   </div>

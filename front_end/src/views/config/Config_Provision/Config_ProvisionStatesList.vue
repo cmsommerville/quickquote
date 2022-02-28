@@ -13,21 +13,24 @@
             :rowData="rowData"
             rowSelection="single"
             @selection-changed="onGridSelectionChanged"
+            @row-double-clicked="doubleClickRowHandler"
           >
           </ag-grid-vue>
         </div>
         <div class="mx-auto mt-12 flex items-center">
-          <config-new-benefit-states-modal
+          <config-new-provision-states-modal
             class="mx-4"
-            :parent_benefit="benefit"
-            @close:modal="loadBenefit"
+            :provision="provision"
+            @close:modal="loadProvision"
           />
-          <config-edit-benefit-states-modal
+          <config-edit-provision-states-modal
+            ref="editProvision"
             class="mx-4"
-            :disabled="!_selection.benefit_id"
+            :disabled="!_selection.provision_id"
             :transparent="true"
-            :benefit="_selection"
-            @close:modal="loadBenefit"
+            :provision_state="_selection"
+            :provision_code="provision.provision_code"
+            @close:modal="loadProvision"
           />
         </div>
       </div>
@@ -41,46 +44,46 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
-import ConfigNewBenefitStatesModal from "./Config_NewBenefitStates_Modal.vue";
-import ConfigEditBenefitStatesModal from "./Config_EditBenefitStates_Modal.vue";
+import ConfigNewProvisionStatesModal from "./Config_NewProvisionStates_Modal.vue";
+import ConfigEditProvisionStatesModal from "./Config_EditProvisionStates_Modal.vue";
 import { AgGridVue } from "ag-grid-vue3";
-import { CONFIG_BENEFIT_STATES_LIST__COLUMN_DEFS } from "./config.js";
+import { CONFIG_PROVISION_STATES_LIST__COLUMN_DEFS } from "./config.js";
 
 export default {
-  name: "Config_BenefitStatesList",
+  name: "Config_ProvisionStatesList",
   components: {
     AgGridVue,
     AppFormTabs,
     AppFormHeader,
-    ConfigNewBenefitStatesModal,
-    ConfigEditBenefitStatesModal,
+    ConfigNewProvisionStatesModal,
+    ConfigEditProvisionStatesModal,
   },
   props: {
     product_id: {
       required: true,
       type: [Number, String],
     },
-    benefit_id: {
+    provision_id: {
       required: true,
       type: [Number, String],
     },
   },
   async mounted() {
     this.loaded = false;
-    await this.loadBenefit();
+    await this.loadProvision();
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
-      title: "States",
-      subtitle: "Setup a new state or change an existing one!",
+      title: "Provisions",
+      subtitle: "Create a new provision or edit an existing one!",
       active_stage: "landing",
       _stages: [
         {
-          label: "Back to Benefit",
-          id: "benefit",
-          to: "config-benefit-landing",
+          label: "Back to Provision",
+          id: "provision",
+          to: "config-provision-landing",
         },
         {
           label: "States",
@@ -88,22 +91,26 @@ export default {
           disabled: true,
         },
       ],
-      benefit: {},
-      columnDefs: [...CONFIG_BENEFIT_STATES_LIST__COLUMN_DEFS],
+      provision: {},
+      columnDefs: [...CONFIG_PROVISION_STATES_LIST__COLUMN_DEFS],
       _selection: {},
     };
   },
   methods: {
-    async loadBenefit() {
-      const res = await axios.get(`/config/benefit/${this.benefit_id}`);
-      this.benefit = { ...res.data };
+    doubleClickRowHandler() {
+      this._selection = this.gridApi.getSelectedRows()[0];
+      this.$refs.editProvision.open();
+    },
+    async loadProvision() {
+      const res = await axios.get(`/config/provision/${this.provision_id}`);
+      this.provision = { ...res.data };
     },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
         params: {
           product_id: this.product_id,
-          benefit_id: this.benefit_id,
+          provision_id: this.provision_id,
           ...params,
         },
         query: {
@@ -124,10 +131,10 @@ export default {
   },
   computed: {
     rowData() {
-      return this.benefit.child_states.map((item) => {
+      return this.provision.states.map((item) => {
         return {
           ...item,
-          ...item.state,
+          provision_code: this.provision.provision_code,
         };
       });
     },

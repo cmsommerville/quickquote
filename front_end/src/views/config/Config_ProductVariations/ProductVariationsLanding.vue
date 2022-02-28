@@ -1,21 +1,21 @@
 <template>
   <div class="grid grid-cols-2">
-    <div>
-      <div class="my-8">
+    <div class="flex flex-col items-center justify-between">
+      <div class="my-4 w-1/2">
         <app-input
           v-model="_selection.product_variation_label"
           :disabled="disableInputs"
           >Product Variation Name</app-input
         >
       </div>
-      <div class="my-8">
+      <div class="my-4 w-1/2">
         <app-input
           v-model="_selection.product_variation_code"
           :disabled="disableInputs"
           >Product Variation Code</app-input
         >
       </div>
-      <div class="my-8">
+      <div class="my-4 w-1/2">
         <app-input
           v-model="_selection.product_variation_effective_date"
           :disabled="disableInputs"
@@ -23,7 +23,7 @@
           >Effective Date</app-input
         >
       </div>
-      <div class="my-8">
+      <div class="my-4 w-1/2">
         <app-input
           v-model="_selection.product_variation_expiration_date"
           :disabled="disableInputs"

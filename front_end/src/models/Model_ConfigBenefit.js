@@ -1,10 +1,3 @@
-class Model_RefBenefit {
-  constructor(benefit_code, benefit_label) {
-    this.benefit_code = benefit_code;
-    this.benefit_label = benefit_label;
-  }
-}
-
 export class Model_ConfigBenefitState {
   constructor(
     parent_id,
@@ -50,6 +43,7 @@ export class Model_ConfigBenefit {
     this.product_id = +product_id ?? null;
     this.state_id = state_id ?? null;
     this.benefit_code = benefit_code ?? null;
+    this.benefit_label = benefit_label ?? null;
     this.benefit_effective_date = benefit_effective_date ?? "1900-01-01";
     this.benefit_expiration_date = benefit_expiration_date ?? "9999-12-31";
     this.coverage_id = coverage_id ?? null;
@@ -60,7 +54,6 @@ export class Model_ConfigBenefit {
     this.default_value = default_value ?? null;
     this.unit_code = unit_code ?? null;
     this.is_durational = is_durational ?? false;
-    this.ref_benefit = new Model_RefBenefit(benefit_code, benefit_label);
   }
   validate() {
     return true;

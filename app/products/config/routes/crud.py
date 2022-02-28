@@ -241,6 +241,10 @@ rating_routes = [
 
 custom_crud_routes = [
     {
+        "class": CRUD_RefStates_List, 
+        "endpoints": ['/config/ref-states']
+    }, 
+    {
         "class": CRUD_ProductVariation, 
         "endpoints": ['/config/product-variations/<int:id>', '/config/product-variations']
     }, 
@@ -320,15 +324,15 @@ factor_list_routes = [
 ]
 
 ref_data_list_routes = [
-    {
-        "class": CRUD_ResourceFactory(
-            resource_name='CRUD_RefStates_List', 
-            model=Model_RefStates,
-            schema=Schema_RefStates, 
-            primary_key='state_id'
-        ).generate_list_class(), 
-        "endpoints": ['/config/ref-states']
-    }, 
+    # {
+    #     "class": CRUD_ResourceFactory(
+    #         resource_name='CRUD_RefStates_List', 
+    #         model=Model_RefStates,
+    #         schema=Schema_RefStates, 
+    #         primary_key='state_id'
+    #     ).generate_list_class(), 
+    #     "endpoints": ['/config/ref-states']
+    # }, 
     {
         "class": CRUD_ResourceFactory(
             resource_name='CRUD_RefUnitCode_List', 
@@ -337,5 +341,32 @@ ref_data_list_routes = [
             primary_key='unit_code'
         ).generate_list_class(), 
         "endpoints": ['/config/ref-unit-codes']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_RefComponentTypes_List', 
+            model=Model_RefComponentTypes,
+            schema=Schema_RefComponentTypes, 
+            primary_key='component_type_code'
+        ).generate_list_class(), 
+        "endpoints": ['/config/ref-component-types']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_RefTextFieldTypes_List', 
+            model=Model_RefTextFieldTypes,
+            schema=Schema_RefTextFieldTypes, 
+            primary_key='type_code'
+        ).generate_list_class(), 
+        "endpoints": ['/config/ref-text-field-types']
+    }, 
+    { 
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_RefComparisonOperator_List', 
+            model=Model_RefComparisonOperator,
+            schema=Schema_RefComparisonOperator, 
+            primary_key='comparison_operator_code'
+        ).generate_list_class(), 
+        "endpoints": ['/config/ref-comparison-operators']
     }, 
 ]

@@ -4,7 +4,6 @@
       :stages="stages"
       :title="title"
       :subtitle="subtitle"
-      :tabbed="true"
       @toggle:stage="toggleHandler"
     >
       <template #content>
@@ -13,7 +12,7 @@
             <div class="col-span-3">
               <united-states-map
                 class="h-full"
-                :configured_states="product_states"
+                :disabled_states="product_states"
               />
               <div class="flex justify-end">
                 <app-button class="h-10 text-xs" @click="toggleAllStates">{{
@@ -164,8 +163,8 @@ export default {
         query: { ...query },
       });
     },
-    toggleHandler(id) {
-      const stage = this.stages.find((stg) => stg.id === id);
+    toggleHandler(s) {
+      const stage = this.stages.find((stg) => stg.id === s.id);
       this.routeTo(stage.to);
     },
     async save() {

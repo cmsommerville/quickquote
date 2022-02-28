@@ -12,18 +12,15 @@
             @grid-ready="onGridReady"
             :rowData="rowData"
             rowSelection="single"
+            :rowDragManaged="true"
             @selection-changed="onGridSelectionChanged"
             @row-double-clicked="doubleClickRowHandler"
+            @row-drag-end="priorityHandler"
           >
           </ag-grid-vue>
         </div>
         <div class="mx-auto mt-12">
-          <app-button
-            class="mx-6"
-            :disabled="!_selection.coverage_id"
-            @click="configure"
-            >Edit</app-button
-          >
+          <app-button class="mx-6" @click="configure">Edit</app-button>
           <app-button
             class="mx-6"
             :transparent="true"
@@ -43,10 +40,10 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
 import { AgGridVue } from "ag-grid-vue3";
-import { CONFIG_BENEFIT__COLUMN_DEFS } from "./config.js";
+import { CONFIG_FACTOR_LIST__COLUMN_DEFS } from "./config.js";
 
 export default {
-  name: "Config_BenefitList",
+  name: "Config_FactorList",
   components: {
     AgGridVue,
     AppFormTabs,
@@ -57,56 +54,70 @@ export default {
       required: true,
       type: [Number, String],
     },
+    provision_id: {
+      required: true,
+      type: [Number, String],
+    },
   },
   async mounted() {
     this.loaded = false;
     const res = await axios.get(
-      `/qry-config/all-benefits?product_id=${this.product_id}`
+      `/qry-config/factors?provision_id=${this.provision_id}`
     );
 
-    this.benefits = [...res.data];
+    this.factors = [...res.data];
     this.loaded = true;
   },
   data() {
     return {
       loaded: false,
-      title: "Benefits",
-      subtitle: "Create a new benefit or edit an existing one!",
-      active_stage: "landing",
+      title: "Factors",
+      subtitle: "Create a new factor or edit an existing one!",
+      active_stage: "factors",
       _stages: [
         {
-          label: "Back to Product",
-          id: "product",
-          to: "config-product",
+          label: "Back to Provision",
+          id: "provision",
+          to: "config-provision-landing",
         },
         {
-          label: "All Benefits",
-          id: "landing",
-          disabled: true,
-        },
-        {
-          label: "Configure",
-          id: "configure",
+          label: "Factors",
+          id: "factors",
           disabled: true,
         },
       ],
-      benefits: [],
-      columnDefs: [...CONFIG_BENEFIT__COLUMN_DEFS],
+      factors: [],
+      columnDefs: [...CONFIG_FACTOR_LIST__COLUMN_DEFS],
       _selection: {},
     };
   },
   methods: {
-    configure() {
-      this.routeTo("config-benefit-landing", {
-        benefit_id: this._selection.benefit_id,
+    priorityHandler() {
+      const data = [];
+      this.gridApi.forEachNode(function (row, index) {
+        data.push({ ...row.data, factor_priority: index });
       });
+      this.factors = [
+        ...data.map((f, ix) => {
+          return { ...f, factor_priority: ix };
+        }),
+      ];
+    },
+    configure() {
+      this.routeTo(
+        "config-factor",
+        {},
+        {
+          factor_id: this._selection.factor_id,
+        }
+      );
     },
     doubleClickRowHandler() {
       this._selection = this.gridApi.getSelectedRows()[0];
       this.configure();
     },
     newBenefitHandler() {
-      this.routeTo("config-benefit-new");
+      this.routeTo("config-factor");
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -118,20 +129,55 @@ export default {
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id, ...params },
+        params: {
+          product_id: this.product_id,
+          provision_id: this.provision_id,
+          ...params,
+        },
         query: { ...query },
       });
+    },
+    ruleFormatter(rule) {
+      const ops = {
+        __lt__: "<",
+        __le__: "<=",
+        __gt__: ">",
+        __ge__: ">=",
+        __eq__: "=",
+        __ne__: "!=",
+      };
+      if (!rule) return "";
+      return `${rule.field_name} ${ops[rule.comparison_operator_code]} ${
+        rule.field_value
+      }`;
     },
     toggleHandler(stg) {
       this.routeTo(stg.to);
     },
   },
   computed: {
+    output() {
+      return this.factors;
+    },
     rowData() {
-      return this.benefits.map((item) => {
+      return this.factors.map((item, i) => {
+        const rule1 =
+          item.factor_rules && item.factor_rules.length >= 1
+            ? item.factor_rules[0]
+            : null;
+        const rule2 =
+          item.factor_rules && item.factor_rules.length >= 2
+            ? item.factor_rules[1]
+            : null;
+        const rule3 =
+          item.factor_rules && item.factor_rules.length >= 3
+            ? item.factor_rules[2]
+            : null;
         return {
           ...item,
-          state_count: item.child_states ? item.child_states.length : 1,
+          rule1: this.ruleFormatter(rule1),
+          rule2: this.ruleFormatter(rule2),
+          rule3: this.ruleFormatter(rule3),
         };
       });
     },

@@ -95,7 +95,7 @@ import axios from "@/services/axios.js";
 export default {
   name: "UnitedStatesMap",
   props: {
-    configured_states: {
+    disabled_states: {
       default: [],
       type: Array,
     },
@@ -119,7 +119,7 @@ export default {
         .filter((st) => !!st.svg_path)
         .map((item) => {
           const config_states =
-            this.configured_states.find(
+            this.disabled_states.find(
               (cs) => cs.state_code === item.state_code
             ) ?? {};
           if (config_states.state_code) {

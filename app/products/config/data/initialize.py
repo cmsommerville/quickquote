@@ -91,27 +91,32 @@ class Resource_InitializeData(Resource):
         })
         rate_group = res.json()
 
-        # benefits
-        benefits = []
-        for bnft in CONFIG_BENEFIT: 
-            res = requests.post('http://localhost:5000/config/benefit', json={
-                **bnft, 
-                "child_states": [{**child, "product_id": product['product_id']} for child in bnft['child_states']], 
-                "product_id": product['product_id'], 
-                "rate_group_id": rate_group['rate_group_id'], 
-                "coverage_id": coverage['coverage_id']
-            })
-            benefits.append(res.json())
+        try: 
+            # benefits
+            benefits = []
+            for bnft in CONFIG_BENEFIT: 
+                res = requests.post('http://localhost:5000/config/benefit', json={
+                    **bnft, 
+                    "child_states": [{**child, "product_id": product['product_id']} for child in bnft['child_states']], 
+                    "product_id": product['product_id'], 
+                    "rate_group_id": rate_group['rate_group_id'], 
+                    "coverage_id": coverage['coverage_id']
+                })
+                benefits.append(res.json())
+        except Exception as e: 
+            print("BENEFITS ERROR")
 
-
-        # provisions
-        provisions = []
-        for prov in CONFIG_PROVISION: 
-            res = requests.post('http://localhost:5000/config/provision', json={
-                **prov, 
-                "product_id": product['product_id'], 
-            })
-            provisions.append(res.json())
+        try: 
+            # provisions
+            provisions = []
+            for prov in CONFIG_PROVISION: 
+                res = requests.post('http://localhost:5000/config/provision', json={
+                    **prov, 
+                    "product_id": product['product_id'], 
+                })
+                provisions.append(res.json())
+        except Exception as e: 
+            print("PROVISION ERROR")
 
         # provision ui
         for prov_code, ui in CONFIG_PROVISION_UI.items(): 
@@ -131,21 +136,25 @@ class Resource_InitializeData(Resource):
             )
             
 
-
-        # benefit product variation
-        for bnft in benefits: 
-            res = requests.post('http://localhost:5000/config/benefit-product-variations', json=[{
-                "product_variation_id": product_variation['product_variation_id'], 
-                "benefit_id": bnft['benefit_id']
-            }])
-
-        
-        # benefit provision
-        for bnft in benefits: 
-            for prov in provisions: 
-                res = requests.post('http://localhost:5000/config/benefit-provisions', json={
-                    "provision_id": prov['provision_id'], 
+        try: 
+            # benefit product variation
+            for bnft in benefits: 
+                res = requests.post('http://localhost:5000/config/benefit-product-variations', json=[{
+                    "product_variation_id": product_variation['product_variation_id'], 
                     "benefit_id": bnft['benefit_id']
-                })
+                }])
+        except Exception as e: 
+            print("BENEFIT PRODUCT VARIATION ERROR")
+        
+        try: 
+            # benefit provision
+            for bnft in benefits: 
+                for prov in provisions: 
+                    res = requests.post('http://localhost:5000/config/benefit-provisions', json={
+                        "provision_id": prov['provision_id'], 
+                        "benefit_id": bnft['benefit_id']
+                    })
+        except Exception as e: 
+            print("BENEFIT PROVISION ERROR")
 
         return "Data loaded", 200

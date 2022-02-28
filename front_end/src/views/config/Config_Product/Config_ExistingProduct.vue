@@ -106,7 +106,7 @@ export default {
           icon: "plus-circle-icon",
           id: "provisions",
           prereq_ids: ["benefits"],
-          route_name: "config-provisions",
+          route_name: "config-provision-list",
         },
       ],
       selection: null,

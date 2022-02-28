@@ -42,6 +42,7 @@
         'border-2': true,
         'py-1': true,
         'px-4': true,
+        'w-full': true,
         'bg-gray-100': $attrs.disabled,
         'text-gray-400': $attrs.disabled,
       }"

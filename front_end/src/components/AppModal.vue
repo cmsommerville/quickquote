@@ -5,7 +5,7 @@
     @click="closeHandler"
   >
     <div
-      class="min-w-2/3 min-h-1/2 z-50 bg-gray-100 rounded-md overflow-hidden"
+      class="min-w-1/3 min-h-1/2 z-50 bg-gray-100 rounded-md overflow-hidden"
       @click.stop
     >
       <div class="w-full h-16 bg-gray-300 px-8 py-2 relative flex items-center">
@@ -18,7 +18,7 @@
         />
       </div>
       <div class="px-8 py-2">
-        <slot name="content" />
+        <slot name="content" :close="closeHandler" />
       </div>
     </div>
   </div>
@@ -38,6 +38,9 @@ export default {
     };
   },
   methods: {
+    openHandler() {
+      this.open = true;
+    },
     closeHandler() {
       this.$emit("close:modal");
       this.open = false;

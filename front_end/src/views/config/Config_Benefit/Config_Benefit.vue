@@ -158,7 +158,10 @@
 
       <template #actions>
         <div class="flex justify-center">
-          <app-button class="mx-3" @click="save">Next</app-button>
+          <app-button class="mx-3" @click="save">Save</app-button>
+          <app-button class="mx-3" :transparent="true" @click="cancel"
+            >Cancel</app-button
+          >
         </div>
       </template>
     </app-form-card>
@@ -221,7 +224,6 @@ export default {
           bnft,
           this.multiple_states
         );
-
         this.loaded = true;
       })
       .catch((err) => {
@@ -233,16 +235,21 @@ export default {
       loaded: false,
       title: "Setup This Benefit",
       subtitle: "",
-      active_stage: "configure",
+      active_stage: "basic_info",
       _stages: [
         {
           label: "All Benefits",
-          id: "landing",
+          id: "benefits",
           to: "config-benefits",
         },
         {
-          label: "Configure",
-          id: "configure",
+          label: "Back to Benefit",
+          id: "benefit",
+          to: "config-benefit-landing",
+        },
+        {
+          label: "Basic Info",
+          id: "basic_info",
           disabled: true,
         },
       ],
@@ -256,10 +263,18 @@ export default {
   },
   computed: {
     stages() {
-      return this._stages.map((item) => ({
-        ...item,
-        active: item.id === this.active_stage,
-      }));
+      return this._stages
+        .filter((item) => {
+          if (this.$route.params.benefit_id) {
+            return item.id !== "benefits";
+          } else {
+            return item.id !== "benefit";
+          }
+        })
+        .map((item) => ({
+          ...item,
+          active: item.id === this.active_stage,
+        }));
     },
     suffix() {
       return this.benefit.unit_code === "percent" ? "%" : "$";
@@ -293,39 +308,43 @@ export default {
         data.is_durational
       );
     },
+    cancel() {
+      if (this.$route.params.benefit_id) {
+        this.routeTo("config-benefit-landing");
+      } else {
+        this.routeTo("config-benefits");
+      }
+    },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id, ...params },
+        params: {
+          product_id: this.product_id,
+          benefit_id: this.benefit_id,
+          ...params,
+        },
         query: { ...query },
       });
-    },
-    sortOrderHandler() {
-      console.log("Sort order handler!");
-    },
-    toggleHandler(stage) {
-      this.routeTo(stage.to);
     },
     async save() {
       try {
         const bnft = await axios.post("/config/benefit", this.output);
         this.benefit = { ...bnft.data };
         this.$store.commit("SET_SELECTIONS_OBJECT", this.benefit);
-        this.$store.dispatch(
-          "SET_SNACKBAR_MESSAGE",
-          "Inserted benefit to database!"
-        );
+        this.$store.dispatch("SET_SNACKBAR_MESSAGE", "Saved to database!");
 
-        if (this.multiple_states) {
-          this.routeTo("config-benefit-states", {
-            benefit_id: this.benefit.benefit_id,
-          });
-        } else {
-          this.routeTo("config-product");
-        }
+        this.routeTo("config-benefit-landing", {
+          benefit_id: this.benefit.benefit_id,
+        });
       } catch (err) {
         this.$store.dispatch("SET_SNACKBAR_MESSAGE", err);
       }
+    },
+    sortOrderHandler() {
+      console.log("Sort order handler!");
+    },
+    toggleHandler(stage) {
+      this.routeTo(stage.to);
     },
   },
 };

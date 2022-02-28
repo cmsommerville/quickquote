@@ -32,8 +32,8 @@ class Model_ConfigBenefit(BaseModel):
         f"{CONFIG_PRODUCT}.product_id"), nullable=False)
     state_id = db.Column(db.ForeignKey(
         f"{REF_STATE}.state_id"), nullable=False)
-    benefit_code = db.Column(db.ForeignKey(
-        f"{REF_BENEFIT}.benefit_code"), nullable=False)
+    benefit_code = db.Column(db.String(30), nullable=False)
+    benefit_label = db.Column(db.String(100))
     benefit_effective_date = db.Column(db.Date(), nullable=False)
     benefit_expiration_date = db.Column(db.Date(), nullable=False)
     coverage_id = db.Column(db.ForeignKey(
@@ -58,7 +58,6 @@ class Model_ConfigBenefit(BaseModel):
         "Model_ConfigBenefitProductVariation", back_populates="benefit")
     coverage = db.relationship(
         "Model_ConfigCoverage", back_populates="benefits")
-    ref_benefit = db.relationship("Model_RefBenefit")
     rate_group = db.relationship("Model_ConfigRateGroup")
     durations = db.relationship(
         "Model_ConfigBenefitDuration", back_populates="benefit")

@@ -262,14 +262,8 @@ CONFIG_COVERAGE = {
 CONFIG_RATE_GROUP = {
     "rate_group_code": "LS", 
     "rate_type_code": "APU",
-    "rate_type": {
-        "rate_type_code": "APU", 
-        "rate_type_label": "Annual Rate per $1000"
-    }, 
-    "rate_group": {
-        "rate_group_code": "LS", 
-        "rate_group_label": "Lump Sum"
-    }
+    "rate_type_label": "Annual Rate per $1000", 
+    "rate_group_label": "Lump Sum"
 }
 
 CONFIG_BENEFIT = [
@@ -284,10 +278,7 @@ CONFIG_BENEFIT = [
       "unit_code":"Percent",
       "is_durational":False,
       "benefit_code":"cancer",
-      "ref_benefit":{
-          "benefit_code":"cancer",
-          "benefit_label":"Internal Cancer"
-      }, 
+      "benefit_label":"Internal Cancer", 
       "child_states": [
         {
           "state_id": 1,
@@ -325,11 +316,8 @@ CONFIG_BENEFIT = [
       "default_value":"100",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"heart_attack",
-      "ref_benefit":{
           "benefit_code":"heart_attack",
-          "benefit_label":"Heart Attack"
-      }, 
+          "benefit_label":"Heart Attack", 
       "child_states": [
         {
           "state_id": 1,
@@ -367,11 +355,8 @@ CONFIG_BENEFIT = [
       "default_value":"100",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"stroke",
-      "ref_benefit":{
           "benefit_code":"stroke",
-          "benefit_label":"Stroke"
-      }, 
+          "benefit_label":"Stroke", 
       "child_states": [
         {
           "state_id": 1,
@@ -409,11 +394,8 @@ CONFIG_BENEFIT = [
       "default_value":"100",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"transplant",
-      "ref_benefit":{
           "benefit_code":"transplant",
-          "benefit_label":"Major Organ Transplant"
-      }, 
+          "benefit_label":"Major Organ Transplant", 
       "child_states": [
         {
           "state_id": 1,
@@ -451,11 +433,8 @@ CONFIG_BENEFIT = [
       "default_value":"100",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"renal_failure",
-      "ref_benefit":{
           "benefit_code":"renal_failure",
-          "benefit_label":"End Stage Renal Failure"
-      }, 
+          "benefit_label":"End Stage Renal Failure", 
       "child_states": [
         {
           "state_id": 1,
@@ -493,11 +472,8 @@ CONFIG_BENEFIT = [
       "default_value":"25",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"alzheimers",
-      "ref_benefit":{
           "benefit_code":"alzheimers",
-          "benefit_label":"Advanced Alzheimer's"
-      }, 
+          "benefit_label":"Advanced Alzheimer's", 
       "child_states": [
         {
           "state_id": 1,
@@ -535,11 +511,8 @@ CONFIG_BENEFIT = [
       "default_value":"100",
       "unit_code":"Percent",
       "is_durational":False,
-      "benefit_code":"parkinsons",
-      "ref_benefit":{
           "benefit_code":"parkinsons",
-          "benefit_label":"Parkinson's Disease"
-      }, 
+          "benefit_label":"Parkinson's Disease", 
       "child_states": [
         {
           "state_id": 1,
@@ -573,13 +546,10 @@ CONFIG_BENEFIT = [
 
 CONFIG_PROVISION = [
   {
-    "provision_code": "group_size",
     "provision_effective_date": "1900-01-01",
     "provision_expiration_date": "9999-12-31",
-    "provision": {
-        "provision_label": "Group Size",
-        "provision_code": "group_size",
-    },
+    "provision_label": "Group Size",
+    "provision_code": "group_size",
     "states": [
         {
             "state_id": 1,
@@ -604,13 +574,10 @@ CONFIG_PROVISION = [
     ],
   }, 
   {
-    "provision_code": "prex",
     "provision_effective_date": "1900-01-01",
     "provision_expiration_date": "9999-12-31",
-    "provision": {
-        "provision_label": "Pre-Existing Condition Limitation",
-        "provision_code": "prex",
-    },
+    "provision_label": "Pre-Existing Condition Limitation",
+    "provision_code": "prex",
     "states": [
         {
             "state_id": 1,

@@ -1,5 +1,5 @@
 <template>
-  <app-modal v-bind="$attrs" @close:modal="$emit('close:modal')">
+  <app-modal ref="modal" v-bind="$attrs" @close:modal="$emit('close:modal')">
     <template #header>Add States</template>
     <template #content>
       <div class="my-2 grid grid-cols-3 gap-8">
@@ -46,23 +46,21 @@
 import axios from "@/services/axios.js";
 import AppModal from "@/components/AppModal.vue";
 import UnitedStatesMap from "@/components/USAMap/USAMap.vue";
-import { Model_ConfigBenefitState } from "@/models/Model_ConfigBenefit.js";
+import { Model_ConfigProvisionState } from "@/models/Model_ConfigProvision.js";
 
 export default {
-  name: "Config_NewBenefitStates_Modal",
+  name: "Config_NewProvisionStates_Modal",
   components: { AppModal, UnitedStatesMap },
   props: {
-    parent_benefit: {
+    provision: {
       required: true,
       type: Object,
     },
   },
   mounted() {
-    this.effective_date = this.parent_benefit.benefit_effective_date;
-    this.expiration_date = this.parent_benefit.benefit_expiration_date;
-    this.configured_states = this.parent_benefit.child_states.map((st) => {
-      return { ...st.state, benefit_id: st.benefit_id };
-    });
+    this.effective_date = this.provision.provision_effective_date;
+    this.expiration_date = this.provision.provision_expiration_date;
+    this.configured_states = [...this.provision.states];
   },
   data() {
     return {
@@ -72,15 +70,18 @@ export default {
     };
   },
   methods: {
+    open() {
+      this.$refs.modal.openHandler();
+    },
     toggleAllStates() {
       this.$store.commit("toggle_all_states");
     },
     async save() {
       try {
-        const res = await axios.post("/config/benefits", this.output);
+        const res = await axios.post("/config/provision/states", this.output);
         this.$store.dispatch(
           "SET_SNACKBAR_MESSAGE",
-          `Added ${res.data.length} states to the database!`
+          `Added ${res.data.length} states!`
         );
       } catch (err) {
         this.$store.dispatch("SET_SNACKBAR_MESSAGE", err);
@@ -93,11 +94,10 @@ export default {
     },
     output() {
       return this.selected_states.map((st) => {
-        return new Model_ConfigBenefitState(
-          this.parent_benefit.benefit_id,
-          this.parent_benefit.product_id,
+        return new Model_ConfigProvisionState(
+          null,
+          this.provision.provision_id,
           st.state_id,
-          this.parent_benefit.benefit_code,
           this.effective_date,
           this.expiration_date
         );

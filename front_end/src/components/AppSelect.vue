@@ -32,6 +32,7 @@
         'pl-2': true,
         'pr-10': true,
         'w-full': true,
+        'bg-transparent': true,
 
         'placeholder:text-inherit': true,
         'placeholder:font-extralight': true,
@@ -42,11 +43,12 @@
       v-bind="$attrs"
     >
       <option
-        v-for="item in items"
-        :key="item[item_value]"
-        :value="item[item_value]"
+        v-for="(item, i) in _items"
+        :key="item.code"
+        :value="item.code"
+        :hidden="item.hidden"
       >
-        {{ item[item_text] }}
+        {{ item.label }}
       </option>
     </select>
   </div>
@@ -81,6 +83,20 @@ export default {
     return {
       htmlFor: "",
     };
+  },
+  computed: {
+    _items() {
+      return [
+        // { label: "Select an option", code: null, hidden: true },
+        ...this.items.map((item) => {
+          return {
+            label: item[this.item_text],
+            code: item[this.item_value],
+            hidden: false,
+          };
+        }),
+      ];
+    },
   },
 };
 </script>
