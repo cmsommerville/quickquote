@@ -84,7 +84,7 @@ export default {
     return {
       loaded: false,
       title: "Setup This Provision",
-      subtitle: "",
+      subtitle: "Let's get some basic info!",
       active_stage: "basic_info",
       _stages: [
         {

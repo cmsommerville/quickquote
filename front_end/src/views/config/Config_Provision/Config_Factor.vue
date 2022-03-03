@@ -26,47 +26,56 @@
                 <app-modal
                   :fab="true"
                   :disabled="!rule._id"
-                  class="bg-red-700 text-white mb-4"
+                  class="bg-red-700 text-white mb-4 border-2 border-red-700 disabled:border-gray-200"
                   ><x-icon class="h-16 w-16 p-5" />
                   <template #header>Are you sure?</template>
-                  <template #content>
-                    <div
-                      class="flex justify-center items-center mx-32 mt-12 mb-8"
-                    >
-                      <app-button @click="deleteHandler"
+                  <template #content="contentProps">
+                    <div class="flex justify-center items-center mx-32 my-8">
+                      <app-button class="bg-red-700 mr-8" @click="deleteHandler"
                         >Delete record</app-button
+                      >
+                      <app-button
+                        :transparent="true"
+                        @click="contentProps.close"
+                        >Cancel</app-button
                       >
                     </div>
                   </template>
                 </app-modal>
-                <!-- <app-button><x-icon class="h-16 w-16 p-5" /></app-button> -->
               </div>
             </transition>
             <transition name="scale-up">
               <div v-if="show_fab">
-                <config-factor-modal
-                  class="bg-white text-theme-primary border-2 border-theme-primary mb-4"
-                  ref="editModal"
+                <app-button
+                  class="bg-white text-theme-primary border-2 border-theme-primary mb-4 disabled:border-gray-200"
                   :disabled="!rule._id"
                   :fab="true"
-                  v-model="rule"
-                  :factor="factor"
-                  @update:modelValue="ruleSaveHandler"
+                  @click="openEditHandler"
                   ><pencil-icon class="h-16 w-16 p-5"
-                /></config-factor-modal>
+                /></app-button>
               </div>
             </transition>
 
             <config-factor-modal
-              class="mr-8"
+              class="mr-8 border-2 border-theme-primary disabled:border-gray-200"
               ref="newModal"
               :fab="true"
               v-model="rule"
               :factor="factor"
               @click="newRuleHandler"
               @update:modelValue="ruleSaveHandler"
+              @close:modal="show_fab = false"
               ><plus-icon class="h-16 w-16 p-5"
             /></config-factor-modal>
+
+            <config-factor-modal
+              class="hidden"
+              ref="editModal"
+              v-model="rule"
+              :factor="factor"
+              @update:modelValue="ruleSaveHandler"
+              @close:modal="show_fab = false"
+            ></config-factor-modal>
           </div>
         </div>
         <div class="mx-auto mt-12 flex items-center">
@@ -151,8 +160,8 @@ export default {
     return {
       loaded: false,
       show_fab: false,
-      title: "Setup This Factor",
-      subtitle: "",
+      title: "Setup Rules",
+      subtitle: "Add, edit, or delete a rule!",
       active_stage: "configure",
       _stages: [
         {
@@ -232,6 +241,10 @@ export default {
     },
     onGridSelectionChanged(e) {
       this.rule = this.gridApi.getSelectedRows()[0];
+    },
+    openEditHandler() {
+      this.show_fab = false;
+      this.$refs.editModal.open();
     },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({

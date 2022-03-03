@@ -30,7 +30,7 @@
               >
             </div>
             <div v-if="_selection.component_type === 'SELECT'">
-              <app-modal :fab="true" :transparent="true"
+              <app-modal :fab="true"
                 ><plus-icon class="w-8 h-8 p-2" />
                 <template #header>Edit an Item</template>
                 <template #content="contentProps">

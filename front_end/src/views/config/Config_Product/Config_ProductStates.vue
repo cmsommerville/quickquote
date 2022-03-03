@@ -132,14 +132,13 @@ export default {
     output() {
       if (!this.selected_states) return [];
       return this.selected_states.map((state) => {
-        const state_obj = this.ref_states.find((s) => s.state_code === state);
         const prod_state = this.product_states.find(
-          (s) => s.state_code === state
+          (s) => s.state_code === state.state_code
         );
 
         const output_state = {
           product_id: this.product_id,
-          state_id: state_obj.state_id,
+          state_id: state.state_id,
           state_effective_date: this.state_effective_date,
           state_expiration_date: this.state_expiration_date,
         };

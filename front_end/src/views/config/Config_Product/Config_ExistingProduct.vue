@@ -162,8 +162,8 @@ export default {
         query: { ...query },
       });
     },
-    toggleHandler(id) {
-      const stage = this.stages.find((stg) => stg.id === id);
+    toggleHandler(s) {
+      const stage = this.stages.find((stg) => stg.id === s.id);
       this.routeTo(stage.to);
     },
   },

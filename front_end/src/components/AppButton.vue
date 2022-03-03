@@ -31,7 +31,7 @@ export default {
       _btn: "bg-theme-primary text-white hover:bg-opacity-90 hover:scale-105",
       _transparent:
         "border-2 bg-transparent border-theme-primary text-theme-primary hover:bg-theme-primary hover:text-white hover:bg-opacity-90 hover:scale-105",
-      _fab: "text-white hover:bg-opacity-90 hover:scale-105",
+      _fab: "bg-theme-primary text-white hover:bg-opacity-90 hover:scale-105",
 
       _disabled_flat: "disabled:text-gray-500",
       _disabled_btn:
@@ -64,7 +64,7 @@ export default {
         return classes.join(" ");
       }
 
-      if (this.fab && this.transparent) {
+      if (this.fab || this.transparent) {
         classes = [
           ...classes,
           this.fab ? this._fab : "",
