@@ -1,4 +1,3 @@
-from app.products.config.models.Config_ProductStateAvailability import Model_ConfigProductStateAvailability
 from flask import request
 from flask_restful import Resource
 

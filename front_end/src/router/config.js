@@ -4,6 +4,7 @@ import routes_config_age_bands from "@/views/config/Config_AgeBands/routes.js";
 import routes_config_coverages from "@/views/config/Config_Coverage/routes.js";
 import routes_config_benefits from "@/views/config/Config_Benefit/routes.js";
 import routes_config_provisions from "@/views/config/Config_Provision/routes.js";
+import routes_config_distributions from "@/views/config/Config_Distributions/routes.js";
 
 export default [
   ...routes_config_product,
@@ -12,4 +13,5 @@ export default [
   ...routes_config_coverages,
   ...routes_config_benefits,
   ...routes_config_provisions,
+  ...routes_config_distributions,
 ];

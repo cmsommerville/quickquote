@@ -1,7 +1,7 @@
 <template>
   <div class="w-full bg-white shadow-xl rounded-md min-h-96 p-8">
     <app-form-header :title="title" :subtitle="subtitle" />
-    <age-bands-tabs :active_stage="active_stage" />
+    <app-form-tabs :stages="stages" @toggle:stage="toggleHandler" />
     <div class="my-12" v-if="loaded">
       <div class="grid grid-cols-6 xl:grid-cols-5 gap-8 relative h-96 my-12">
         <div class="col-span-3">
@@ -49,17 +49,16 @@
 import { format } from "date-fns";
 import axios from "@/services/axios.js";
 import UnitedStatesMap from "@/components/USAMap/USAMap.vue";
-import AgeBandsTabs from "./AgeBandsTabs.vue";
+import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import { Model_ConfigAgeBands } from "@/models/Model_ConfigAgeBands.js";
 
 export default {
   name: "Config_ProductVariations",
   components: {
-    AgeBandsTabs,
+    AppFormTabs,
     AppFormHeader,
     UnitedStatesMap,
-    AgeBandsTabs,
   },
   props: {
     product_id: {
@@ -73,7 +72,13 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    this._selection = { ...this.$store.getters.get_selections_object };
+    let age_band_set = {};
+    if (this.age_band_set_id) {
+      age_band_set = await axios.get(
+        `/config/age-band-set/${this.age_band_set_id}`
+      );
+    }
+    this._selection = this.modelSetter(age_band_set);
     this.loaded = true;
   },
   data() {
@@ -82,25 +87,23 @@ export default {
       title: "Age Bands",
       subtitle: "Now let's select which states these age bands apply to...",
       active_stage: "states",
+      _stages: [
+        {
+          label: "Back to Age Band",
+          id: "age_band",
+          to: "config-age-band",
+        },
+        {
+          label: "States",
+          id: "states",
+          disabled: true,
+        },
+      ],
       age_band_states: [],
       _selection: {},
     };
   },
   methods: {
-    routeTo(route_name, params = {}, query = {}) {
-      this.$router.push({
-        name: route_name,
-        params: { product_id: this.product_id, ...params },
-        query: { ...query },
-      });
-    },
-    toggleHandler(stage) {
-      if (!!stage.tab) {
-        this.active_stage = stage.id;
-      } else {
-        this.routeTo(stage.to);
-      }
-    },
     formatDateText(input_dt) {
       const dt = new Date(input_dt);
       const dtDateOnly = new Date(
@@ -108,8 +111,22 @@ export default {
       );
       return format(dtDateOnly, "M/d/yyyy");
     },
-    toggleAllStates() {
-      this.$store.commit("toggle_all_states");
+    modelSetter(data) {
+      return new Model_ConfigAgeBands(
+        data.age_band_set_id ?? null,
+        data.product_variation_id ?? null,
+        data.state_id ?? null,
+        data.age_band_effective_date ?? null,
+        data.age_band_expiration_date ?? null,
+        data.age_bands ?? null
+      );
+    },
+    routeTo(route_name, params = {}, query = {}) {
+      this.$router.push({
+        name: route_name,
+        params: { product_id: this.product_id, ...params },
+        query: { ...query },
+      });
     },
     async save() {
       try {
@@ -122,14 +139,14 @@ export default {
         this.$store.dispatch("SET_SNACKBAR_MESSAGE", err);
       }
     },
+    toggleAllStates() {
+      this.$store.commit("toggle_all_states");
+    },
+    toggleHandler(stage) {
+      this.routeTo(stage.to);
+    },
   },
   computed: {
-    ref_states() {
-      return this.$store.getters.get_ref_states;
-    },
-    selected_states() {
-      return this.$store.getters.get_selected_states;
-    },
     output() {
       const age_band_sets = this.selected_states.map((st) => {
         return new Model_ConfigAgeBands(
@@ -143,6 +160,18 @@ export default {
       });
 
       return age_band_sets;
+    },
+    ref_states() {
+      return this.$store.getters.get_ref_states;
+    },
+    selected_states() {
+      return this.$store.getters.get_selected_states;
+    },
+    stages() {
+      return this._stages.map((item) => ({
+        ...item,
+        active: item.id === this.active_stage,
+      }));
     },
   },
 };

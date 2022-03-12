@@ -19,6 +19,7 @@ from .Config_Provision import *
 from .Config_ProvisionUIComponent import *
 from .Config_ProvisionStateAvailability import *
 from .Config_RateGroup import *
+from .Config_RateTable import *
 from .Ref_ComparisonOperator import *
 from .Ref_ComponentTypes import *
 from .Ref_InterpolationRule import *

@@ -7,7 +7,7 @@ from .Resource_SelectionFactors import *
 from .Resource_SelectionDistribution import *
 from .Resource_DefaultDistribution import *
 from .Resource_RatingMain import *
-from .Config_RateTable import RateTableList
+# from .Config_RateTable import RateTableList
 from .Search_Plan import PlanSearch
 
 
@@ -32,10 +32,10 @@ routes = [
         "class": Resource_SelectionFactors, 
         "endpoints": ['/selections/plan/<int:plan_id>/factors']
     },
-    {
-        "class": RateTableList, 
-        "endpoints": ['/config/rate-table']
-    },
+    # {
+    #     "class": RateTableList, 
+    #     "endpoints": ['/config/rate-table']
+    # },
     {
         "class": Resource_DefaultDistribution, 
         "endpoints": ['/selections/plan/<int:plan_id>/default-dist']

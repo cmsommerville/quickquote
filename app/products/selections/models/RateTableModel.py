@@ -4,7 +4,7 @@ import datetime
 
 
 class RateTableModel(BaseModel):
-    __tablename__ = "rate_table"
+    __tablename__ = "rate_table2"
 
     rate_table_id = db.Column(db.Integer, primary_key=True)
     product_code = db.Column(db.String(20), nullable=False)

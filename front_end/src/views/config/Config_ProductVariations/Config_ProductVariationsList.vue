@@ -4,7 +4,7 @@
     <app-form-tabs :stages="stages" @toggle:stage="toggleHandler" />
     <div class="my-12" v-if="loaded">
       <div class="flex justify-center flex-col my-12">
-        <div class="h-96 relative">
+        <div class="h-72 w-full mx-auto relative">
           <ag-grid-vue
             class="ag-theme-alpine"
             style="width: 100%; height: 100%"
@@ -17,8 +17,8 @@
           >
           </ag-grid-vue>
           <app-new-edit-delete-button
-            :disabled_edit="!_selection.age_band_set_id"
-            :disabled_delete="!_selection.age_band_set_id"
+            :disabled_edit="!_selection.product_variation_id"
+            :disabled_delete="!_selection.product_variation_id"
             @fab:new="newHandler"
             @fab:edit="editHandler"
             @fab:delete="deleteHandler"
@@ -40,17 +40,18 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
+import AppModal from "@/components/AppModal.vue";
 import AppNewEditDeleteButton from "@/components/AppNewEditDeleteButton.vue";
 import { AgGridVue } from "ag-grid-vue3";
-import { CONFIG_AGE_BANDS__COLUMN_DEFS } from "./config.js";
-import { Model_ConfigAgeBands } from "@/models/Model_ConfigAgeBands.js";
+import { CONFIG_PRODUCT_VARIATIONS_LIST__COLUMN_DEFS } from "./config.js";
 
 export default {
-  name: "Config_ProductVariations",
+  name: "Config_ProductVariationsList",
   components: {
     AgGridVue,
-    AppFormHeader,
     AppFormTabs,
+    AppFormHeader,
+    AppModal,
     AppNewEditDeleteButton,
   },
   props: {
@@ -59,35 +60,26 @@ export default {
       type: [Number, String],
     },
   },
-  mounted() {
+  async mounted() {
     this.loaded = false;
-    const p_age_bands = axios.get(
-      `/qry-config/product/${this.product_id}/all-age-bands`
-    );
-    const p_variations = axios.get(
+    const res = await axios.get(
       `/qry-config/all-product-variations?product_id=${this.product_id}`
     );
 
-    const selection = new Model_ConfigAgeBands();
-    this._selection = { ...selection };
-
-    Promise.all([p_age_bands, p_variations])
-      .then(([ab, vars]) => {
-        this.age_bands = [...ab.data];
-        this.product_variations = [...vars.data];
-
-        this.loaded = true;
-      })
-      .catch((err) => {
-        this.loaded = true;
-      });
+    this.variations = [
+      ...res.data.map((item) => {
+        return { ...item, _id: (Math.random() + 1).toString(36).substring(4) };
+      }),
+    ];
+    this.loaded = true;
   },
   data() {
     return {
       loaded: false,
-      title: "Age Bands",
-      subtitle: "Create a new age band or edit an existing one!",
-      active_stage: "landing",
+      show_fab: false,
+      title: "Product Variations",
+      subtitle: "Create a new variation or edit an existing one!",
+      active_stage: "variations",
       _stages: [
         {
           label: "Back to Product",
@@ -95,8 +87,8 @@ export default {
           to: "config-product",
         },
         {
-          label: "Age Bands",
-          id: "landing",
+          label: "Variations",
+          id: "variations",
           disabled: true,
         },
         {
@@ -105,42 +97,50 @@ export default {
           disabled: true,
         },
       ],
-      age_bands: [],
-      product_variations: [],
+      variations: [],
+      columnDefs: [...CONFIG_PRODUCT_VARIATIONS_LIST__COLUMN_DEFS],
       _selection: {},
-      columnDefs: [...CONFIG_AGE_BANDS__COLUMN_DEFS],
     };
   },
   methods: {
-    activeStageSetter(stage_name) {
-      console.log(stage_name);
-      this.active_stage = stage_name;
+    addDistributionHandler(data) {
+      this.variations = [
+        ...this.variations.filter((dist) => {
+          return (
+            dist.product_variation_id == null ||
+            dist.product_variation_id !== data.product_variation_id
+          );
+        }),
+        { ...data, _id: (Math.random() + 1).toString(36).substring(4) },
+      ];
     },
-    deleteHandler() {
-      console.log("Delete handler");
+    async deleteHandler() {
+      if (this._selection.product_variation_id) {
+        await axios.delete(
+          `/config/age-distribution-set/${this._selection.product_variation_id}`
+        );
+        this.$store.dispatch("SET_SNACKBAR_MESSAGE", "Deleted from DB");
+      }
+      this.distributions = [
+        ...this.variations.filter((item) => {
+          item._id !== this._selection._id;
+        }),
+      ];
     },
     doubleClickRowHandler() {
-      const selection = this.gridApi.getSelectedRows()[0];
-      this.$store.commit("SET_SELECTIONS_OBJECT", selection);
-      if (this._selection.age_band_set_id) {
-        this.routeTo(
-          "config-age-band",
-          {},
-          { age_band_set_id: this._selection.age_band_set_id }
-        );
-      } else {
-        this.routeTo("config-age-band");
-      }
+      this._selection = this.gridApi.getSelectedRows()[0];
+      this.routeTo("config-product-variation", {
+        product_variation_id: this._selection.product_variation_id,
+      });
     },
     editHandler() {
-      this.routeTo(
-        "config-age-band",
-        {},
-        { age_band_set_id: this._selection.age_band_set_id }
-      );
+      this.routeTo("config-product-variation", {
+        product_variation_id: this._selection.product_variation_id,
+      });
     },
     newHandler() {
-      this.routeTo("config-age-band");
+      this._selection = {};
+      this.routeTo("config-product-variation");
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -156,20 +156,35 @@ export default {
         query: { ...query },
       });
     },
+    async save() {
+      try {
+        const res = await axios.post("/config/product-variations", this.output);
+        this.variations = [...res.data];
+        this.$store.dispatch(
+          "SET_SNACKBAR_MESSAGE",
+          "Successfully added data to DB"
+        );
+      } catch (err) {
+        this.$store.dispatch("SET_SNACKBAR_MESSAGE", err);
+      }
+    },
     toggleHandler(stg) {
       this.routeTo(stg.to);
     },
   },
   computed: {
+    output() {
+      if (this.variations.length > 0) {
+        return this.variations.map((v) => {
+          return v; //this.modelSetter(dist);
+        });
+      }
+      return [];
+    },
     rowData() {
-      return this.age_bands.map((item) => {
+      return this.variations.map((item) => {
         return {
           ...item,
-          product_variation_code: item.product_variation.product_variation_code,
-          product_variation_label:
-            item.product_variation.product_variation_label,
-          state_code: item.state.state_code,
-          state_name: item.state.state_name,
         };
       });
     },

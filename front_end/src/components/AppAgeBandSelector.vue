@@ -24,7 +24,7 @@
 
       <div class="flex items-start">
         <app-button
-          class="mr-1 w-8 h-8 flex items-center justify-center text-center bg-green-600"
+          class="mr-1 w-8 h-8 flex items-center justify-center text-center"
           tabindex="2"
           :fab="true"
           @click="addAgeBandHandler(index)"
@@ -33,9 +33,10 @@
         </app-button>
 
         <app-button
-          class="mr-1 w-8 h-8 flex items-center justify-center text-center bg-pink-600"
+          class="mr-1 w-8 h-8 flex items-center justify-center text-center bg-transparent"
           tabindex="2"
           :fab="true"
+          :transparent="true"
           @click="removeAgeBandHandler(index)"
         >
           <minus-icon class="w-2/3 h-2/3" />

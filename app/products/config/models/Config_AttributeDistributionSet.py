@@ -17,5 +17,5 @@ class Model_ConfigAttributeDistributionSet(BaseModel):
     attr_distribution = db.relationship("Model_ConfigAttributeDistribution")
 
     @classmethod
-    def find_by_attr_type(cls, attr_type, is_composite_default_dist=False): 
-        return cls.query.filter(cls.attr_type_code == attr_type, cls.is_composite_default_dist == is_composite_default_dist).all()
+    def find_by_attr_type(cls, attr_type): 
+        return cls.query.filter(cls.attr_type_code == attr_type).all()

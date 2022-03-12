@@ -335,6 +335,24 @@ ref_data_list_routes = [
     # }, 
     {
         "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigAgeDistributionSet_List', 
+            model=Model_ConfigAgeDistributionSet,
+            schema=Schema_ConfigAgeDistributionSet, 
+            primary_key='age_distribution_set_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/age-distribution-sets']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
+            resource_name='CRUD_ConfigAttributeDistributionSet_List', 
+            model=Model_ConfigAttributeDistributionSet,
+            schema=Schema_ConfigAttributeDistributionSet, 
+            primary_key='attr_distribution_set_id'
+        ).generate_list_class(), 
+        "endpoints": ['/config/attr-distribution-sets']
+    }, 
+    {
+        "class": CRUD_ResourceFactory(
             resource_name='CRUD_RefUnitCode_List', 
             model=Model_RefUnitCode,
             schema=Schema_RefUnitCode, 

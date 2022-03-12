@@ -16,11 +16,11 @@ class CRUD_ResourceFactory:
     def generate_class(self):
         cls = type(self.resource_name, (Resource,), {
                 "__init__": self._constructor, 
-                "get": self._get_method_generator(), 
-                "post": self._post_method_generator(),
-                "put": self._put_method_generator(),
-                "patch": self._patch_method_generator(), 
-                "delete": self._delete_method_generator()
+                "get": classmethod(self._get_method_generator()), 
+                "post": classmethod(self._post_method_generator()),
+                "put": classmethod(self._put_method_generator()),
+                "patch": classmethod(self._patch_method_generator()), 
+                "delete": classmethod(self._delete_method_generator())
             }, 
         )
 
@@ -29,21 +29,20 @@ class CRUD_ResourceFactory:
     def generate_list_class(self):
         cls = type(self.resource_name, (Resource,), {
                 "__init__": self._constructor, 
-                "get": self._get_list_method_generator(), 
-                "post": self._post_list_method_generator()
+                "get": classmethod(self._get_list_method_generator()), 
+                "post": classmethod(self._post_list_method_generator())
             }, 
         )
 
         return cls
 
     def _constructor(self, **kwargs): 
-        super(BaseModel).__init__
+        super(Resource).__init__
 
     def _get_method_generator(self):
         """
         This method returns a new method called `get`. 
         """
-        @classmethod
         def get(cls, id):
             obj = self.model.find_one(id)
             return self.schema_instance.dump(obj), 200
@@ -54,7 +53,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `post`. 
         """
-        @classmethod
         def post(cls):
             req = request.get_json()
             obj = self.schema_instance.load(req)
@@ -67,7 +65,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `put`. 
         """
-        @classmethod
         def put(cls, id): 
             req = request.get_json()
             obj = self.schema_instance.load({**req, self.primary_key: id})
@@ -80,7 +77,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `patch`. 
         """
-        @classmethod
         def patch(cls, id): 
             req = request.get_json()
             # get existing data 
@@ -99,7 +95,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `delete`. 
         """
-        @classmethod
         def delete(cls, id): 
             obj = self.model.find_one(id)
             obj.delete()
@@ -112,7 +107,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `get`. 
         """
-        @classmethod
         def get(cls):
             params = {}
             limit = request.args.get('limit')
@@ -132,7 +126,6 @@ class CRUD_ResourceFactory:
         """
         This method returns a new method called `post`. 
         """
-        @classmethod
         def post(cls):
             req = request.get_json()
             obj = self.schema_list_instance.load(req)

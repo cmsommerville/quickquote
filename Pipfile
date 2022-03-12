@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 flask = "*"
-flask-restful = "*"
 flask-marshmallow = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
@@ -13,15 +12,15 @@ sqlalchemy = "*"
 flask-cors = "*"
 flask-session = "*"
 python-dotenv = "*"
-flask-pymongo = "*"
-pymongo = "*"
 dnspython = "*"
 psycopg2 = "*"
 pytest = "*"
-ariadne = "*"
 typing = "*"
 requests = "*"
 pyodbc = "*"
+pandas = "*"
+flask-restful = "*"
+flask-restx = "*"
 
 [dev-packages]
 

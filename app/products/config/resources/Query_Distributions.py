@@ -19,6 +19,5 @@ class Query_AttrDistributionSets(Resource):
     @classmethod
     def get(cls):
         attr_code = request.args.get('attr_code')
-        is_composite_default_dist = request.args.get('is_composite_default_dist', False)
-        res = Model_ConfigAttributeDistributionSet.find_by_attr_type(attr_code, is_composite_default_dist)
+        res = Model_ConfigAttributeDistributionSet.find_by_attr_type(attr_code)
         return _config_attr_schema_list.dump(res), 200

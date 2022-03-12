@@ -1,5 +1,6 @@
 from .crud import *
 from .custom import *
+from .blueprints import file_uploads
 
 routes = [
     *product_routes, 
@@ -22,3 +23,4 @@ routes = [
 
     *custom_routes
 ]
+

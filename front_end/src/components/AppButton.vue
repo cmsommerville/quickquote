@@ -30,7 +30,7 @@ export default {
         "px-1 py-1 rounded-none border-b-2 border-transparent bg-transparent text-them-primary hover:border-b-2 hover:border-theme-primary",
       _btn: "bg-theme-primary text-white hover:bg-opacity-90 hover:scale-105",
       _transparent:
-        "border-2 bg-transparent border-theme-primary text-theme-primary hover:bg-theme-primary hover:text-white hover:bg-opacity-90 hover:scale-105",
+        "border-2 bg-opacity-0 border-theme-primary text-theme-primary hover:bg-theme-primary hover:text-white hover:bg-opacity-90 hover:scale-105",
       _fab: "bg-theme-primary text-white hover:bg-opacity-90 hover:scale-105",
 
       _disabled_flat: "disabled:text-gray-500",

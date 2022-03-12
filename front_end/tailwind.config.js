@@ -27,6 +27,10 @@ module.exports = {
       },
       width: {
         "90%": "90%",
+        "50vw": "50vw",
+        "60vw": "60vw",
+        "70vw": "70vw",
+        "80vw": "80vw",
       },
       minWidth: {
         "1/2": "50%",

@@ -20,6 +20,11 @@ export default {
     return {
       _stages: [
         {
+          label: "Back to Product",
+          id: "product",
+          to: "config-product",
+        },
+        {
           label: "Age Bands",
           id: "landing",
           disabled: true,
@@ -27,11 +32,6 @@ export default {
         {
           label: "Configure",
           id: "configure",
-          disabled: true,
-        },
-        {
-          label: "States",
-          id: "states",
           disabled: true,
         },
       ],

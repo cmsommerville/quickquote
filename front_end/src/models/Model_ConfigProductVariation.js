@@ -1,5 +1,6 @@
 export class Model_ConfigProductVariation {
   constructor(
+    product_variation_id,
     product_id,
     product_variation_code,
     product_variation_label,
@@ -15,9 +16,14 @@ export class Model_ConfigProductVariation {
     unismoker_distribution_set_id,
     unisex_distribution_set_id,
     age_distribution_set_id,
+    smoker_distinct_distribution_set_id,
+    sex_distinct_distribution_set_id,
     vary_by_gender,
     vary_by_tobacco
   ) {
+    if (product_variation_id) {
+      this.product_variation_id = product_variation_id;
+    }
     this.product_id = product_id;
     this.product_variation_code = product_variation_code;
     this.product_variation_label = product_variation_label;
@@ -38,6 +44,10 @@ export class Model_ConfigProductVariation {
     this.unismoker_distribution_set_id = unismoker_distribution_set_id ?? null;
     this.unisex_distribution_set_id = unisex_distribution_set_id ?? null;
     this.age_distribution_set_id = age_distribution_set_id ?? null;
+    this.smoker_distinct_distribution_set_id =
+      smoker_distinct_distribution_set_id ?? null;
+    this.sex_distinct_distribution_set_id =
+      sex_distinct_distribution_set_id ?? null;
     this.vary_by_gender = vary_by_gender ?? false;
     this.vary_by_tobacco = vary_by_tobacco ?? false;
   }

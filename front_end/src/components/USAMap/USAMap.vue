@@ -33,7 +33,7 @@
       inkscape:version="0.91 r13725"
       x="0px"
       y="0px"
-      viewBox="170 90 960 600"
+      viewBox="110 100 960 600"
       enable-background="new 0 0 959 593"
       xml:space="preserve"
     >

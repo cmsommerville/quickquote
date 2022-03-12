@@ -8,4 +8,4 @@ from .Model_SelectionPlan import *
 from .Model_SelectionRateGroupSummary import *
 from .Model_SelectionBenefitFactor import *
 from .Model_SelectionDistribution import *
-from .RateTableModel import RateTableModel
+# from .RateTableModel import RateTableModel

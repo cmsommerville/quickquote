@@ -1,6 +1,6 @@
 <template>
   <div class="flex w-full justify-end items-center">
-    <div class="cursor-pointer mr-8" @click="clickHandler">
+    <div class="cursor-pointer mr-4" @click="clickHandler">
       <slot />
     </div>
     <label class="relative inline-block w-14 h-8 flex" :for="htmlFor">
@@ -43,7 +43,9 @@ export default {
   },
   methods: {
     clickHandler() {
-      this.$refs.input.checked = !this.$refs.input.checked;
+      if (!this.$attrs.disabled) {
+        this.$refs.input.checked = !this.$refs.input.checked;
+      }
     },
   },
 };

@@ -16,8 +16,8 @@ class Model_ConfigProvisionStateAvailability(BaseModel):
     )
 
     provision_state_id = db.Column(db.Integer, primary_key=True)
-    provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"), nullable=False)
-    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"), nullable=False)
+    provision_id = db.Column(db.ForeignKey(f"{CONFIG_PROVISION}.provision_id"))
+    state_id = db.Column(db.ForeignKey(f"{REF_STATE}.state_id"))
     state_effective_date = db.Column(db.Date, nullable=False)
     state_expiration_date = db.Column(db.Date, nullable=False)
 

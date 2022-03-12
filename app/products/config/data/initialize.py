@@ -15,13 +15,13 @@ class Resource_InitializeData(Resource):
         requests.get('http://localhost:5000/admin/create-tables?drop=Y&create=Y')
 
         # states
-        requests.post('http://localhost:5000/config/ref-states', json=REF_STATES)
+        requests.post('http://localhost:5000/config/ref-states', json=REF_STATES) 
         insertAllStatesRecord()
 
         # # unit codes
         requests.post('http://localhost:5000/config/ref-unit-codes', json=REF_UNIT_CODES)
 
-        # # ui component types
+        # ui component types
         for typ in REF_UI_COMPONENT_TYPES: 
             requests.post('http://localhost:5000/config/ref-component-type', json=typ)
 
@@ -41,12 +41,12 @@ class Resource_InitializeData(Resource):
         product = res.json()
 
         # product states
-        res = requests.post('http://localhost:5000/config/product/states', json=[
-            {
-                **state, 
-                "product_id": product['product_id']
-            } for state in CONFIG_PRODUCT_STATES
-        ])
+        # res = requests.post('http://localhost:5000/config/product/states', json=[
+        #     {
+        #         **state, 
+        #         "product_id": product['product_id']
+        #     } for state in CONFIG_PRODUCT_STATES
+        # ])
 
         # age distribution
         res = requests.post('http://localhost:5000/config/age-distribution-set', json=AGE_DISTRIBUTION)

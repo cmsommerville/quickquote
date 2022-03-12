@@ -30,8 +30,7 @@
               >
             </div>
             <div v-if="_selection.component_type === 'SELECT'">
-              <app-modal :fab="true"
-                ><plus-icon class="w-8 h-8 p-2" />
+              <app-modal class="hidden" ref="modal" :fab="true">
                 <template #header>Edit an Item</template>
                 <template #content="contentProps">
                   <div class="flex flex-col items-center">
@@ -58,7 +57,7 @@
             </div>
           </div>
           <div
-            class="h-72 w-full col-span-2"
+            class="h-72 w-full col-span-2 relative"
             v-if="_selection.component_type === 'SELECT'"
           >
             <ag-grid-vue
@@ -72,6 +71,13 @@
               @row-double-clicked="doubleClickRowHandler"
             >
             </ag-grid-vue>
+            <app-new-edit-delete-button
+              :disabled_edit="!_item.item_code"
+              :disabled_delete="!_item.item_code"
+              @fab:new="newItemHandler"
+              @fab:edit="editItemHandler"
+              @fab:delete="deleteItemHandler"
+            />
           </div>
           <div
             class="grid grid-cols-3 gap-x-8 col-span-2"
@@ -108,13 +114,14 @@
 <script>
 import axios from "@/services/axios.js";
 import AppModal from "@/components/AppModal.vue";
+import AppNewEditDeleteButton from "@/components/AppNewEditDeleteButton.vue";
 import { AgGridVue } from "ag-grid-vue3";
 import { CONFIG_PROVISION_UI_SELECT_ITEMS__COLUMN_DEFS } from "./config.js";
 import { Model_ConfigProvisionUI } from "@/models/Model_ConfigProvision.js";
 
 export default {
   name: "Config_ProvisionUI",
-  components: { AgGridVue, AppModal },
+  components: { AgGridVue, AppModal, AppNewEditDeleteButton },
   props: {
     product_id: {
       required: true,
@@ -186,7 +193,7 @@ export default {
     selectItemRowData() {
       if (this._selection.items && this._selection.items.length) {
         return this._selection.items.map((item) => {
-          return { ui_component_item_id: "-", ...item };
+          return { ...item };
         });
       }
       return [];
@@ -219,20 +226,38 @@ export default {
       callback();
     },
     cancel() {
-      console.log("Cancelled");
+      this.routeTo("config-provision-landing");
+    },
+    deleteItemHandler() {
+      if (!this._item) return;
+      if (this._item.ui_component_item_id) {
+        console.log("Delete request");
+      } else {
+        this._selection.items = this._selection.items.filter((item) => {
+          return item.item_code !== this._item.item_code;
+        });
+      }
     },
     doubleClickRowHandler() {
-      this.selected_row = this.gridApi.getSelectedRows()[0];
+      this._item = this.gridApi.getSelectedRows()[0];
+      this.$refs.modal.openHandler();
+    },
+    editItemHandler() {
+      this.$refs.modal.openHandler();
     },
     modelSetter(data) {
       return new Model_ConfigProvisionUI(data);
+    },
+    newItemHandler() {
+      this._item = {};
+      this.$refs.modal.openHandler();
     },
     onGridReady(params) {
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
     },
     onGridSelectionChanged() {
-      this.selected_row = this.gridApi.getSelectedRows()[0];
+      this._item = this.gridApi.getSelectedRows()[0];
     },
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
