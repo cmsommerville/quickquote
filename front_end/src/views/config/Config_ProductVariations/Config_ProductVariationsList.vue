@@ -129,12 +129,12 @@ export default {
     },
     doubleClickRowHandler() {
       this._selection = this.gridApi.getSelectedRows()[0];
-      this.routeTo("config-product-variation", {
+      this.routeTo("config-product-variation-landing", {
         product_variation_id: this._selection.product_variation_id,
       });
     },
     editHandler() {
-      this.routeTo("config-product-variation", {
+      this.routeTo("config-product-variation-landing", {
         product_variation_id: this._selection.product_variation_id,
       });
     },

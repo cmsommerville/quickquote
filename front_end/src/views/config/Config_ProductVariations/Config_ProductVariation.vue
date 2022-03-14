@@ -251,9 +251,14 @@ export default {
       active_stage: "configure",
       _stages: [
         {
-          label: "All Variations",
-          id: "landing",
+          label: "Back to Variations",
+          id: "product_variation_list",
           to: "config-product-variations",
+        },
+        {
+          label: "Back to Variation",
+          id: "product_variation",
+          to: "config-product-variation-landing",
         },
         {
           label: "Configure",
@@ -276,10 +281,10 @@ export default {
     stages() {
       return this._stages
         .filter((item) => {
-          if (this.$route.params.benefit_id) {
-            return item.id !== "benefits";
+          if (this.$route.params.product_variation_id) {
+            return item.id !== "product_variation_list";
           } else {
-            return item.id !== "benefit";
+            return item.id !== "product_variation";
           }
         })
         .map((item) => ({

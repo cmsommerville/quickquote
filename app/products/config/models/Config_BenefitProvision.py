@@ -31,3 +31,21 @@ class Model_ConfigBenefitProvision(BaseModel):
     @classmethod
     def find_benefits(cls, provision_id):
         return cls.query.filter(cls.provision_id == provision_id).all()
+
+    @classmethod
+    def merge(cls, bps):
+        provision_id = getattr(bps[0], "provision_id")
+        benefit_ids = [bp.benefit_id for bp in bps]
+        if not provision_id: 
+            return
+        
+        bnfts = cls.find_benefits(provision_id)
+        for bnft in bnfts:
+            if bnft.benefit_id not in benefit_ids:
+                bnft.delete()
+        try: 
+            db.session.add_all(bps)
+            db.session.commit()
+        except: 
+            db.session.rollback()
+            raise

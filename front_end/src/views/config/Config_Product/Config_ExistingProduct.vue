@@ -108,6 +108,13 @@ export default {
           prereq_ids: ["benefits"],
           route_name: "config-provision-list",
         },
+        {
+          text: "Applicabilities",
+          icon: "plus-circle-icon",
+          id: "applicabilities",
+          prereq_ids: ["benefits", "provisions"],
+          route_name: "config-applicabilities",
+        },
       ],
       selection: null,
       product: {},

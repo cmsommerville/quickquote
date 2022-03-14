@@ -83,15 +83,6 @@ benefit_routes = [
     }, 
     {
         "class": CRUD_ResourceFactory(
-            resource_name='CRUD_BenefitProvisionConfig', 
-            model=Model_ConfigBenefitProvision, 
-            schema=Schema_ConfigBenefitProvision,
-            primary_key='benefit_provision_id'
-        ).generate_class(), 
-        "endpoints": ['/config/benefit-provisions']
-    }, 
-    {
-        "class": CRUD_ResourceFactory(
             resource_name='CRUD_BenefitDurationConfig', 
             model=Model_ConfigBenefitDuration, 
             schema=Schema_ConfigBenefitDuration,
@@ -259,6 +250,10 @@ custom_crud_routes = [
     {
         "class": CRUD_BenefitProductVariationConfig,
         "endpoints": ['/config/benefit-product-variations']
+    }, 
+    {
+        "class": CRUD_BenefitProvisionConfig,
+        "endpoints": ['/config/benefit-provisions']
     }, 
 ]
 

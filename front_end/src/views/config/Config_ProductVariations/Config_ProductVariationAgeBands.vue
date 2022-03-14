@@ -15,7 +15,7 @@
             <div class="w-full my-6">
               <app-select
                 v-model="_selection.product_variation_id"
-                :disabled="!!age_band_set_id"
+                :disabled="true"
                 :items="product_variations"
                 item_text="product_variation_label"
                 item_value="product_variation_id"
@@ -72,7 +72,7 @@ import axios from "@/services/axios.js";
 import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
 import AppAgeBandSelector from "@/components/AppAgeBandSelector.vue";
-import ConfigAgeBandsStatesModal from "./AgeBandsStatesModal.vue";
+import ConfigAgeBandsStatesModal from "./Config_ProductVariationAgeBandsStatesModal.vue";
 import { Model_ConfigAgeBands } from "@/models/Model_ConfigAgeBands.js";
 
 export default {
@@ -88,6 +88,10 @@ export default {
       required: true,
       type: [Number, String],
     },
+    product_variation_id: {
+      required: true,
+      type: [Number, String],
+    },
     age_band_set_id: {
       default: null,
       type: [Number, String, null],
@@ -95,7 +99,7 @@ export default {
   },
   async mounted() {
     this.loaded = false;
-    let age_band_set;
+    let age_band_set = { product_variation_id: this.product_variation_id };
     if (this.age_band_set_id) {
       age_band_set = await axios.get(
         `/config/age-band-set/${this.age_band_set_id}`
@@ -119,14 +123,14 @@ export default {
       active_stage: "configure",
       _stages: [
         {
-          label: "Back to Product",
-          id: "product",
-          to: "config-product",
+          label: "Back to Variation",
+          id: "product_variation",
+          to: "config-product-variation-landing",
         },
         {
           label: "Age Bands",
           id: "landing",
-          to: "config-age-bands",
+          to: "config-age-bands-list",
         },
         {
           label: "Configure",
@@ -157,7 +161,11 @@ export default {
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id, ...params },
+        params: {
+          product_id: this.product_id,
+          product_variation_id: this.product_variation_id,
+          ...params,
+        },
         query: { ...query },
       });
     },

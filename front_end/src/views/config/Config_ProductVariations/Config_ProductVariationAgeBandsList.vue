@@ -42,11 +42,11 @@ import AppFormHeader from "@/components/AppFormCard/AppFormHeader.vue";
 import AppFormTabs from "@/components/AppFormCard/AppFormTabs.vue";
 import AppNewEditDeleteButton from "@/components/AppNewEditDeleteButton.vue";
 import { AgGridVue } from "ag-grid-vue3";
-import { CONFIG_AGE_BANDS__COLUMN_DEFS } from "./config.js";
+import { CONFIG_AGE_BANDS__COLUMN_DEFS } from "../Config_AgeBands/config.js";
 import { Model_ConfigAgeBands } from "@/models/Model_ConfigAgeBands.js";
 
 export default {
-  name: "Config_ProductVariations",
+  name: "Config_AgeBandsList",
   components: {
     AgGridVue,
     AppFormHeader,
@@ -58,29 +58,25 @@ export default {
       required: true,
       type: [Number, String],
     },
+    product_variation_id: {
+      required: true,
+      type: [Number, String],
+    },
   },
   mounted() {
     this.loaded = false;
     const p_age_bands = axios.get(
-      `/qry-config/product/${this.product_id}/all-age-bands`
+      `/qry-config/all-age-bands?product_variation_id=${this.product_variation_id}`
     );
-    const p_variations = axios.get(
-      `/qry-config/all-product-variations?product_id=${this.product_id}`
-    );
-
     const selection = new Model_ConfigAgeBands();
     this._selection = { ...selection };
 
-    Promise.all([p_age_bands, p_variations])
+    Promise.all([p_age_bands])
       .then(([ab, vars]) => {
         this.age_bands = [...ab.data];
-        this.product_variations = [...vars.data];
-
-        this.loaded = true;
       })
-      .catch((err) => {
-        this.loaded = true;
-      });
+      .catch((err) => {})
+      .finally(() => (this.loaded = true));
   },
   data() {
     return {
@@ -90,9 +86,9 @@ export default {
       active_stage: "landing",
       _stages: [
         {
-          label: "Back to Product",
-          id: "product",
-          to: "config-product",
+          label: "Back to Variation",
+          id: "product_variation",
+          to: "config-product-variation-landing",
         },
         {
           label: "Age Bands",
@@ -106,7 +102,6 @@ export default {
         },
       ],
       age_bands: [],
-      product_variations: [],
       _selection: {},
       columnDefs: [...CONFIG_AGE_BANDS__COLUMN_DEFS],
     };
@@ -152,7 +147,11 @@ export default {
     routeTo(route_name, params = {}, query = {}) {
       this.$router.push({
         name: route_name,
-        params: { product_id: this.product_id, ...params },
+        params: {
+          product_id: this.product_id,
+          product_variation_id: this.product_variation_id,
+          ...params,
+        },
         query: { ...query },
       });
     },

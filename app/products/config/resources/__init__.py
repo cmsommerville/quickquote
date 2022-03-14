@@ -1,6 +1,7 @@
 from .CRUD_ProvisionUIComponent import *
 from .CRUD_BenefitState import *
 from .CRUD_BenefitProductVariation import *
+from .CRUD_BenefitProvision import *
 from .CRUD_ProductVariation import *
 from .CRUD_RefStates import *
 from .Query_Product import *

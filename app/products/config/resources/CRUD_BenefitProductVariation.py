@@ -26,5 +26,15 @@ class CRUD_BenefitProductVariationConfig(Resource):
     def post(cls):
         data = request.get_json()
         benefit_variations = _config_benefit_variation_schema_list.load(data)
-        Model_ConfigBenefitProductVariation.save_all_to_db(benefit_variations)
+        Model_ConfigBenefitProductVariation.merge(benefit_variations)
         return _config_benefit_variation_schema_list.dump(benefit_variations), 200
+
+
+    @classmethod
+    def delete(cls):
+        data = request.get_json()
+        product_variation_id = request.args.get('product_variation_id')
+        if product_variation_id:
+            benefits = Model_ConfigBenefitProductVariation.find_benefits(product_variation_id)
+            Model_ConfigBenefitProductVariation.delete_many(benefits)
+        return "Deleted", 201

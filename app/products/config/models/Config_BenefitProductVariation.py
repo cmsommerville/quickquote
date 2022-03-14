@@ -1,3 +1,4 @@
+from itertools import product
 from app.extensions import db
 from app.shared import BaseModel
 from ...__constants__ import TBL_NAMES
@@ -29,3 +30,31 @@ class Model_ConfigBenefitProductVariation(BaseModel):
     @classmethod
     def find_benefits(cls, id):
         return cls.query.filter(cls.product_variation_id == id).all()
+
+    @classmethod
+    def merge(cls, bpvs):
+        product_variation_id = getattr(bpvs[0], "product_variation_id")
+        benefit_ids = [bpv.benefit_id for bpv in bpvs]
+        if not product_variation_id: 
+            return
+        
+        bnfts = cls.find_benefits(product_variation_id)
+        for bnft in bnfts:
+            if bnft.benefit_id not in benefit_ids:
+                bnft.delete()
+        try: 
+            db.session.add_all(bpvs)
+            db.session.commit()
+        except: 
+            db.session.rollback()
+            raise
+
+    @classmethod
+    def delete_many(cls, bpvs):
+        try: 
+            for bpv in bpvs: 
+                db.session.delete(bpv)
+            db.session.commit()
+        except: 
+            db.session.rollback()
+            raise
